@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Footer Colors -->
+    <color name="footer_background">#FFFFFF</color>
+    <color name="footer_border">#E0E0E0</color>
+    <color name="footer_icon_color">#757575</color>
+    <color name="footer_icon_selected">#2196F3</color>
+    <color name="footer_text_color">#757575</color>
+    <color name="footer_text_selected">#2196F3</color>
+    <color name="footer_selected_background">#E3F2FD</color>
+
+    <!-- Primary Colors -->
+    <color name="primary_color">#2196F3</color>
+    <color name="primary_dark">#1976D2</color>
+    <color name="accent_color">#FF4081</color>
+
+    <!-- SafeZone Theme Colors -->
+    <color name="safezone_blue">#1E88E5</color>
+    <color name="safezone_green">#4CAF50</color>
+    <color name="safezone_orange">#FF9800</color>
+    <color name="safezone_red">#F44336</color>
+    <color name="safezone_gray">#9E9E9E</color>
+</resources>

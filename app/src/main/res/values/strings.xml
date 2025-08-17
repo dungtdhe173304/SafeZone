@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">SafeZone</string>
+
+    <!-- Footer Navigation -->
+    <string name="home">Trang chủ</string>
+    <string name="products">Sản phẩm</string>
+    <string name="auction">Đấu giá</string>
+    <string name="wallet">Ví tiền</string>
+    <string name="profile">Hồ sơ</string>
+
+    <!-- Content Descriptions -->
+    <string name="home_icon">Biểu tượng trang chủ</string>
+    <string name="products_icon">Biểu tượng sản phẩm</string>
+    <string name="auction_icon">Biểu tượng đấu giá</string>
+    <string name="wallet_icon">Biểu tượng ví tiền</string>
+    <string name="profile_icon">Biểu tượng hồ sơ</string>
+</resources>
