@@ -1,26 +1,21 @@
 package com.group5.safezone.model.entity;
 
-import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
 import androidx.room.ForeignKey;
-import androidx.room.Index;
 
 import java.util.Date;
 
 @Entity(tableName = "product",
         foreignKeys = @ForeignKey(entity = User.class,
                 parentColumns = "id",
-                childColumns = "userId",
-                onDelete = ForeignKey.CASCADE),
-        indices = {@Index(value = "userId")}) // Thêm index cho foreign key
+                childColumns = "UserId",
+                onDelete = ForeignKey.CASCADE))
 public class Product {
-
     @PrimaryKey
-    @NonNull // Thêm annotation này
     @ColumnInfo(name = "id")
-    private String id = ""; // Khởi tạo giá trị mặc định
+    private String id;
 
     @ColumnInfo(name = "productName")
     private String productName;
@@ -67,7 +62,7 @@ public class Product {
     @ColumnInfo(name = "UpdatedAt")
     private Date updatedAt;
 
-    @ColumnInfo(name = "userId")
+    @ColumnInfo(name = "UserId")
     private int userId;
 
     @ColumnInfo(name = "isAuctionItem")
@@ -92,21 +87,9 @@ public class Product {
         this.createdAt = new Date();
     }
 
-    // Constructor với id (để đảm bảo id không null)
-    public Product(@NonNull String id) {
-        this.id = id;
-        this.view = 0;
-        this.quantity = 1;
-        this.isDeleted = false;
-        this.isAuctionItem = false;
-        this.isAdminCheck = false;
-        this.createdAt = new Date();
-    }
-
     // Getters and Setters
-    @NonNull
     public String getId() { return id; }
-    public void setId(@NonNull String id) { this.id = id; }
+    public void setId(String id) { this.id = id; }
 
     public String getProductName() { return productName; }
     public void setProductName(String productName) { this.productName = productName; }
@@ -167,9 +150,4 @@ public class Product {
 
     public Double getMinBidIncrement() { return minBidIncrement; }
     public void setMinBidIncrement(Double minBidIncrement) { this.minBidIncrement = minBidIncrement; }
-
-    // Utility method để tạo ID tự động
-    public static String generateProductId() {
-        return "PROD" + System.currentTimeMillis();
-    }
 }
