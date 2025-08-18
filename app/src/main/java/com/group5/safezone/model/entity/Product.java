@@ -1,5 +1,6 @@
 package com.group5.safezone.model.entity;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 import androidx.room.ColumnInfo;
@@ -14,6 +15,7 @@ import java.util.Date;
                 onDelete = ForeignKey.CASCADE))
 public class Product {
     @PrimaryKey
+    @NonNull
     @ColumnInfo(name = "id")
     private String id;
 
@@ -79,6 +81,7 @@ public class Product {
 
     // Constructor
     public Product() {
+        this.id = ""; // Khởi tạo với giá trị rỗng thay vì null
         this.view = 0;
         this.quantity = 1;
         this.isDeleted = false;
@@ -87,9 +90,16 @@ public class Product {
         this.createdAt = new Date();
     }
 
+    // Constructor với id
+    public Product(@NonNull String id) {
+        this();
+        this.id = id;
+    }
+
     // Getters and Setters
+    @NonNull
     public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public void setId(@NonNull String id) { this.id = id; }
 
     public String getProductName() { return productName; }
     public void setProductName(String productName) { this.productName = productName; }
