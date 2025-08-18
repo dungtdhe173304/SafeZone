@@ -33,7 +33,7 @@ public interface ProductDao {
     @Query("SELECT * FROM product WHERE productName LIKE '%' || :keyword || '%' AND IsDeleted = 0")
     List<Product> searchProducts(String keyword);
 
-    @Query("UPDATE product SET view = view + 1 WHERE id = :id")
+    @Query("UPDATE product SET views = views + 1 WHERE id = :id")
     void incrementView(String id);
 
     @Query("UPDATE product SET isAdminCheck = :isChecked, adminmessage = :message WHERE id = :id")

@@ -31,7 +31,7 @@ public class Product {
     @ColumnInfo(name = "information")
     private String information;
 
-    @ColumnInfo(name = "view")
+    @ColumnInfo(name = "views")
     private Integer view;
 
     @ColumnInfo(name = "quantity")
