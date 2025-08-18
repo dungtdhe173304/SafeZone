@@ -1,6 +1,9 @@
 package com.group5.safezone.view;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -9,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -20,20 +24,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.group5.safezone.R;
 import com.group5.safezone.adapter.UserAdapter;
 import com.group5.safezone.model.entity.User;
+import com.group5.safezone.config.AuthInterceptor;
+import com.group5.safezone.config.SessionManager;
+import com.group5.safezone.view.admin.AdminMainActivity;
+import com.group5.safezone.view.auth.LoginActivity;
+import com.group5.safezone.view.base.BaseActivity;
 import com.group5.safezone.viewmodel.UserViewModel;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private UserViewModel userViewModel;
     private UserAdapter userAdapter;
+    private SessionManager sessionManager;
 
     // UI Components
     private ProgressBar progressBar;
-    private TextView tvError;
+    private TextView tvError, tvWelcome;
     private CardView cardUserInfo;
     private TextView tvUserName, tvEmail, tvPhone, tvRole, tvBalance, tvStatus, tvVerify;
     private RecyclerView recyclerViewUsers;
@@ -42,6 +51,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Kiểm tra authentication
+        if (!AuthInterceptor.checkAuthentication(this)) {
+            return;
+        }
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
@@ -51,11 +66,17 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+        sessionManager = new SessionManager(this);
+
         initViews();
+        setupToolbar();
         setupViewModel();
         setupRecyclerView();
         setupClickListeners();
         observeViewModel();
+        setupFooter();
+
+        displayWelcomeMessage();
 
         // Load dữ liệu ban đầu
         userViewModel.loadAllUsers();
@@ -64,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     private void initViews() {
         progressBar = findViewById(R.id.progressBar);
         tvError = findViewById(R.id.tvError);
+        tvWelcome = findViewById(R.id.tvWelcome);
         cardUserInfo = findViewById(R.id.cardUserInfo);
         tvUserName = findViewById(R.id.tvUserName);
         tvEmail = findViewById(R.id.tvEmail);
@@ -75,6 +97,18 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewUsers = findViewById(R.id.recyclerViewUsers);
         btnLoadUser = findViewById(R.id.btnLoadUser);
         btnLoadAllUsers = findViewById(R.id.btnLoadAllUsers);
+    }
+
+    private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("SafeZone");
+    }
+
+    private void displayWelcomeMessage() {
+        String userName = sessionManager.getUserName();
+        String role = sessionManager.getUserRole();
+        tvWelcome.setText("Chào mừng, " + userName + " (" + role + ")!");
     }
 
     private void setupViewModel() {
@@ -94,8 +128,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         btnLoadUser.setOnClickListener(v -> {
-            // Load user đầu tiên (admin)
-            userViewModel.getUserById(1);
+            // Load current user
+            int currentUserId = sessionManager.getUserId();
+            userViewModel.getUserById(currentUserId);
         });
 
         btnLoadAllUsers.setOnClickListener(v -> {
@@ -160,4 +195,58 @@ public class MainActivity extends AppCompatActivity {
                 getResources().getColor(android.R.color.holo_green_dark) :
                 getResources().getColor(android.R.color.holo_red_dark));
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        // Ẩn menu admin nếu không phải admin
+        MenuItem adminItem = menu.findItem(R.id.action_admin);
+        if (adminItem != null) {
+            adminItem.setVisible(sessionManager.isAdmin());
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_admin) {
+            if (sessionManager.isAdmin()) {
+                startActivity(new Intent(this, AdminMainActivity.class));
+            }
+            return true;
+        } else if (id == R.id.action_logout) {
+            logout();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void logout() {
+        sessionManager.logout();
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    protected int getCurrentPageIndex() {
+        return 0; // Home page
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Kiểm tra lại authentication và status khi quay lại activity
+        if (!AuthInterceptor.checkAuthentication(this)) {
+            return;
+        }
+        AuthInterceptor.checkAccountStatus(this);
+    }
 }
+

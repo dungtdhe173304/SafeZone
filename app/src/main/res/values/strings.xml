@@ -14,4 +14,17 @@
     <string name="auction_icon">Biểu tượng đấu giá</string>
     <string name="wallet_icon">Biểu tượng ví tiền</string>
     <string name="profile_icon">Biểu tượng hồ sơ</string>
+
+    <!-- Authentication -->
+    <string name="login">Đăng nhập</string>
+    <string name="register">Đăng ký</string>
+    <string name="logout">Đăng xuất</string>
+    <string name="forgot_password">Quên mật khẩu</string>
+
+    <!-- Common -->
+    <string name="loading">Đang tải...</string>
+    <string name="error">Lỗi</string>
+    <string name="success">Thành công</string>
+    <string name="cancel">Hủy</string>
+    <string name="ok">OK</string>
 </resources>

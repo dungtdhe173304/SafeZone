@@ -1,6 +1,7 @@
 package com.group5.safezone.config;
 
 import com.group5.safezone.model.entity.User;
+import com.group5.safezone.config.PasswordUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,7 +35,7 @@ public class DatabaseInitializer {
         // Admin user
         User admin = new User();
         admin.setUserName("admin");
-        admin.setPassword("admin123");
+        admin.setPassword(PasswordUtils.hashPassword("admin123")); // Hash password
         admin.setEmail("admin@safezone.com");
         admin.setPhone("0901234567");
         admin.setGender(true);
@@ -48,13 +49,13 @@ public class DatabaseInitializer {
         // Test user
         User testUser = new User();
         testUser.setUserName("testuser");
-        testUser.setPassword("test123");
+        testUser.setPassword(PasswordUtils.hashPassword("test123")); // Hash password
         testUser.setEmail("test@example.com");
         testUser.setPhone("0945678901");
         testUser.setGender(true);
         testUser.setDob(new Date(100, 8, 5)); // 2000-09-05
         testUser.setRole("USER");
-        testUser.setStatus("PENDING");
+        testUser.setStatus("ACTIVE"); // Đổi thành ACTIVE để có thể login
         testUser.setBalance(50000.0);
         testUser.setIsVerify(false);
         users.add(testUser);

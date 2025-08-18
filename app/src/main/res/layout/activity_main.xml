@@ -7,11 +7,23 @@
     android:layout_height="match_parent"
     tools:context=".view.MainActivity">
 
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/primary_color"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <ScrollView
         android:id="@+id/scroll_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/footer_container">
@@ -22,15 +34,16 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Header -->
+            <!-- Welcome Message -->
             <TextView
+                android:id="@+id/tvWelcome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Welcome to SafeZone"
-                android:textSize="24sp"
+                android:text="Chào mừng đến với SafeZone"
+                android:textSize="20sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:textColor="@android:color/holo_blue_dark"
+                android:textColor="@color/primary_color"
                 android:layout_marginBottom="24dp" />
 
             <!-- Progress Bar -->
@@ -73,7 +86,7 @@
                         android:text="Thông tin người dùng"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@android:color/holo_blue_dark"
+                        android:textColor="@color/primary_color"
                         android:layout_marginBottom="12dp" />
 
                     <!-- User Name -->
@@ -96,7 +109,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="-"
-                            android:textColor="@android:color/black" />
+                            android:textColor="@color/text_primary" />
                     </LinearLayout>
 
                     <!-- Email -->
@@ -119,7 +132,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="-"
-                            android:textColor="@android:color/black" />
+                            android:textColor="@color/text_primary" />
                     </LinearLayout>
 
                     <!-- Phone -->
@@ -142,7 +155,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="-"
-                            android:textColor="@android:color/black" />
+                            android:textColor="@color/text_primary" />
                     </LinearLayout>
 
                     <!-- Role -->
@@ -211,7 +224,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="-"
-                            android:textColor="@android:color/black" />
+                            android:textColor="@color/text_primary" />
                     </LinearLayout>
 
                     <!-- Verify Status -->
@@ -233,7 +246,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="-"
-                            android:textColor="@android:color/black" />
+                            android:textColor="@color/text_primary" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -260,7 +273,7 @@
                         android:text="Danh sách người dùng"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@android:color/holo_blue_dark"
+                        android:textColor="@color/primary_color"
                         android:layout_marginBottom="12dp" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -286,8 +299,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_marginEnd="8dp"
-                    android:text="Load User"
-                    android:backgroundTint="@android:color/holo_blue_dark" />
+                    android:text="Load My Info"
+                    android:backgroundTint="@color/primary_color" />
 
                 <Button
                     android:id="@+id/btnLoadAllUsers"
