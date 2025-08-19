@@ -16,6 +16,7 @@
     <color name="primary_color">#2196F3</color>
     <color name="primary_dark">#1976D2</color>
     <color name="accent_color">#FF4081</color>
+    <color name="secondary_color">#FF9800</color>
 
     <!-- SafeZone Theme Colors -->
     <color name="safezone_blue">#1E88E5</color>
@@ -23,6 +24,16 @@
     <color name="safezone_orange">#FF9800</color>
     <color name="safezone_red">#F44336</color>
     <color name="safezone_gray">#9E9E9E</color>
+
+    <!-- Wallet Colors -->
+    <color name="success_color">#4CAF50</color>
+    <color name="error_color">#F44336</color>
+    <color name="warning_color">#FF9800</color>
+    <color name="info_color">#2196F3</color>
+    <color name="gray">#757575</color>
+    <color name="light_gray">#BDBDBD</color>
+    <color name="chip_background">#F5F5F5</color>
+    <color name="info_background">#E3F2FD</color>
 
 
     <color name="background_color">#F5F5F5</color>

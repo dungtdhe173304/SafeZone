@@ -6,4 +6,6 @@
     </style>
 
     <style name="Theme.SafeZone" parent="Base.Theme.SafeZone" />
+    
+    <style name="Theme.SafeZone.NoActionBar" parent="Base.Theme.SafeZone" />
 </resources>

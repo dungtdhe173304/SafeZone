@@ -90,4 +90,10 @@ public class UserRepository {
     public List<User> getUsersByRole(String role) {
         return userDao.getUsersByRole(role);
     }
+
+    public void shutdown() {
+        if (executor != null) {
+            executor.shutdown();
+        }
+    }
 }

@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -16,7 +20,7 @@
 
         <activity
             android:name=".view.auth.LoginActivity"
-            android:exported="true">
+            android:exported="true"
             android:theme="@style/Theme.SafeZone.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,6 +29,7 @@
             </intent-filter>
         </activity>
 
+        <!-- Needed for showing notifications on Android 13+ (optional if targeting 33+) -->
         <!-- Main Activity -->
         <activity
             android:name=".view.MainActivity"
@@ -33,6 +38,24 @@
         <!-- Admin Main Activity -->
         <activity
             android:name=".view.admin.AdminMainActivity"
+            android:exported="false" />
+
+        <!-- Wallet Activity -->
+        <activity
+            android:name=".view.Wallet.WalletActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="safezone" />
+            </intent-filter>
+        </activity>
+
+        <!-- Notifications Activity -->
+        <activity
+            android:name=".view.notification.NotificationsActivity"
             android:exported="false" />
 
     </application>

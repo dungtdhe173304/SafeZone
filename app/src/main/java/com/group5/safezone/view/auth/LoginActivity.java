@@ -19,6 +19,7 @@ import com.group5.safezone.config.SessionManager;
 import com.group5.safezone.view.MainActivity;
 import com.group5.safezone.view.admin.AdminMainActivity;
 import com.group5.safezone.viewmodel.AuthViewModel;
+import com.group5.safezone.config.NotificationPermissionUtil;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -91,6 +92,8 @@ public class LoginActivity extends AppCompatActivity {
             String userRole = sessionManager.getUserRole();
             navigateToMainScreen(userRole);
         }
+        // Nhắc người dùng cấp quyền thông báo nếu bị tắt
+        NotificationPermissionUtil.promptIfNeeded(this, 7000);
     }
 
     private void performLogin() {

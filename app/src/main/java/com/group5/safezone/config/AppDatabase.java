@@ -7,6 +7,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.group5.safezone.model.dao.UserDao;
@@ -51,7 +52,7 @@ import com.group5.safezone.model.entity.Transactions;
         AuctionRegistrations.class,
         Bids.class,
         Transactions.class
-}, version = 1, exportSchema = false)
+}, version = 3, exportSchema = false)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -72,6 +73,57 @@ public abstract class AppDatabase extends RoomDatabase {
 
     private static volatile AppDatabase INSTANCE;
 
+    // Migration từ version 1 lên 2
+    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            // Thêm các cột mới vào bảng Transactions
+            database.execSQL("ALTER TABLE Transactions ADD COLUMN referenceId TEXT");
+            database.execSQL("ALTER TABLE Transactions ADD COLUMN createdAt INTEGER");
+            database.execSQL("ALTER TABLE Transactions ADD COLUMN updatedAt INTEGER");
+            
+            // Rename cột UserId thành userId để match với entity
+            try {
+                database.execSQL("ALTER TABLE Transactions RENAME COLUMN UserId TO userId");
+            } catch (Exception e) {
+                // Cột đã được rename hoặc không tồn tại
+            }
+        }
+    };
+
+    // Migration từ version 2 lên 3 - Fix schema integrity
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            // Đảm bảo schema consistency
+            try {
+                // Kiểm tra và tạo lại bảng Transactions nếu cần
+                database.execSQL("DROP TABLE IF EXISTS Transactions");
+                database.execSQL("CREATE TABLE Transactions (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "userId INTEGER NOT NULL, " +
+                        "transactionType TEXT, " +
+                        "amount REAL, " +
+                        "transactionDate INTEGER, " +
+                        "description TEXT, " +
+                        "relatedUserId INTEGER, " +
+                        "status TEXT, " +
+                        "orderId INTEGER, " +
+                        "auctionId INTEGER, " +
+                        "referenceId TEXT, " +
+                        "createdAt INTEGER, " +
+                        "updatedAt INTEGER, " +
+                        "FOREIGN KEY(userId) REFERENCES user(id) ON DELETE CASCADE, " +
+                        "FOREIGN KEY(relatedUserId) REFERENCES user(id) ON DELETE SET NULL, " +
+                        "FOREIGN KEY(orderId) REFERENCES `order`(id) ON DELETE SET NULL, " +
+                        "FOREIGN KEY(auctionId) REFERENCES auctions(id) ON DELETE SET NULL" +
+                        ")");
+            } catch (Exception e) {
+                // Log error nếu cần
+            }
+        }
+    };
+
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
@@ -79,11 +131,23 @@ public abstract class AppDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "safezone_database")
                             .addCallback(sRoomDatabaseCallback)
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                            .fallbackToDestructiveMigration() // Xóa database cũ nếu migration thất bại
                             .build();
                 }
             }
         }
         return INSTANCE;
+    }
+
+    // Method để clear database khi cần thiết
+    public static void clearDatabase(Context context) {
+        if (INSTANCE != null) {
+            INSTANCE.close();
+            INSTANCE = null;
+        }
+        // Xóa file database
+        context.deleteDatabase("safezone_database");
     }
 
     private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {

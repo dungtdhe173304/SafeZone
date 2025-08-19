@@ -36,6 +36,7 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.room.common.jvm
     implementation libs.room.runtime
+    implementation fileTree(dir: 'C:\\Users\\truon\\Downloads\\ZaloPayLib', include: ['*.aar', '*.jar'], exclude: [])
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
@@ -56,4 +57,9 @@ dependencies {
     testImplementation "androidx.room:room-testing:2.5.0"
 
     implementation "androidx.room:room-paging:2.5.0"
+
+
+    /// zalo pay
+    implementation("com.squareup.okhttp3:okhttp:4.6.0")
+    implementation("commons-codec:commons-codec:1.14")
 }

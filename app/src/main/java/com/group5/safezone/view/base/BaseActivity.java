@@ -15,7 +15,7 @@ import com.group5.safezone.view.MainActivity;
 //import com.group5.safezone.view.HomeActivity;
 //import com.group5.safezone.view.ProductsActivity;
 //import com.group5.safezone.view.ProfileActivity;
-//import com.group5.safezone.view.WalletActivity;
+import com.group5.safezone.view.Wallet.WalletActivity;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -78,7 +78,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 //intent = new Intent(this, AuctionActivity.class);
                 break;
             case 3:
-                //intent = new Intent(this, WalletActivity.class);
+                intent = new Intent(this, WalletActivity.class);
                 break;
             case 4:
                // intent = new Intent(this, ProfileActivity.class);
@@ -87,9 +87,20 @@ public abstract class BaseActivity extends AppCompatActivity {
                 return;
         }
 
-        startActivity(intent);
-        overridePendingTransition(0, 0); // Không có animation
-        finish();
+        if (intent != null) {
+            try {
+                startActivity(intent);
+                overridePendingTransition(0, 0); // Không có animation
+                // Chỉ finish() khi chuyển về MainActivity
+                if (pageIndex == 0) {
+                    finish();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Log lỗi để debug
+                android.util.Log.e("BaseActivity", "Error navigating to page " + pageIndex, e);
+            }
+        }
     }
 
     private void updateFooterSelection() {

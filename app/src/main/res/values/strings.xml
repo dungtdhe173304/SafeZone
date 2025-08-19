@@ -21,10 +21,41 @@
     <string name="logout">Đăng xuất</string>
     <string name="forgot_password">Quên mật khẩu</string>
 
+    <!-- Wallet -->
+    <string name="wallet_title">Ví tiền</string>
+    <string name="current_balance">Số dư hiện tại</string>
+    <string name="deposit">Nạp tiền</string>
+    <string name="withdraw">Rút tiền</string>
+    <string name="transaction_history">Lịch sử giao dịch</string>
+    <string name="view_all">Xem tất cả</string>
+    <string name="deposit_amount">Số tiền muốn nạp</string>
+    <string name="enter_amount">Nhập số tiền (VNĐ)</string>
+    <string name="quick_select">Chọn nhanh</string>
+    <string name="payment_info">Thanh toán sẽ được thực hiện qua ZaloPay</string>
+    <string name="confirm">Xác nhận</string>
+    <string name="empty_transactions">Chưa có giao dịch nào</string>
+    <string name="start_first_transaction">Bắt đầu giao dịch đầu tiên của bạn</string>
+    <string name="please_enter_amount">Vui lòng nhập số tiền</string>
+    <string name="amount_must_be_positive">Số tiền phải lớn hơn 0</string>
+    <string name="invalid_amount">Số tiền không hợp lệ</string>
+    <string name="deposit_success">Nạp tiền thành công!</string>
+    <string name="deposit_cancelled">Hủy nạp tiền</string>
+    <string name="deposit_error">Lỗi nạp tiền</string>
+    <string name="order_creation_error">Lỗi tạo đơn hàng</string>
+    <string name="withdraw_development">Tính năng rút tiền đang phát triển</string>
+
     <!-- Common -->
     <string name="loading">Đang tải...</string>
     <string name="error">Lỗi</string>
     <string name="success">Thành công</string>
     <string name="cancel">Hủy</string>
     <string name="ok">OK</string>
+
+    <!-- Navigation Drawer -->
+    <string name="nav_open">Mở menu</string>
+    <string name="nav_close">Đóng menu</string>
+    <string name="notifications">Thông báo</string>
+    <string name="notif_permission_title">Cho phép hiển thị thông báo?</string>
+    <string name="notif_permission_msg">SafeZone cần quyền gửi thông báo để báo cho bạn khi nạp tiền thành công và các cập nhật quan trọng.</string>
+    <string name="allow">Cho phép</string>
 </resources>
