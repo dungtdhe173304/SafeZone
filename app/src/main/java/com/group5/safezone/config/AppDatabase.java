@@ -97,7 +97,8 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
             super.onOpen(db);
-            // Database đã được mở
+            // Đảm bảo có dữ liệu mẫu khi mở lại app
+            DatabaseInitializer.ensureSeedDataAsync(INSTANCE);
         }
     };
 }

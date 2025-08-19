@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,7 +23,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.group5.safezone.R;
-import com.group5.safezone.adapter.UserAdapter;
+// import com.group5.safezone.adapter.UserAdapter;
+import com.group5.safezone.adapter.AuctionItemAdapter;
 import com.group5.safezone.model.entity.User;
 import com.group5.safezone.config.AuthInterceptor;
 import com.group5.safezone.config.SessionManager;
@@ -30,6 +32,7 @@ import com.group5.safezone.view.admin.AdminMainActivity;
 import com.group5.safezone.view.auth.LoginActivity;
 import com.group5.safezone.view.base.BaseActivity;
 import com.group5.safezone.viewmodel.UserViewModel;
+import com.group5.safezone.viewmodel.AuctionViewModel;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -37,16 +40,17 @@ import java.util.Locale;
 public class MainActivity extends BaseActivity {
 
     private UserViewModel userViewModel;
-    private UserAdapter userAdapter;
+    private AuctionViewModel auctionViewModel;
+    private AuctionItemAdapter auctionAdapter;
     private SessionManager sessionManager;
 
     // UI Components
     private ProgressBar progressBar;
-    private TextView tvError, tvWelcome;
-    private CardView cardUserInfo;
-    private TextView tvUserName, tvEmail, tvPhone, tvRole, tvBalance, tvStatus, tvVerify;
-    private RecyclerView recyclerViewUsers;
-    private Button btnLoadUser, btnLoadAllUsers;
+    private TextView tvError, tvWelcome, tvHelloUser, tvBalancePill;
+    private ImageView ivAvatar;
+    private RecyclerView recyclerViewAuctions;
+    private TextView etSearch; // using TextView for simplicity (EditText id)
+    private Button btnSearch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,29 +78,29 @@ public class MainActivity extends BaseActivity {
         setupRecyclerView();
         setupClickListeners();
         observeViewModel();
+        observeAuctionViewModel();
         setupFooter();
 
         displayWelcomeMessage();
 
         // Load dữ liệu ban đầu
-        userViewModel.loadAllUsers();
+        int uid = sessionManager.getUserId();
+        if (uid > 0) {
+            userViewModel.getUserById(uid);
+        }
+        auctionViewModel.loadAuctions(uid);
     }
 
     private void initViews() {
         progressBar = findViewById(R.id.progressBar);
         tvError = findViewById(R.id.tvError);
-        tvWelcome = findViewById(R.id.tvWelcome);
-        cardUserInfo = findViewById(R.id.cardUserInfo);
-        tvUserName = findViewById(R.id.tvUserName);
-        tvEmail = findViewById(R.id.tvEmail);
-        tvPhone = findViewById(R.id.tvPhone);
-        tvRole = findViewById(R.id.tvRole);
-        tvBalance = findViewById(R.id.tvBalance);
-        tvStatus = findViewById(R.id.tvStatus);
-        tvVerify = findViewById(R.id.tvVerify);
-        recyclerViewUsers = findViewById(R.id.recyclerViewUsers);
-        btnLoadUser = findViewById(R.id.btnLoadUser);
-        btnLoadAllUsers = findViewById(R.id.btnLoadAllUsers);
+        tvWelcome = null; // header common
+        tvHelloUser = findViewById(R.id.tvHelloUser);
+        tvBalancePill = findViewById(R.id.tvBalancePill);
+        ivAvatar = findViewById(R.id.ivAvatar);
+        recyclerViewAuctions = findViewById(R.id.recyclerViewAuctions);
+        etSearch = findViewById(R.id.etSearch);
+        btnSearch = findViewById(R.id.btnSearch);
     }
 
     private void setupToolbar() {
@@ -108,33 +112,47 @@ public class MainActivity extends BaseActivity {
     private void displayWelcomeMessage() {
         String userName = sessionManager.getUserName();
         String role = sessionManager.getUserRole();
-        tvWelcome.setText("Chào mừng, " + userName + " (" + role + ")!");
+        tvHelloUser.setText("Chào mừng, " + (userName != null ? userName : "Khách") + "!");
+        java.text.NumberFormat formatter = java.text.NumberFormat.getCurrencyInstance(new java.util.Locale("vi","VN"));
+        String balanceText = formatter.format(sessionManager.getBalance());
+        tvBalancePill.setText(balanceText);
+        ivAvatar.setImageResource(R.drawable.ic_person);
     }
 
     private void setupViewModel() {
         userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        auctionViewModel = new ViewModelProvider(this).get(AuctionViewModel.class);
     }
 
     private void setupRecyclerView() {
-        userAdapter = new UserAdapter();
-        recyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewUsers.setAdapter(userAdapter);
+        auctionAdapter = new AuctionItemAdapter(this);
+        recyclerViewAuctions.setLayoutManager(new LinearLayoutManager(this));
+        recyclerViewAuctions.setAdapter(auctionAdapter);
 
-        userAdapter.setOnUserClickListener(user -> {
-            displayUserInfo(user);
-            Toast.makeText(this, "Selected: " + user.getUserName(), Toast.LENGTH_SHORT).show();
+        auctionAdapter.setActionListener(new AuctionItemAdapter.OnAuctionActionListener() {
+            @Override
+            public void onRegisterClick(com.group5.safezone.model.ui.AuctionItemUiModel item) {
+                if (sessionManager.getUserId() <= 0) {
+                    Toast.makeText(MainActivity.this, "Vui lòng đăng nhập", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                android.content.Intent intent = new android.content.Intent(MainActivity.this, RegisterAuctionActivity.class);
+                intent.putExtra(RegisterAuctionActivity.EXTRA_AUCTION_ID, item.getAuction().getId());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onEnterRoomClick(com.group5.safezone.model.ui.AuctionItemUiModel item) {
+                Toast.makeText(MainActivity.this, "Vào phòng đấu giá (đang phát triển)", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
     private void setupClickListeners() {
-        btnLoadUser.setOnClickListener(v -> {
-            // Load current user
-            int currentUserId = sessionManager.getUserId();
-            userViewModel.getUserById(currentUserId);
-        });
-
-        btnLoadAllUsers.setOnClickListener(v -> {
-            userViewModel.loadAllUsers();
+        btnSearch.setOnClickListener(v -> {
+            int uid = sessionManager.getUserId();
+            String keyword = etSearch.getText() != null ? etSearch.getText().toString() : "";
+            auctionViewModel.searchAuctions(uid, keyword);
         });
     }
 
@@ -155,46 +173,41 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        // Observe current user
+        // Observe current user (cập nhật số dư pill)
         userViewModel.getCurrentUser().observe(this, user -> {
             if (user != null) {
-                displayUserInfo(user);
+                java.text.NumberFormat formatter = java.text.NumberFormat.getCurrencyInstance(new java.util.Locale("vi","VN"));
+                String balanceText = formatter.format(user.getBalance() != null ? user.getBalance() : 0);
+                tvBalancePill.setText(balanceText);
+                tvHelloUser.setText("Chào mừng, " + (user.getUserName() != null ? user.getUserName() : "Khách") + "!");
             }
         });
 
-        // Observe all users
-        userViewModel.getAllUsers().observe(this, users -> {
-            if (users != null && !users.isEmpty()) {
-                userAdapter.setUsers(users);
-                // Hiển thị user đầu tiên
-                displayUserInfo(users.get(0));
+        // No users list on home
+    }
+
+    private void observeAuctionViewModel() {
+        auctionViewModel.getIsLoading().observe(this, isLoading -> {
+            progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        });
+
+        auctionViewModel.getItems().observe(this, items -> {
+            if (items != null) {
+                auctionAdapter.submitList(items);
+            }
+        });
+
+        auctionViewModel.getErrorMessage().observe(this, msg -> {
+            if (msg != null && !msg.isEmpty()) {
+                tvError.setText(msg);
+                tvError.setVisibility(View.VISIBLE);
+            } else {
+                tvError.setVisibility(View.GONE);
             }
         });
     }
 
-    private void displayUserInfo(User user) {
-        cardUserInfo.setVisibility(View.VISIBLE);
-
-        tvUserName.setText(user.getUserName() != null ? user.getUserName() : "N/A");
-        tvEmail.setText(user.getEmail() != null ? user.getEmail() : "N/A");
-        tvPhone.setText(user.getPhone() != null ? user.getPhone() : "N/A");
-        tvRole.setText(user.getRole() != null ? user.getRole() : "N/A");
-        tvStatus.setText(user.getStatus() != null ? user.getStatus() : "N/A");
-
-        // Format balance
-        if (user.getBalance() != null) {
-            NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-            tvBalance.setText(formatter.format(user.getBalance()));
-        } else {
-            tvBalance.setText("0 VNĐ");
-        }
-
-        // Verify status
-        tvVerify.setText(user.getIsVerify() != null && user.getIsVerify() ? "Đã xác thực" : "Chưa xác thực");
-        tvVerify.setTextColor(user.getIsVerify() != null && user.getIsVerify() ?
-                getResources().getColor(android.R.color.holo_green_dark) :
-                getResources().getColor(android.R.color.holo_red_dark));
-    }
+    // Bỏ hiển thị thông tin chi tiết người dùng
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

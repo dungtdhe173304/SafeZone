@@ -48,7 +48,7 @@ public class UserDataManager {
                 true,
                 new Date(100, 8, 5),
                 "USER",
-                "PENDING",
+                "ACTIVE",
                 50000.0,
                 false
         );

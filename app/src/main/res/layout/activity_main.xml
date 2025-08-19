@@ -34,17 +34,40 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Welcome Message -->
-            <TextView
-                android:id="@+id/tvWelcome"
+            <!-- Gradient Header -->
+            <include
+                layout="@layout/common_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Chào mừng đến với SafeZone"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:textColor="@color/primary_color"
-                android:layout_marginBottom="24dp" />
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Search -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:layout_marginBottom="12dp">
+
+                <EditText
+                    android:id="@+id/etSearch"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:hint="Tìm theo tên vật phẩm"
+                    android:background="@android:drawable/edit_text"
+                    android:paddingLeft="12dp"
+                    android:singleLine="true"/>
+
+                <Button
+                    android:id="@+id/btnSearch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Tìm"
+                    android:layout_marginStart="8dp"
+                    android:backgroundTint="@color/primary_color"/>
+            </LinearLayout>
 
             <!-- Progress Bar -->
             <ProgressBar
@@ -64,196 +87,9 @@
                 android:visibility="gone"
                 android:layout_marginBottom="16dp" />
 
-            <!-- User Info Card -->
-            <androidx.cardview.widget.CardView
-                android:id="@+id/cardUserInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="8dp"
-                app:cardElevation="4dp"
-                android:visibility="gone">
+            <!-- Bỏ phần thông tin người dùng chi tiết -->
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Thông tin người dùng"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/primary_color"
-                        android:layout_marginBottom="12dp" />
-
-                    <!-- User Name -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Tên đăng nhập:"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvUserName"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="-"
-                            android:textColor="@color/text_primary" />
-                    </LinearLayout>
-
-                    <!-- Email -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Email:"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvEmail"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="-"
-                            android:textColor="@color/text_primary" />
-                    </LinearLayout>
-
-                    <!-- Phone -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Số điện thoại:"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvPhone"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="-"
-                            android:textColor="@color/text_primary" />
-                    </LinearLayout>
-
-                    <!-- Role -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Vai trò:"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvRole"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="-"
-                            android:textColor="@android:color/holo_orange_dark" />
-                    </LinearLayout>
-
-                    <!-- Balance -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Số dư:"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvBalance"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="-"
-                            android:textColor="@android:color/holo_green_dark" />
-                    </LinearLayout>
-
-                    <!-- Status -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Trạng thái:"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvStatus"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="-"
-                            android:textColor="@color/text_primary" />
-                    </LinearLayout>
-
-                    <!-- Verify Status -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Xác thực:"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvVerify"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="-"
-                            android:textColor="@color/text_primary" />
-                    </LinearLayout>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- All Users List -->
+            <!-- Auction List -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -270,14 +106,14 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Danh sách người dùng"
+                        android:text="LIVE AUCTION"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:textColor="@color/primary_color"
                         android:layout_marginBottom="12dp" />
 
                     <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recyclerViewUsers"
+                        android:id="@+id/recyclerViewAuctions"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false" />
@@ -285,33 +121,6 @@
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
-
-            <!-- Action Buttons -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-
-                <Button
-                    android:id="@+id/btnLoadUser"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:text="Load My Info"
-                    android:backgroundTint="@color/primary_color" />
-
-                <Button
-                    android:id="@+id/btnLoadAllUsers"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:text="Load All Users"
-                    android:backgroundTint="@android:color/holo_green_dark" />
-
-            </LinearLayout>
 
         </LinearLayout>
 
