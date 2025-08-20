@@ -24,6 +24,10 @@
     <color name="safezone_red">#F44336</color>
     <color name="safezone_gray">#9E9E9E</color>
 
+    <!-- Additional Colors for Auction Room -->
+    <color name="blue">#2196F3</color>
+    <color name="green">#4CAF50</color>
+    <color name="red">#F44336</color>
 
     <color name="background_color">#F5F5F5</color>
     <color name="text_primary">#212121</color>

@@ -30,16 +30,29 @@
             android:name=".view.MainActivity"
             android:exported="false" />
 
-        <!-- Register Auction Activity -->
-        <activity
-            android:name=".view.RegisterAuctionActivity"
-            android:exported="false"
-            android:theme="@style/Theme.SafeZone" />
 
         <!-- Admin Main Activity -->
         <activity
             android:name=".view.admin.AdminMainActivity"
             android:exported="false" />
+
+        <!-- Auction Registration Activity -->
+        <activity
+            android:name=".view.AuctionRegistrationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Auction Room Activity -->
+        <activity
+            android:name=".view.AuctionRoomActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Admin Auction Approval Activity -->
+        <activity
+            android:name=".view.AdminAuctionApprovalActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
 
     </application>
 

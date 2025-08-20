@@ -51,7 +51,7 @@ public class AuthViewModel extends AndroidViewModel {
     }
 
     public void login(String email, String password) {
-        isLoading.setValue(true);
+        isLoading.postValue(true);
         executor.execute(() -> {
             try {
                 User user = userRepository.getUserByEmail(email);
@@ -94,7 +94,7 @@ public class AuthViewModel extends AndroidViewModel {
     }
 
     public void register(String userName, String email, String password, String phone) {
-        isLoading.setValue(true);
+        isLoading.postValue(true);
         executor.execute(() -> {
             try {
                 // Kiểm tra email đã tồn tại

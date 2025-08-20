@@ -73,6 +73,7 @@ public class AuctionItemAdapter extends RecyclerView.Adapter<AuctionItemAdapter.
         private final TextView tvEndTime;
         private final TextView tvStatus;
         private final TextView tvParticipants;
+        private final TextView tvSeller;
         private final Button btnAction;
 
         AuctionViewHolder(@NonNull View itemView) {
@@ -85,6 +86,7 @@ public class AuctionItemAdapter extends RecyclerView.Adapter<AuctionItemAdapter.
             tvEndTime = itemView.findViewById(R.id.tvEndTime);
             tvStatus = itemView.findViewById(R.id.tvStatus);
             tvParticipants = itemView.findViewById(R.id.tvParticipants);
+            tvSeller = itemView.findViewById(R.id.tvSeller);
             btnAction = itemView.findViewById(R.id.btnAction);
         }
 
@@ -124,16 +126,35 @@ public class AuctionItemAdapter extends RecyclerView.Adapter<AuctionItemAdapter.
 
             tvStatus.setText(item.isRegistered() ? "Đã đăng ký" : "Chưa đăng ký");
             tvParticipants.setText("Người tham gia: " + item.getParticipantCount());
+            if (tvSeller != null) {
+                tvSeller.setText("Người bán: " + (item.getSellerUserName() != null ? item.getSellerUserName() : "--"));
+            }
 
             if (item.isRegistered()) {
                 btnAction.setText("Vào phòng đấu giá");
                 btnAction.setOnClickListener(v -> {
-                    if (actionListener != null) actionListener.onEnterRoomClick(item);
+                    try {
+                        if (actionListener != null) {
+                            actionListener.onEnterRoomClick(item);
+                        } else {
+                            android.util.Log.e("AuctionItemAdapter", "actionListener is null");
+                        }
+                    } catch (Exception e) {
+                        android.util.Log.e("AuctionItemAdapter", "Error in onEnterRoomClick: " + e.getMessage());
+                    }
                 });
             } else {
                 btnAction.setText("Đăng ký tham gia");
                 btnAction.setOnClickListener(v -> {
-                    if (actionListener != null) actionListener.onRegisterClick(item);
+                    try {
+                        if (actionListener != null) {
+                            actionListener.onRegisterClick(item);
+                        } else {
+                            android.util.Log.e("AuctionItemAdapter", "actionListener is null");
+                        }
+                    } catch (Exception e) {
+                        android.util.Log.e("AuctionItemAdapter", "Error in onRegisterClick: " + e.getMessage());
+                    }
                 });
             }
         }

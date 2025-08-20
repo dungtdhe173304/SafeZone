@@ -49,7 +49,7 @@ public class UserViewModel extends AndroidViewModel {
     }
 
     public void loadAllUsers() {
-        isLoading.setValue(true);
+        isLoading.postValue(true);
         executor.execute(() -> {
             try {
                 List<User> users = repository.getAllUsers();
@@ -63,7 +63,7 @@ public class UserViewModel extends AndroidViewModel {
     }
 
     public void getUserById(int userId) {
-        isLoading.setValue(true);
+        isLoading.postValue(true);
         executor.execute(() -> {
             try {
                 User user = repository.getUserById(userId);
@@ -77,7 +77,7 @@ public class UserViewModel extends AndroidViewModel {
     }
 
     public void getUserByEmail(String email) {
-        isLoading.setValue(true);
+        isLoading.postValue(true);
         executor.execute(() -> {
             try {
                 User user = repository.getUserByEmail(email);
@@ -91,7 +91,7 @@ public class UserViewModel extends AndroidViewModel {
     }
 
     public void getUserByUserName(String userName) {
-        isLoading.setValue(true);
+        isLoading.postValue(true);
         executor.execute(() -> {
             try {
                 User user = repository.getUserByUserName(userName);
@@ -160,7 +160,7 @@ public class UserViewModel extends AndroidViewModel {
     }
 
     public void getUsersByRole(String role) {
-        isLoading.setValue(true);
+        isLoading.postValue(true);
         executor.execute(() -> {
             try {
                 List<User> users = repository.getUsersByRole(role);

@@ -14,19 +14,28 @@ public class AuctionItemUiModel {
     private final boolean isRegistered;
     private final AuctionRegistrations registration;
     private final int participantCount;
+    private final String sellerUserName;
+    private final String sellerEmail;
+    private final String sellerPhone;
 
     public AuctionItemUiModel(Product product,
                               Auctions auction,
                               List<ProductImages> images,
                               boolean isRegistered,
                               AuctionRegistrations registration,
-                              int participantCount) {
+                              int participantCount,
+                              String sellerUserName,
+                              String sellerEmail,
+                              String sellerPhone) {
         this.product = product;
         this.auction = auction;
         this.images = images;
         this.isRegistered = isRegistered;
         this.registration = registration;
         this.participantCount = participantCount;
+        this.sellerUserName = sellerUserName;
+        this.sellerEmail = sellerEmail;
+        this.sellerPhone = sellerPhone;
     }
 
     public Product getProduct() {
@@ -51,6 +60,18 @@ public class AuctionItemUiModel {
 
     public int getParticipantCount() {
         return participantCount;
+    }
+
+    public String getSellerUserName() {
+        return sellerUserName;
+    }
+
+    public String getSellerEmail() {
+        return sellerEmail;
+    }
+
+    public String getSellerPhone() {
+        return sellerPhone;
     }
 }
 

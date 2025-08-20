@@ -88,9 +88,23 @@ public class DatabaseInitializer {
         testUser.setDob(new Date(100, 8, 5)); // 2000-09-05
         testUser.setRole("USER");
         testUser.setStatus("ACTIVE"); // Đổi thành ACTIVE để có thể login
-        testUser.setBalance(50000.0);
+        testUser.setBalance(800000.0);
         testUser.setIsVerify(false);
         users.add(testUser);
+
+        // Test user
+        User testUser1 = new User();
+        testUser1.setUserName("testuser1");
+        testUser1.setPassword(PasswordUtils.hashPassword("test123")); // Hash password
+        testUser1.setEmail("test1@example.com");
+        testUser1.setPhone("0945678902");
+        testUser1.setGender(true);
+        testUser1.setDob(new Date(100, 8, 5)); // 2000-09-05
+        testUser1.setRole("USER");
+        testUser1.setStatus("ACTIVE"); // Đổi thành ACTIVE để có thể login
+        testUser1.setBalance(800000.0);
+        testUser1.setIsVerify(false);
+        users.add(testUser1);
 
         return users;
     }
@@ -114,7 +128,7 @@ public class DatabaseInitializer {
         a1.setProductId("P001");
         a1.setSellerUserId(1);
         a1.setStartPrice(300000.0);
-        a1.setBuyNowPrice(900000.0);
+        a1.setBuyNowPrice(9000000.0);
         a1.setStartTime(new java.util.Date(System.currentTimeMillis() - 3600_000));
         a1.setEndTime(new java.util.Date(System.currentTimeMillis() + 24 * 3600_000));
         a1.setStatus("active");
@@ -138,7 +152,7 @@ public class DatabaseInitializer {
         a2.setProductId("P002");
         a2.setSellerUserId(1);
         a2.setStartPrice(800000.0);
-        a2.setBuyNowPrice(800000.0);
+        a2.setBuyNowPrice(8000000.0);
         a2.setStartTime(new java.util.Date(System.currentTimeMillis() - 7200_000));
         a2.setEndTime(new java.util.Date(System.currentTimeMillis() + 36 * 3600_000));
         a2.setStatus("active");
