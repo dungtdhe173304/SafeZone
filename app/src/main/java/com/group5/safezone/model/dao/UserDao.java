@@ -47,4 +47,7 @@ public interface UserDao {
 
     @Query("DELETE FROM user")
     void deleteAllUsers();
+    
+    @Query("SELECT * FROM user WHERE (userName LIKE :query OR email LIKE :query) AND IsDeleted = 0 ORDER BY userName ASC")
+    List<User> searchUsersByUsernameOrEmail(String query);
 }

@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -56,6 +57,16 @@
         <!-- Notifications Activity -->
         <activity
             android:name=".view.notification.NotificationsActivity"
+            android:exported="false" />
+
+        <!-- Chat Activity -->
+        <activity
+            android:name=".view.chat.ChatActivity"
+            android:exported="false" />
+
+        <!-- Chat Notification Service -->
+        <service
+            android:name=".service.ChatNotificationService"
             android:exported="false" />
 
     </application>

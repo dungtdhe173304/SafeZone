@@ -60,6 +60,20 @@ public class DatabaseInitializer {
         testUser.setIsVerify(false);
         users.add(testUser);
 
+        // Thêm user mới - có thể đăng nhập bằng cả username và email
+        User newUser = new User();
+        newUser.setUserName("johndoe");
+        newUser.setPassword(PasswordUtils.hashPassword("john123")); // Hash password
+        newUser.setEmail("john.doe@gmail.com");
+        newUser.setPhone("0987654321");
+        newUser.setGender(false); // false = nữ
+        newUser.setDob(new Date(95, 5, 15)); // 1995-06-15
+        newUser.setRole("USER");
+        newUser.setStatus("ACTIVE");
+        newUser.setBalance(75000.0);
+        newUser.setIsVerify(true);
+        users.add(newUser);
+
         return users;
     }
 }

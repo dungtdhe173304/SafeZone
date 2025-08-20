@@ -52,7 +52,7 @@ import com.group5.safezone.model.entity.Transactions;
         AuctionRegistrations.class,
         Bids.class,
         Transactions.class
-}, version = 3, exportSchema = false)
+}, version = 4, exportSchema = false)
 @TypeConverters({DateConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -124,6 +124,14 @@ public abstract class AppDatabase extends RoomDatabase {
         }
     };
 
+    // Migration từ version 3 lên 4 - Giữ nguyên ChatCommunity
+    static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(SupportSQLiteDatabase database) {
+            // Không thay đổi gì, chỉ giữ nguyên cấu trúc hiện tại
+        }
+    };
+
     public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
             synchronized (AppDatabase.class) {
@@ -131,7 +139,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, "safezone_database")
                             .addCallback(sRoomDatabaseCallback)
-                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
                             .fallbackToDestructiveMigration() // Xóa database cũ nếu migration thất bại
                             .build();
                 }
@@ -148,6 +156,12 @@ public abstract class AppDatabase extends RoomDatabase {
         }
         // Xóa file database
         context.deleteDatabase("safezone_database");
+    }
+
+    // Method để force reinitialize database với dữ liệu mới
+    public static void forceReinitialize(Context context) {
+        clearDatabase(context);
+        getDatabase(context); // Sẽ tạo database mới với dữ liệu mới
     }
 
     private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {

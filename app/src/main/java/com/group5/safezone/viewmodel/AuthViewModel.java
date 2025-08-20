@@ -50,16 +50,29 @@ public class AuthViewModel extends AndroidViewModel {
         return errorMessage;
     }
 
-    public void login(String email, String password) {
+    public void login(String emailOrUsername, String password) {
         isLoading.setValue(true);
         executor.execute(() -> {
             try {
-                User user = userRepository.getUserByEmail(email);
-
-                if (user == null) {
-                    errorMessage.postValue("Email không tồn tại trong hệ thống");
-                    isLoading.postValue(false);
-                    return;
+                User user = null;
+                
+                // Kiểm tra xem input là email hay username
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(emailOrUsername).matches()) {
+                    // Nếu là email format, tìm user bằng email
+                    user = userRepository.getUserByEmail(emailOrUsername);
+                    if (user == null) {
+                        errorMessage.postValue("Email không tồn tại trong hệ thống");
+                        isLoading.postValue(false);
+                        return;
+                    }
+                } else {
+                    // Nếu không phải email format, tìm user bằng username
+                    user = userRepository.getUserByUserName(emailOrUsername);
+                    if (user == null) {
+                        errorMessage.postValue("Tên đăng nhập không tồn tại trong hệ thống");
+                        isLoading.postValue(false);
+                        return;
+                    }
                 }
 
                 // Kiểm tra mật khẩu

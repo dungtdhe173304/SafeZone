@@ -35,15 +35,21 @@ import com.group5.safezone.config.SessionManager;
 import com.group5.safezone.config.NotificationPermissionUtil;
 import com.group5.safezone.config.NotificationEvents;
 import com.group5.safezone.view.Wallet.WalletActivity;
+import com.group5.safezone.config.AppDatabase;
+import android.os.Handler;
 import com.group5.safezone.view.admin.AdminMainActivity;
 import com.group5.safezone.view.auth.LoginActivity;
 import com.group5.safezone.view.base.BaseActivity;
 import com.group5.safezone.view.notification.NotificationsActivity;
 import com.group5.safezone.viewmodel.UserViewModel;
 import com.google.android.material.navigation.NavigationView;
+import com.group5.safezone.Constant.Chatbox.ConstantKey;
 
 import java.text.NumberFormat;
 import java.util.Locale;
+
+import com.zegocloud.zimkit.BuildConfig;
+import com.zegocloud.zimkit.services.ZIMKit;
 
 public class MainActivity extends BaseActivity {
 
@@ -84,12 +90,21 @@ public class MainActivity extends BaseActivity {
 
         sessionManager = new SessionManager(this);
 
+        // Initialize ZEGOCLOUD SDK
+        initZegoCloud();
+
         initViews();
         setupToolbar();
         setupDrawer();
         setupBackPressedDispatcher();
         // Hỏi quyền/thông báo nếu đang bị tắt ngay khi vào app
         NotificationPermissionUtil.promptIfNeeded(this, 7001);
+        
+        // DEV ONLY: Reset database để test user mới
+        if (BuildConfig.DEBUG) {
+            resetDatabaseForTesting();
+        }
+        
         setupViewModel();
         setupRecyclerView();
         setupClickListeners();
@@ -142,6 +157,8 @@ public class MainActivity extends BaseActivity {
                     // stay on home
                 } else if (id == R.id.nav_wallet) {
                     startActivity(new Intent(this, WalletActivity.class));
+                } else if (id == R.id.nav_chat) {
+                    startActivity(new Intent(this, com.group5.safezone.view.chat.ChatActivity.class));
                 } else if (id == R.id.nav_settings) {
                     Toast.makeText(this, "Cài đặt đang phát triển", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_about) {
@@ -383,6 +400,32 @@ public class MainActivity extends BaseActivity {
         if (notificationReceiver != null) {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(notificationReceiver);
             notificationReceiver = null;
+        }
+    }
+
+    private void initZegoCloud() {
+        ZIMKit.initWith(this.getApplication(), ConstantKey.appID, ConstantKey.appSign);
+        ZIMKit.initNotifications();
+    }
+
+    // DEV ONLY: Reset database để test
+    private void resetDatabaseForTesting() {
+        // Chỉ reset 1 lần khi app được cài đặt
+        if (!getSharedPreferences("dev_prefs", MODE_PRIVATE).getBoolean("db_reset", false)) {
+            Toast.makeText(this, "Đang reset database để test user mới...", Toast.LENGTH_LONG).show();
+            
+
+            
+            // Đánh dấu đã reset
+            getSharedPreferences("dev_prefs", MODE_PRIVATE).edit()
+                    .putBoolean("db_reset", true)
+                    .apply();
+            
+            // Reload data
+            new Handler().postDelayed(() -> {
+                userViewModel.loadAllUsers();
+                Toast.makeText(this, "Database đã được reset! Bây giờ có 3 users", Toast.LENGTH_LONG).show();
+            }, 2000);
         }
     }
 }
