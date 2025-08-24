@@ -7,7 +7,20 @@
 
     <style name="Theme.SafeZone" parent="Base.Theme.SafeZone" />
     
-    <style name="Theme.SafeZone.NoActionBar" parent="Base.Theme.SafeZone" />
+    <style name="Theme.SafeZone.NoActionBar" parent="Base.Theme.SafeZone">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="FullScreenDialog" parent="Theme.SafeZone">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
     
     <!-- Custom styles for chat -->
     <style name="ToolbarTitleStyle" parent="TextAppearance.AppCompat.Title">

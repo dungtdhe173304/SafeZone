@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,53 +15,35 @@ import android.content.Context;
 import android.content.IntentFilter;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.group5.safezone.R;
-import com.group5.safezone.adapter.UserAdapter;
-import com.group5.safezone.model.entity.User;
 import com.group5.safezone.config.AuthInterceptor;
 import com.group5.safezone.config.SessionManager;
 import com.group5.safezone.config.NotificationPermissionUtil;
 import com.group5.safezone.config.NotificationEvents;
 import com.group5.safezone.view.Wallet.WalletActivity;
-import com.group5.safezone.config.AppDatabase;
-import android.os.Handler;
 import com.group5.safezone.view.admin.AdminMainActivity;
 import com.group5.safezone.view.auth.LoginActivity;
 import com.group5.safezone.view.base.BaseActivity;
 import com.group5.safezone.view.notification.NotificationsActivity;
-import com.group5.safezone.viewmodel.UserViewModel;
+import com.group5.safezone.view.PurchaseHistoryActivity;
+import com.group5.safezone.view.SalesHistoryActivity;
 import com.google.android.material.navigation.NavigationView;
 import com.group5.safezone.Constant.Chatbox.ConstantKey;
-
-import java.text.NumberFormat;
-import java.util.Locale;
 
 import com.zegocloud.zimkit.BuildConfig;
 import com.zegocloud.zimkit.services.ZIMKit;
 
 public class MainActivity extends BaseActivity {
 
-    private UserViewModel userViewModel;
-    private UserAdapter userAdapter;
     private SessionManager sessionManager;
 
     // UI Components
-    private ProgressBar progressBar;
-    private TextView tvError, tvWelcome;
-    private CardView cardUserInfo;
-    private TextView tvUserName, tvEmail, tvPhone, tvRole, tvBalance, tvStatus, tvVerify;
-    private RecyclerView recyclerViewUsers;
-    private Button btnLoadUser, btnLoadAllUsers;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private View notificationBellView;
@@ -97,43 +77,26 @@ public class MainActivity extends BaseActivity {
         setupToolbar();
         setupDrawer();
         setupBackPressedDispatcher();
+        
+        // Load HomeFragment as default
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new HomeFragment())
+                    .commit();
+        }
+        
         // Hỏi quyền/thông báo nếu đang bị tắt ngay khi vào app
         NotificationPermissionUtil.promptIfNeeded(this, 7001);
         
-        // DEV ONLY: Reset database để test user mới
-        if (BuildConfig.DEBUG) {
-            resetDatabaseForTesting();
-        }
+        // Database reset functionality removed - no longer needed
         
-        setupViewModel();
-        setupRecyclerView();
-        setupClickListeners();
-        observeViewModel();
+        // Setup footer for navigation
         setupFooter();
-
-        displayWelcomeMessage();
-
-        // Load dữ liệu ban đầu
-        userViewModel.loadAllUsers();
     }
 
     private void initViews() {
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.navigation_view);
-        progressBar = findViewById(R.id.progressBar);
-        tvError = findViewById(R.id.tvError);
-        tvWelcome = findViewById(R.id.tvWelcome);
-        cardUserInfo = findViewById(R.id.cardUserInfo);
-        tvUserName = findViewById(R.id.tvUserName);
-        tvEmail = findViewById(R.id.tvEmail);
-        tvPhone = findViewById(R.id.tvPhone);
-        tvRole = findViewById(R.id.tvRole);
-        tvBalance = findViewById(R.id.tvBalance);
-        tvStatus = findViewById(R.id.tvStatus);
-        tvVerify = findViewById(R.id.tvVerify);
-        recyclerViewUsers = findViewById(R.id.recyclerViewUsers);
-        btnLoadUser = findViewById(R.id.btnLoadUser);
-        btnLoadAllUsers = findViewById(R.id.btnLoadAllUsers);
     }
 
     private void setupToolbar() {
@@ -154,11 +117,25 @@ public class MainActivity extends BaseActivity {
             navigationView.setNavigationItemSelectedListener(item -> {
                 int id = item.getItemId();
                 if (id == R.id.nav_home) {
-                    // stay on home
+                    // Load HomeFragment
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new HomeFragment())
+                            .commit();
+                } else if (id == R.id.nav_products) {
+                    // Load HomeFragment (which contains products)
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, new HomeFragment())
+                            .commit();
                 } else if (id == R.id.nav_wallet) {
                     startActivity(new Intent(this, WalletActivity.class));
+                } else if (id == R.id.nav_purchase_history) {
+                    startActivity(new Intent(this, PurchaseHistoryActivity.class));
+                } else if (id == R.id.nav_sales_history) {
+                    startActivity(new Intent(this, SalesHistoryActivity.class));
                 } else if (id == R.id.nav_chat) {
                     startActivity(new Intent(this, com.group5.safezone.view.chat.ChatActivity.class));
+                } else if (id == R.id.nav_livestream) {
+                    startActivity(new Intent(this, com.group5.safezone.view.livestreaming.LiveStreamingMainActivity.class));
                 } else if (id == R.id.nav_settings) {
                     Toast.makeText(this, "Cài đặt đang phát triển", Toast.LENGTH_SHORT).show();
                 } else if (id == R.id.nav_about) {
@@ -209,11 +186,7 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    private void displayWelcomeMessage() {
-        String userName = sessionManager.getUserName();
-        String role = sessionManager.getUserRole();
-        tvWelcome.setText("Chào mừng, " + userName + " (" + role + ")!");
-    }
+    // Welcome message functionality removed - no longer needed in new layout
 
     private void refreshUnreadCount() {
         if (notificationBadge == null) return;
@@ -233,90 +206,28 @@ public class MainActivity extends BaseActivity {
         }).start();
     }
 
-    private void setupViewModel() {
-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+    // Live streaming functionality
+    private void setupLiveStreaming() {
+        // Start live stream as host
+        String userID = "user_" + sessionManager.getUserId();
+        String userName = sessionManager.getUserName();
+        String liveID = "live_" + System.currentTimeMillis();
+        
+        Intent intent = new Intent(this, com.group5.safezone.view.livestreaming.LiveStreamingActivity.class);
+        intent.putExtra("userID", userID);
+        intent.putExtra("userName", userName);
+        intent.putExtra("host", true);
+        intent.putExtra("liveID", liveID);
+        startActivity(intent);
     }
 
-    private void setupRecyclerView() {
-        userAdapter = new UserAdapter();
-        recyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
-        recyclerViewUsers.setAdapter(userAdapter);
-
-        userAdapter.setOnUserClickListener(user -> {
-            displayUserInfo(user);
-            Toast.makeText(this, "Selected: " + user.getUserName(), Toast.LENGTH_SHORT).show();
-        });
+    private void joinLiveStream() {
+        // Open JoinStreamActivity to input Stream ID
+        Intent intent = new Intent(this, com.group5.safezone.view.livestreaming.JoinStreamActivity.class);
+        startActivity(intent);
     }
 
-    private void setupClickListeners() {
-        btnLoadUser.setOnClickListener(v -> {
-            // Load current user
-            int currentUserId = sessionManager.getUserId();
-            userViewModel.getUserById(currentUserId);
-        });
-
-        btnLoadAllUsers.setOnClickListener(v -> {
-            userViewModel.loadAllUsers();
-        });
-    }
-
-    private void observeViewModel() {
-        // Observe loading state
-        userViewModel.getIsLoading().observe(this, isLoading -> {
-            progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-        });
-
-        // Observe error messages
-        userViewModel.getErrorMessage().observe(this, errorMessage -> {
-            if (errorMessage != null && !errorMessage.isEmpty()) {
-                tvError.setText(errorMessage);
-                tvError.setVisibility(View.VISIBLE);
-                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
-            } else {
-                tvError.setVisibility(View.GONE);
-            }
-        });
-
-        // Observe current user
-        userViewModel.getCurrentUser().observe(this, user -> {
-            if (user != null) {
-                displayUserInfo(user);
-            }
-        });
-
-        // Observe all users
-        userViewModel.getAllUsers().observe(this, users -> {
-            if (users != null && !users.isEmpty()) {
-                userAdapter.setUsers(users);
-                // Hiển thị user đầu tiên
-                displayUserInfo(users.get(0));
-            }
-        });
-    }
-
-    private void displayUserInfo(User user) {
-        cardUserInfo.setVisibility(View.VISIBLE);
-
-        tvUserName.setText(user.getUserName() != null ? user.getUserName() : "N/A");
-        tvEmail.setText(user.getEmail() != null ? user.getEmail() : "N/A");
-        tvPhone.setText(user.getPhone() != null ? user.getPhone() : "N/A");
-        tvRole.setText(user.getRole() != null ? user.getRole() : "N/A");
-        tvStatus.setText(user.getStatus() != null ? user.getStatus() : "N/A");
-
-        // Format balance
-        if (user.getBalance() != null) {
-            NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-            tvBalance.setText(formatter.format(user.getBalance()));
-        } else {
-            tvBalance.setText("0 VNĐ");
-        }
-
-        // Verify status
-        tvVerify.setText(user.getIsVerify() != null && user.getIsVerify() ? "Đã xác thực" : "Chưa xác thực");
-        tvVerify.setTextColor(user.getIsVerify() != null && user.getIsVerify() ?
-                getResources().getColor(android.R.color.holo_green_dark) :
-                getResources().getColor(android.R.color.holo_red_dark));
-    }
+    // User info display methods removed - no longer needed in new layout
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -392,6 +303,20 @@ public class MainActivity extends BaseActivity {
 
         // Cập nhật lại badge khi quay lại màn hình
         refreshUnreadCount();
+        
+        // Reload HomeFragment if it's the current fragment to refresh product list
+        reloadCurrentFragment();
+    }
+    
+    private void reloadCurrentFragment() {
+        // Get current fragment
+        androidx.fragment.app.Fragment currentFragment = getSupportFragmentManager()
+                .findFragmentById(R.id.fragment_container);
+        
+        if (currentFragment instanceof HomeFragment) {
+            System.out.println("=== MainActivity: Reloading HomeFragment on resume ===");
+            ((HomeFragment) currentFragment).reloadProducts();
+        }
     }
 
     @Override
@@ -408,25 +333,12 @@ public class MainActivity extends BaseActivity {
         ZIMKit.initNotifications();
     }
 
-    // DEV ONLY: Reset database để test
-    private void resetDatabaseForTesting() {
-        // Chỉ reset 1 lần khi app được cài đặt
-        if (!getSharedPreferences("dev_prefs", MODE_PRIVATE).getBoolean("db_reset", false)) {
-            Toast.makeText(this, "Đang reset database để test user mới...", Toast.LENGTH_LONG).show();
-            
-
-            
-            // Đánh dấu đã reset
-            getSharedPreferences("dev_prefs", MODE_PRIVATE).edit()
-                    .putBoolean("db_reset", true)
-                    .apply();
-            
-            // Reload data
-            new Handler().postDelayed(() -> {
-                userViewModel.loadAllUsers();
-                Toast.makeText(this, "Database đã được reset! Bây giờ có 3 users", Toast.LENGTH_LONG).show();
-            }, 2000);
-        }
+    public void loadHomeFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new HomeFragment())
+                .commit();
     }
+
+    // Database reset functionality removed - no longer needed
 }
 

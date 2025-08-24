@@ -1,14 +1,12 @@
 <resources>
     <string name="app_name">SafeZone</string>
 
-    <!-- Footer Navigation -->
     <string name="home">Trang chủ</string>
     <string name="products">Sản phẩm</string>
     <string name="auction">Đấu giá</string>
     <string name="wallet">Ví tiền</string>
     <string name="profile">Hồ sơ</string>
 
-    <!-- Content Descriptions -->
     <string name="home_icon">Biểu tượng trang chủ</string>
     <string name="products_icon">Biểu tượng sản phẩm</string>
     <string name="auction_icon">Biểu tượng đấu giá</string>
@@ -58,4 +56,78 @@
     <string name="notif_permission_title">Cho phép hiển thị thông báo?</string>
     <string name="notif_permission_msg">SafeZone cần quyền gửi thông báo để báo cho bạn khi nạp tiền thành công và các cập nhật quan trọng.</string>
     <string name="allow">Cho phép</string>
+
+    <!-- Live Streaming -->
+    <string name="livestream_title">Live Streaming</string>
+    <string name="livestream_welcome">Chào mừng đến với Live Streaming!</string>
+    <string name="livestream_instructions">Chọn một tùy chọn để bắt đầu</string>
+    <string name="start_stream">Bắt đầu Live Stream</string>
+    <string name="start_stream_desc">Tạo một live stream mới và chia sẻ với bạn bè</string>
+    <string name="start_stream_btn">🚀 Bắt đầu Stream</string>
+    <string name="join_stream">Tham gia Stream</string>
+    <string name="join_stream_desc">Tham gia vào live stream của người khác</string>
+    <string name="join_stream_btn">🔗 Tham gia Stream</string>
+    <string name="my_streams">Stream của tôi</string>
+    <string name="my_streams_desc">Xem các stream đã tạo hoặc đã tham gia</string>
+    <string name="my_streams_btn">📺 Xem Stream</string>
+    <string name="livestream_guide_title">💡 Hướng dẫn sử dụng:</string>
+    <string name="livestream_guide_text">• Để bắt đầu stream: Nhấn \'Bắt đầu Stream\' và chia sẻ Stream ID với bạn bè\n\n• Để tham gia stream: Nhấn \'Tham gia Stream\' và nhập Stream ID được chia sẻ\n\n• Để xem stream của mình: Nhấn \'Xem Stream\' để xem danh sách</string>
+    <string name="livestream_user_instructions">Bạn có thể bắt đầu một live stream mới hoặc tham gia vào stream của người khác.</string>
+    <string name="livestream_guest_instructions">Tham gia vào live stream của người khác hoặc xem các stream đã lưu.</string>
+
+    <!-- Navigation Menu -->
+    <string name="nav_home">Trang chủ</string>
+    <string name="nav_wallet">Ví tiền</string>
+    <string name="nav_purchase_history">Lịch sử mua hàng</string>
+    <string name="nav_sales_history">Lịch sử bán hàng</string>
+    <string name="nav_chat">Tin nhắn</string>
+    <string name="nav_settings">Cài đặt</string>
+    <string name="nav_about">Về chúng tôi</string>
+    <string name="nav_logout">Đăng xuất</string>
+
+    <!-- Home Fragment -->
+    <string name="add_new_product">Thêm sản phẩm mới</string>
+    <string name="product_name">Tên sản phẩm</string>
+    <string name="description">Mô tả sản phẩm</string>
+    <string name="information">Thông tin chi tiết</string>
+    <string name="transaction_fee">Phí giao dịch</string>
+    <string name="seller_fee">Người bán (1)</string>
+    <string name="buyer_fee">Người mua (2)</string>
+    <string name="price">Giá</string>
+    <string name="visibility">Hiển thị</string>
+    <string name="visibility_public">Công khai</string>
+    <string name="visibility_private">Riêng tư</string>
+    <string name="users_who_can_view">Người có thể xem (phân cách bằng dấu phẩy)</string>
+    <string name="private_information">Thông tin riêng tư (sẽ được mã hóa)</string>
+    <string name="add_images">Thêm ảnh</string>
+    <string name="add_product">Thêm sản phẩm</string>
+    <string name="products_list">Danh sách sản phẩm</string>
+    <string name="product_name_required">Tên sản phẩm là bắt buộc</string>
+    <string name="price_required">Giá là bắt buộc</string>
+    <string name="invalid_price_format">Định dạng giá không hợp lệ</string>
+    <string name="failed_to_encrypt">Failed to encrypt private information</string>
+    <string name="delete_product">Delete Product</string>
+    <string name="delete_product_confirmation">Are you sure you want to delete this product?</string>
+    <string name="delete">Delete</string>
+    <string name="product_deleted">Sản phẩm đã bị xóa</string>
+    <string name="permission_denied">Quyền bị từ chối</string>
+    <string name="select_images">Chọn ảnh</string>
+    <string name="selected_images">Đã chọn %d ảnh</string>
+    <string name="loading_products">Đang tải sản phẩm...</string>
+    <string name="no_products_found">Không tìm thấy sản phẩm nào</string>
+    <string name="view_details">Xem chi tiết</string>
+    <string name="seller">Người bán</string>
+    <string name="buy_now">Mua ngay</string>
+    
+    <!-- Posting Fee -->
+    <string name="insufficient_balance">Số dư không đủ</string>
+    <string name="posting_fee_message">Bạn cần %1$s VNĐ để đăng bài, nhưng hiện chỉ có %2$s VNĐ.\n\nBạn có muốn nạp tiền ngay không?</string>
+    <string name="deposit_money">Nạp tiền</string>
+    <string name="posting_success">Đăng bài thành công! Đã trừ phí 5.000 VNĐ</string>
+    
+    <!-- Validation Messages -->
+    <string name="price_must_be_greater_than_10000">Giá phải lớn hơn 10.000 VNĐ</string>
+    <string name="private_info_required">Thông tin riêng tư là bắt buộc</string>
+    <string name="edit_product">Chỉnh sửa sản phẩm</string>
+    <string name="copy_link_success">Đã copy link sản phẩm</string>
 </resources>

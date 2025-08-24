@@ -33,7 +33,7 @@ public class SessionManager {
         editor.putString(KEY_EMAIL, user.getEmail());
         editor.putString(KEY_ROLE, user.getRole());
         editor.putString(KEY_STATUS, user.getStatus());
-        editor.putFloat(KEY_BALANCE, user.getBalance() != null ? user.getBalance().floatValue() : 0f);
+        editor.putLong(KEY_BALANCE, user.getBalance() != null ? user.getBalance().longValue() : 0L);
         editor.putBoolean(KEY_IS_VERIFY, user.getIsVerify() != null ? user.getIsVerify() : false);
         editor.apply();
     }
@@ -63,7 +63,25 @@ public class SessionManager {
     }
 
     public double getBalance() {
-        return pref.getFloat(KEY_BALANCE, 0f);
+        try {
+            // Try to get as float first
+            return pref.getFloat(KEY_BALANCE, 0f);
+        } catch (ClassCastException e) {
+            // If float fails, try to get as long and convert
+            try {
+                long longBalance = pref.getLong(KEY_BALANCE, 0L);
+                return (double) longBalance;
+            } catch (ClassCastException e2) {
+                // If long also fails, try to get as int and convert
+                try {
+                    int intBalance = pref.getInt(KEY_BALANCE, 0);
+                    return (double) intBalance;
+                } catch (ClassCastException e3) {
+                    // If all fail, return 0
+                    return 0.0;
+                }
+            }
+        }
     }
 
     public boolean isVerified() {
@@ -84,7 +102,8 @@ public class SessionManager {
     }
 
     public void updateBalance(double newBalance) {
-        editor.putFloat(KEY_BALANCE, (float) newBalance);
+        // Store as long to avoid precision issues with float
+        editor.putLong(KEY_BALANCE, (long) newBalance);
         editor.apply();
     }
 

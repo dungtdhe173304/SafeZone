@@ -72,7 +72,12 @@ public abstract class BaseActivity extends AppCompatActivity {
                 intent = new Intent(this, MainActivity.class);
                 break;
             case 1:
-                //intent = new Intent(this, ProductsActivity.class);
+                // Products page - stay in MainActivity but load HomeFragment
+                if (this instanceof MainActivity) {
+                    ((MainActivity) this).loadHomeFragment();
+                    return;
+                }
+                intent = new Intent(this, MainActivity.class);
                 break;
             case 2:
                 //intent = new Intent(this, AuctionActivity.class);

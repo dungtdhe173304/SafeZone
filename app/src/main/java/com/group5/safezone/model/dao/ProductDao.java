@@ -50,4 +50,10 @@ public interface ProductDao {
 
     @Query("UPDATE product SET IsDeleted = 1, DeletedAt = datetime('now') WHERE id = :id")
     void softDelete(String id);
+
+    @Query("DELETE FROM product")
+    void deleteAllProducts();
+
+    @Insert
+    void insertMultipleProducts(List<Product> products);
 }

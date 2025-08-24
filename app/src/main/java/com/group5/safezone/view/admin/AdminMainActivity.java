@@ -66,7 +66,7 @@ public class AdminMainActivity extends AppCompatActivity {
         });
 
         cardReports.setOnClickListener(v -> {
-            // startActivity(new Intent(this, ReportsActivity.class));
+            startActivity(new Intent(this, ReportManagementActivity.class));
         });
     }
 
