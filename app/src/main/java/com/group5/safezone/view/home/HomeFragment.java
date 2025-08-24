@@ -28,6 +28,7 @@ import com.group5.safezone.viewmodel.AuctionViewModel;
 import com.group5.safezone.viewmodel.UserViewModel;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class HomeFragment extends Fragment {
@@ -190,8 +191,15 @@ public class HomeFragment extends Fragment {
 
 		auctionViewModel.getItems().observe(getViewLifecycleOwner(), items -> {
 			try {
-				if (items != null) {
+				android.util.Log.d("HomeFragment", "Received items from ViewModel: " + (items != null ? items.size() : "null"));
+				if (items != null && !items.isEmpty()) {
+					android.util.Log.d("HomeFragment", "Submitting " + items.size() + " items to adapter");
 					auctionAdapter.submitList(items);
+					// Force refresh the RecyclerView
+					recyclerViewAuctions.getAdapter().notifyDataSetChanged();
+				} else {
+					android.util.Log.w("HomeFragment", "Items list is null or empty");
+					auctionAdapter.submitList(new ArrayList<>());
 				}
 			} catch (Exception e) {
 				android.util.Log.e("HomeFragment", "Error in getItems observer: " + e.getMessage());
@@ -216,5 +224,14 @@ public class HomeFragment extends Fragment {
 		tvHelloUser.setText("Chào mừng, " + (userName != null ? userName : "Khách") + "!");
 		tvBalancePill.setText(balanceText);
 		ivAvatar.setImageResource(R.drawable.ic_person);
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		// Cleanup adapter resources
+		if (auctionAdapter != null) {
+			auctionAdapter.cleanup();
+		}
 	}
 }

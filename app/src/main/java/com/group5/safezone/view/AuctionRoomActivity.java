@@ -49,7 +49,7 @@ public class AuctionRoomActivity extends AppCompatActivity {
 
     // UI Components
     private ImageView ivProductImage;
-    private TextView tvProductName, tvSellerName, tvCurrentPrice, tvTimer, tvUserBalance;
+    private TextView tvProductName, tvSellerName, tvCurrentPrice, tvTimer;
     private RecyclerView rvBidHistory;
     private EditText etBidStep;
     private TextView tvQuantity, tvTotalBid;
@@ -59,6 +59,7 @@ public class AuctionRoomActivity extends AppCompatActivity {
     private AuctionItemUiModel currentItem;
     private User currentUser;
     private double currentHighestBid;
+    private double startPrice;
     private double bidStep;
     private int bidQuantity = 1;
     private CountDownTimer countDownTimer;
@@ -102,7 +103,6 @@ public class AuctionRoomActivity extends AppCompatActivity {
         tvSellerName = findViewById(R.id.tv_seller_name);
         tvCurrentPrice = findViewById(R.id.tv_current_price);
         tvTimer = findViewById(R.id.tv_timer);
-        tvUserBalance = findViewById(R.id.tv_user_balance);
         rvBidHistory = findViewById(R.id.rv_bid_history);
         etBidStep = findViewById(R.id.et_bid_step);
         tvQuantity = findViewById(R.id.tv_quantity);
@@ -201,7 +201,6 @@ public class AuctionRoomActivity extends AppCompatActivity {
                                             if (user != null) {
                         currentUser = user;
                         android.util.Log.d("AuctionRoom", "User loaded via ViewModel: " + user.getUserName() + ", Balance: " + user.getBalance());
-                        updateUserBalanceDisplay();
                     } else {
                         android.util.Log.e("AuctionRoom", "User is null after getUserById, trying direct load");
                         // Fallback: try to load user directly from database
@@ -236,7 +235,16 @@ public class AuctionRoomActivity extends AppCompatActivity {
                 }
 
                 if (auction != null) {
-                    currentHighestBid = auction.getCurrentHighestBid() != null ? auction.getCurrentHighestBid() : 0.0;
+                    // Sử dụng startPrice làm giá khởi điểm
+                    startPrice = auction.getStartPrice() != null ? auction.getStartPrice() : 0.0;
+                    
+                    // Nếu chưa có ai trả giá, sử dụng startPrice
+                    if (auction.getCurrentHighestBid() == null || auction.getCurrentHighestBid() < startPrice) {
+                        currentHighestBid = startPrice;
+                    } else {
+                        currentHighestBid = auction.getCurrentHighestBid();
+                    }
+                    
                     bidStep = product != null && product.getMinBidIncrement() != null ? product.getMinBidIncrement() : 100000.0;
                     
                     tvCurrentPrice.setText("Giá hiện tại: " + currencyFormatter.format(currentHighestBid));
@@ -247,8 +255,6 @@ public class AuctionRoomActivity extends AppCompatActivity {
                 }
             }
             
-            // Update user balance display
-            updateUserBalanceDisplay();
             updateBidQuantity();
         } catch (Exception e) {
             Toast.makeText(this, "Lỗi khi cập nhật giao diện: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -361,11 +367,6 @@ public class AuctionRoomActivity extends AppCompatActivity {
                 return;
             }
 
-            if (currentUser.getBalance() < bidAmount) {
-                Toast.makeText(this, "Số dư không đủ để trả giá", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
             // Disable button to prevent multiple clicks
             btnPlaceBid.setEnabled(false);
 
@@ -390,21 +391,12 @@ public class AuctionRoomActivity extends AppCompatActivity {
                     auction.setHighestBidderUserId(currentUser.getId());
                     repository.getDatabase().auctionsDao().update(auction);
                     
-                    // Update user balance: subtract bid amount
-                    double newBalance = currentUser.getBalance() - bidAmount;
-                    // Our UserDao.updateBalance adds the amount to current balance,
-                    // so pass the delta instead of the absolute value
-                    repository.getDatabase().userDao().updateBalance(currentUser.getId(), -bidAmount);
+                    // Không trừ balance khi trả giá - người dùng được phép trả giá tự do
                     
                     runOnUiThread(() -> {
                         try {
                             // Update UI
                             currentHighestBid = bidAmount;
-                            currentUser.setBalance(newBalance);
-                            // Also update session balance for consistency across screens
-                            try {
-                                new com.group5.safezone.config.SessionManager(AuctionRoomActivity.this).updateBalance(newBalance);
-                            } catch (Exception ignored) {}
                             updateUI();
                             loadBidHistory();
                             
@@ -476,18 +468,7 @@ public class AuctionRoomActivity extends AppCompatActivity {
         }
     }
 
-    private void updateUserBalanceDisplay() {
-        try {
-            if (currentUser != null) {
-                double balance = currentUser.getBalance();
-                tvUserBalance.setText("Số dư: " + currencyFormatter.format(balance));
-            } else {
-                tvUserBalance.setText("Số dư: 0 ₫");
-            }
-        } catch (Exception e) {
-            tvUserBalance.setText("Số dư: 0 ₫");
-        }
-    }
+    // Bỏ method updateUserBalanceDisplay vì không còn hiển thị số dư
 
     private void loadUserDirectly(int userId) {
         executorService.execute(() -> {
@@ -498,7 +479,6 @@ public class AuctionRoomActivity extends AppCompatActivity {
                     if (user != null) {
                         currentUser = user;
                         android.util.Log.d("AuctionRoom", "User loaded directly: " + user.getUserName() + ", Balance: " + user.getBalance());
-                        updateUserBalanceDisplay();
                     } else {
                         android.util.Log.e("AuctionRoom", "User not found in database for ID: " + userId);
                         // Try to create user from session data
@@ -537,7 +517,6 @@ public class AuctionRoomActivity extends AppCompatActivity {
 
                 currentUser = user;
                 android.util.Log.d("AuctionRoom", "User created from session: " + user.getUserName() + ", Balance: " + user.getBalance());
-                updateUserBalanceDisplay();
             } else {
                 android.util.Log.e("AuctionRoom", "Cannot create user from session - insufficient data");
                 Toast.makeText(this, "Dữ liệu phiên đăng nhập không hợp lệ", Toast.LENGTH_SHORT).show();

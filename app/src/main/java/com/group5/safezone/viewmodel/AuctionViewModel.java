@@ -50,12 +50,15 @@ public class AuctionViewModel extends AndroidViewModel {
     }
 
     public void loadAuctions(int userId) {
+        android.util.Log.d("AuctionViewModel", "Loading auctions for user: " + userId);
         isLoading.postValue(true);
         executor.execute(() -> {
             try {
                 List<AuctionItemUiModel> data = repository.loadActiveAuctionsForUser(userId);
+                android.util.Log.d("AuctionViewModel", "Repository returned " + (data != null ? data.size() : "null") + " items");
                 items.postValue(data);
             } catch (Exception e) {
+                android.util.Log.e("AuctionViewModel", "Error loading auctions: " + e.getMessage(), e);
                 errorMessage.postValue("Không thể tải danh sách đấu giá: " + e.getMessage());
             } finally {
                 isLoading.postValue(false);

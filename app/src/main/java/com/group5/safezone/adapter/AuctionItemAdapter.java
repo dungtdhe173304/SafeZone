@@ -1,6 +1,8 @@
 package com.group5.safezone.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +16,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.group5.safezone.R;
 import com.group5.safezone.model.entity.Auctions;
 import com.group5.safezone.model.entity.Product;
+import com.group5.safezone.model.entity.ProductImages;
 import com.group5.safezone.model.ui.AuctionItemUiModel;
 
+import java.io.File;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class AuctionItemAdapter extends RecyclerView.Adapter<AuctionItemAdapter.AuctionViewHolder> {
     public interface OnAuctionActionListener {
@@ -29,14 +35,27 @@ public class AuctionItemAdapter extends RecyclerView.Adapter<AuctionItemAdapter.
 
     private final List<AuctionItemUiModel> items = new ArrayList<>();
     private final LayoutInflater inflater;
+    private final Context context;
+    private final ExecutorService executorService;
     private OnAuctionActionListener actionListener;
 
     public AuctionItemAdapter(Context context) {
+        this.context = context;
         this.inflater = LayoutInflater.from(context);
+        this.executorService = Executors.newFixedThreadPool(4);
     }
 
     public void setActionListener(OnAuctionActionListener listener) {
         this.actionListener = listener;
+    }
+    
+    /**
+     * Call this method when the adapter is no longer needed to cleanup resources
+     */
+    public void cleanup() {
+        if (executorService != null && !executorService.isShutdown()) {
+            executorService.shutdown();
+        }
     }
 
     public void submitList(List<AuctionItemUiModel> newItems) {
@@ -121,8 +140,8 @@ public class AuctionItemAdapter extends RecyclerView.Adapter<AuctionItemAdapter.
             tvStartTime.setText("Bắt đầu: " + startStr);
             tvEndTime.setText("Kết thúc: " + endStr);
 
-            // Thumbnail: we keep a placeholder from resources since paths could be remote
-            ivThumbnail.setImageResource(R.drawable.ic_inventory);
+            // Load thumbnail image from ProductImages
+            loadProductImage(item, ivThumbnail);
 
             tvStatus.setText(item.isRegistered() ? "Đã đăng ký" : "Chưa đăng ký");
             tvParticipants.setText("Người tham gia: " + item.getParticipantCount());
@@ -158,6 +177,73 @@ public class AuctionItemAdapter extends RecyclerView.Adapter<AuctionItemAdapter.
                 });
             }
         }
+    }
+    
+    /**
+     * Load product image from file path
+     */
+    private void loadProductImage(AuctionItemUiModel item, ImageView imageView) {
+        // Set placeholder first
+        imageView.setImageResource(R.drawable.ic_inventory);
+        
+        // Get product images
+        List<ProductImages> images = item.getImages();
+        if (images == null || images.isEmpty()) {
+            return;
+        }
+        
+        // Get first image path
+        ProductImages firstImage = images.get(0);
+        String imagePath = firstImage.getPath();
+        
+        if (imagePath == null || imagePath.trim().isEmpty()) {
+            return;
+        }
+        
+        // Load image in background thread
+        executorService.execute(() -> {
+            try {
+                File imageFile = new File(imagePath);
+                if (imageFile.exists()) {
+                    // Decode image with downsampling to avoid memory issues
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
+                    BitmapFactory.decodeFile(imageFile.getAbsolutePath(), options);
+                    
+                    // Calculate sample size (downsampling)
+                    int sampleSize = 1;
+                    int targetWidth = 300; // Target width for thumbnail
+                    int targetHeight = 300; // Target height for thumbnail
+                    
+                    if (options.outHeight > targetHeight || options.outWidth > targetWidth) {
+                        final int halfHeight = options.outHeight / 2;
+                        final int halfWidth = options.outWidth / 2;
+                        
+                        while ((halfHeight / sampleSize) >= targetHeight
+                                && (halfWidth / sampleSize) >= targetWidth) {
+                            sampleSize *= 2;
+                        }
+                    }
+                    
+                    options.inSampleSize = sampleSize;
+                    options.inJustDecodeBounds = false;
+                    
+                    Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getAbsolutePath(), options);
+                    
+                    if (bitmap != null) {
+                        // Update UI on main thread
+                        android.os.Handler mainHandler = new android.os.Handler(android.os.Looper.getMainLooper());
+                        mainHandler.post(() -> {
+                            imageView.setImageBitmap(bitmap);
+                        });
+                    }
+                } else {
+                    android.util.Log.w("AuctionItemAdapter", "Image file not found: " + imagePath);
+                }
+            } catch (Exception e) {
+                android.util.Log.e("AuctionItemAdapter", "Error loading image: " + e.getMessage(), e);
+            }
+        });
     }
 }
 

@@ -64,14 +64,7 @@
                     android:textStyle="bold"
                     android:layout_marginBottom="4dp" />
 
-                <TextView
-                    android:id="@+id/tv_user_balance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Số dư: 0 ₫"
-                    android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                <!-- Bỏ hiển thị số dư -->
 
             </LinearLayout>
         </LinearLayout>

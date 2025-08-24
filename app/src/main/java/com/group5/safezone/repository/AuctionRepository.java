@@ -44,19 +44,35 @@ public class AuctionRepository {
     }
 
     public List<AuctionItemUiModel> loadActiveAuctionsForUser(int userId) {
-        try {
+                try {
             List<AuctionItemUiModel> result = new ArrayList<>();
             Date now = new Date();
-            List<Auctions> all = auctionsDao.getAllAuctions();
             
-            if (all == null) {
+            // Debug: Log số lượng auction trong database
+            List<Auctions> allAuctions = auctionsDao.getAllAuctions();
+            android.util.Log.d("AuctionRepository", "Total auctions in DB: " + (allAuctions != null ? allAuctions.size() : 0));
+            
+            // Sử dụng getActiveAuctions() để lấy chỉ auction active và chưa hết hạn
+            List<Auctions> activeAuctions = auctionsDao.getActiveAuctions();
+            android.util.Log.d("AuctionRepository", "Active auctions: " + (activeAuctions != null ? activeAuctions.size() : 0));
+            
+            // Fallback: Nếu getActiveAuctions() trả về ít hoặc null, thử lấy tất cả auction active
+            if (activeAuctions == null || activeAuctions.size() < 2) {
+                android.util.Log.d("AuctionRepository", "Fallback: Getting all active auctions manually");
+                activeAuctions = auctionsDao.getAuctionsByStatus("active");
+                android.util.Log.d("AuctionRepository", "Fallback active auctions: " + (activeAuctions != null ? activeAuctions.size() : 0));
+            }
+            
+            if (activeAuctions == null) {
                 return result;
             }
             
-            for (Auctions auction : all) {
+            for (Auctions auction : activeAuctions) {
                 try {
-                    if (auction != null && auction.getStatus() != null && auction.getStatus().equalsIgnoreCase("active")
-                            && auction.getEndTime() != null && auction.getEndTime().after(now)) {
+                    // Kiểm tra thêm: chỉ lấy auction active và chưa hết hạn
+                    if (auction != null && auction.getStatus() != null && 
+                        auction.getStatus().equalsIgnoreCase("active") && 
+                        auction.getEndTime() != null && auction.getEndTime().after(now)) {
                         
                         Product product = null;
                         List<ProductImages> images = null;

@@ -36,6 +36,30 @@
             android:name=".view.admin.AdminMainActivity"
             android:exported="false" />
 
+        <!-- Admin User Management Activity -->
+        <activity
+            android:name=".view.admin.UserManagementActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Admin Product Management Activity -->
+        <activity
+            android:name=".view.admin.ProductManagementActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Admin Order Management Activity -->
+        <activity
+            android:name=".view.admin.OrderManagementActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Admin Reports Activity -->
+        <activity
+            android:name=".view.admin.ReportsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
         <!-- Auction Registration Activity -->
         <activity
             android:name=".view.AuctionRegistrationActivity"
@@ -51,6 +75,18 @@
         <!-- Admin Auction Approval Activity -->
         <activity
             android:name=".view.AdminAuctionApprovalActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Auction Detail Activity -->
+        <activity
+            android:name=".view.AuctionDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- User Auction Management Activity -->
+        <activity
+            android:name=".view.UserAuctionManagementActivity"
             android:exported="false"
             android:theme="@style/Theme.SafeZone" />
 

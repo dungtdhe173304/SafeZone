@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Duyệt đăng ký tham gia đấu giá"
+        android:text="Duyệt bài đấu giá"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"
@@ -19,13 +19,13 @@
         android:padding="16dp"
         android:background="@drawable/gradient_home_header" />
 
-    <!-- RecyclerView for registrations -->
+    <!-- RecyclerView for pending auctions -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:padding="8dp"
-        tools:listitem="@layout/item_registration_approval" />
+        tools:listitem="@layout/item_auction_approval" />
 
 </LinearLayout>

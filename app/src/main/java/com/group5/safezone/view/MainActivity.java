@@ -21,6 +21,7 @@ import com.group5.safezone.config.SessionManager;
 import com.group5.safezone.view.admin.AdminMainActivity;
 import com.group5.safezone.view.auth.LoginActivity;
 import com.group5.safezone.view.base.BaseActivity;
+import com.group5.safezone.view.UserAuctionManagementActivity;
 
 public class MainActivity extends BaseActivity {
 
@@ -92,6 +93,9 @@ public class MainActivity extends BaseActivity {
             if (sessionManager.isAdmin()) {
                 startActivity(new Intent(this, AdminMainActivity.class));
             }
+            return true;
+        } else if (id == R.id.action_my_auctions) {
+            startActivity(new Intent(this, UserAuctionManagementActivity.class));
             return true;
         } else if (id == R.id.action_logout) {
             logout();

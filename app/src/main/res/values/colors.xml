@@ -33,5 +33,16 @@
     <color name="text_primary">#212121</color>
     <color name="text_secondary">#757575</color>
     <color name="divider_color">#BDBDBD</color>
+    
+    <!-- Additional Colors for Admin Auction Approval -->
+    <color name="primary">#2196F3</color>
+    <color name="orange">#FF9800</color>
+    <color name="darker_gray">#616161</color>
+
+    <!-- Holo Colors for Status -->
+    <color name="holo_red_dark">#D32F2F</color>
+    <color name="holo_blue_dark">#1976D2</color>
+    <color name="holo_green_dark">#388E3C</color>
+    <color name="holo_orange_dark">#F57C00</color>
 
 </resources>
