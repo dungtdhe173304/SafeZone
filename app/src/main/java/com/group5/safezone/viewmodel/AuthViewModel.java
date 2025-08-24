@@ -50,8 +50,13 @@ public class AuthViewModel extends AndroidViewModel {
         return errorMessage;
     }
 
+    /**
+     * Đăng nhập với email hoặc username
+     * @param emailOrUsername Email hoặc tên đăng nhập
+     * @param password Mật khẩu
+     */
     public void login(String emailOrUsername, String password) {
-        isLoading.setValue(true);
+        isLoading.postValue(true);
         executor.execute(() -> {
             try {
                 User user = null;
@@ -95,6 +100,20 @@ public class AuthViewModel extends AndroidViewModel {
                     return;
                 }
 
+                // Tự động cập nhật mật khẩu lên format mới nếu cần
+                if (PasswordUtils.needsUpgrade(user.getPassword())) {
+                    try {
+                        String newHashedPassword = PasswordUtils.upgradePassword(password, user.getPassword());
+                        if (!newHashedPassword.equals(user.getPassword())) {
+                            user.setPassword(newHashedPassword);
+                            userRepository.updateUser(user);
+                        }
+                    } catch (Exception e) {
+                        // Log lỗi nhưng không ảnh hưởng đến đăng nhập
+                        System.err.println("Error upgrading password: " + e.getMessage());
+                    }
+                }
+
                 // Đăng nhập thành công
                 loginResult.postValue(user);
                 isLoading.postValue(false);
@@ -106,8 +125,17 @@ public class AuthViewModel extends AndroidViewModel {
         });
     }
 
+    /**
+     * Overload method để backward compatibility với code cũ chỉ dùng email
+     * @param email Email
+     * @param password Mật khẩu
+     */
+    public void loginWithEmail(String email, String password) {
+        login(email, password);
+    }
+
     public void register(String userName, String email, String password, String phone) {
-        isLoading.setValue(true);
+        isLoading.postValue(true);
         executor.execute(() -> {
             try {
                 // Kiểm tra email đã tồn tại

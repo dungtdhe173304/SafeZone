@@ -27,9 +27,9 @@
         <ImageView
             android:id="@+id/ic_home"
             android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/ic_home"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/home"
+            android:src="@drawable/ic_home"
             app:tint="@color/footer_icon_color" />
 
         <TextView

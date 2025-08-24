@@ -17,6 +17,12 @@
     <!-- Removed toolbar bell; it will be in header instead per user request -->
 
     <item
+        android:id="@+id/action_my_auctions"
+        android:title="Bài đăng của tôi"
+        android:icon="@drawable/ic_inventory"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_settings"
         android:title="Cài đặt"
         android:icon="@drawable/ic_settings"

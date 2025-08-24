@@ -13,13 +13,18 @@ import androidx.cardview.widget.CardView;
 import com.group5.safezone.R;
 import com.group5.safezone.config.AuthInterceptor;
 import com.group5.safezone.config.SessionManager;
+import com.group5.safezone.view.AdminAuctionApprovalActivity;
+import com.group5.safezone.view.admin.UserManagementActivity;
+import com.group5.safezone.view.admin.ProductManagementActivity;
+import com.group5.safezone.view.admin.OrderManagementActivity;
+import com.group5.safezone.view.admin.ReportsActivity;
 import com.group5.safezone.view.auth.LoginActivity;
 
 public class AdminMainActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
     private TextView tvWelcome;
-    private CardView cardUserManagement, cardProductManagement, cardOrderManagement, cardReports;
+    private CardView cardUserManagement, cardProductManagement, cardOrderManagement, cardAuctionManagement, cardReports, cardSystemSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +50,9 @@ public class AdminMainActivity extends AppCompatActivity {
         cardUserManagement = findViewById(R.id.cardUserManagement);
         cardProductManagement = findViewById(R.id.cardProductManagement);
         cardOrderManagement = findViewById(R.id.cardOrderManagement);
+        cardAuctionManagement = findViewById(R.id.cardAuctionManagement);
         cardReports = findViewById(R.id.cardReports);
+        cardSystemSettings = findViewById(R.id.cardSystemSettings);
     }
 
     private void setupToolbar() {
@@ -55,18 +62,35 @@ public class AdminMainActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-
+        cardUserManagement.setOnClickListener(v -> {
+            startActivity(new Intent(this, UserManagementActivity.class));
+        });
 
         cardProductManagement.setOnClickListener(v -> {
-            // startActivity(new Intent(this, ProductManagementActivity.class));
+            startActivity(new Intent(this, ProductManagementActivity.class));
         });
 
         cardOrderManagement.setOnClickListener(v -> {
-            // startActivity(new Intent(this, OrderManagementActivity.class));
+            startActivity(new Intent(this, OrderManagementActivity.class));
+        });
+
+        cardAuctionManagement.setOnClickListener(v -> {
+            startActivity(new Intent(this, AdminAuctionApprovalActivity.class));
         });
 
         cardReports.setOnClickListener(v -> {
-            startActivity(new Intent(this, ReportManagementActivity.class));
+            // Ưu tiên ReportManagementActivity từ feature/livetreams nếu có
+            try {
+                startActivity(new Intent(this, ReportManagementActivity.class));
+            } catch (Exception e) {
+                // Fallback về ReportsActivity từ master branch
+                startActivity(new Intent(this, ReportsActivity.class));
+            }
+        });
+
+        cardSystemSettings.setOnClickListener(v -> {
+            // TODO: Implement SystemSettingsActivity
+            // startActivity(new Intent(this, SystemSettingsActivity.class));
         });
     }
 

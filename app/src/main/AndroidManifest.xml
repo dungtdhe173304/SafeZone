@@ -26,19 +26,16 @@
         android:theme="@style/Theme.SafeZone"
         tools:ignore="ExtraText">
 
-
         <activity
             android:name=".view.auth.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.SafeZone.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <!-- Needed for showing notifications on Android 13+ (optional if targeting 33+) -->
         <!-- Main Activity -->
         <activity
             android:name=".view.MainActivity"
@@ -48,6 +45,37 @@
         <activity
             android:name=".view.admin.AdminMainActivity"
             android:exported="false" />
+
+        <!-- Admin User Management Activity -->
+        <activity
+            android:name=".view.admin.UserManagementActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Admin Product Management Activity -->
+        <activity
+            android:name=".view.admin.ProductManagementActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Admin Order Management Activity -->
+        <activity
+            android:name=".view.admin.OrderManagementActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Admin Reports Activity -->
+        <activity
+            android:name=".view.admin.ReportsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Report Management Activity -->
+        <activity
+            android:name=".view.admin.ReportManagementActivity"
+            android:exported="false"
+            android:label="Quản lý báo cáo"
+            android:theme="@style/Theme.SafeZone" />
 
         <!-- Wallet Activity -->
         <activity
@@ -103,6 +131,42 @@
             android:label="Live Streaming"
             android:theme="@style/Theme.SafeZone" />
 
+        <!-- Auction Registration Activity -->
+        <activity
+            android:name=".view.AuctionRegistrationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Auction Room Activity -->
+        <activity
+            android:name=".view.AuctionRoomActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Admin Auction Approval Activity -->
+        <activity
+            android:name=".view.AdminAuctionApprovalActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Auction Detail Activity -->
+        <activity
+            android:name=".view.AuctionDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- User Auction Management Activity -->
+        <activity
+            android:name=".view.UserAuctionManagementActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Edit Auction Activity -->
+        <activity
+            android:name=".view.EditAuctionActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
         <!-- Product Detail Activity -->
         <activity
             android:name=".view.ProductDetailActivity"
@@ -143,13 +207,6 @@
             android:name=".view.SalesHistoryActivity"
             android:exported="false"
             android:label="Lịch sử bán hàng"
-            android:theme="@style/Theme.SafeZone" />
-            
-        <!-- Report Management Activity -->
-        <activity
-            android:name=".view.admin.ReportManagementActivity"
-            android:exported="false"
-            android:label="Quản lý báo cáo"
             android:theme="@style/Theme.SafeZone" />
 
     </application>

@@ -8,6 +8,7 @@
     android:fitsSystemWindows="true"
     tools:context=".view.MainActivity">
 
+    <!-- Main Content Layout -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
@@ -25,7 +26,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Fragment Container -->
+        <!-- Dynamic Fragment Container (for navigation) -->
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment_container"
             android:layout_width="0dp"
@@ -35,7 +36,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/footer_container" />
 
-        <!-- Footer - Luôn nằm dưới cùng -->
+        <!-- Default Home Fragment Container (fallback) -->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/home_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:name="com.group5.safezone.view.home.HomeFragment"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/footer_container"
+            tools:layout="@layout/fragment_home" />
+
+        <!-- Footer - Always at bottom -->
         <include
             android:id="@+id/footer_container"
             layout="@layout/footer_layout"
@@ -47,6 +61,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <!-- Navigation Drawer -->
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navigation_view"
         android:layout_width="wrap_content"

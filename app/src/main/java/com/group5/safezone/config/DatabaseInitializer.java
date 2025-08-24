@@ -2,8 +2,9 @@ package com.group5.safezone.config;
 
 import com.group5.safezone.model.entity.User;
 import com.group5.safezone.model.entity.Product;
-import com.group5.safezone.config.PasswordUtils;
 import com.group5.safezone.model.entity.ProductImages;
+import com.group5.safezone.model.entity.Auctions;
+import com.group5.safezone.config.PasswordUtils;
 import com.group5.safezone.R;
 
 import java.util.ArrayList;
@@ -18,6 +19,31 @@ public class DatabaseInitializer {
     public static void populateAsync(AppDatabase db) {
         executor.execute(() -> {
             populateWithTestData(db);
+        });
+    }
+
+    public static void ensureSeedDataAsync(AppDatabase db) {
+        executor.execute(() -> {
+            try {
+                // Nếu chưa có user nào (trường hợp DB trống) thì seed user
+                if (db.userDao().getAllUsers() == null || db.userDao().getAllUsers().isEmpty()) {
+                    db.userDao().insertMultipleUsers(createSampleUsers());
+                }
+
+                boolean hasActive = false;
+                if (db.auctionsDao().getAllAuctions() != null) {
+                    java.util.Date now = new java.util.Date();
+                    for (com.group5.safezone.model.entity.Auctions a : db.auctionsDao().getAllAuctions()) {
+                        if (a.getStatus() != null && a.getStatus().equalsIgnoreCase("active") && a.getEndTime() != null && a.getEndTime().after(now)) {
+                            hasActive = true;
+                            break;
+                        }
+                    }
+                }
+                if (!hasActive) {
+                    insertSampleAuctions(db);
+                }
+            } catch (Exception ignored) { }
         });
     }
 
@@ -38,6 +64,9 @@ public class DatabaseInitializer {
         
         // Tạo ảnh mẫu cho products
         createSampleProductImages(db, sampleProducts);
+
+        // Thêm dữ liệu mẫu cho phiên đấu giá
+        insertSampleAuctions(db);
     }
     
     private static void createSampleProductImages(AppDatabase db, List<Product> products) {
@@ -84,13 +113,27 @@ public class DatabaseInitializer {
         testUser.setDob(new Date(100, 8, 5)); // 2000-09-05
         testUser.setRole("USER");
         testUser.setStatus("ACTIVE"); // Đổi thành ACTIVE để có thể login
-        testUser.setBalance(50000.0);
+        testUser.setBalance(800000.0);
         testUser.setIsVerify(false);
         users.add(testUser);
 
+        // Test user 1
+        User testUser1 = new User();
+        testUser1.setUserName("testuser1");
+        testUser1.setPassword(PasswordUtils.hashPassword("test123")); // Hash password
+        testUser1.setEmail("test1@example.com");
+        testUser1.setPhone("0945678902");
+        testUser1.setGender(true);
+        testUser1.setDob(new Date(100, 8, 5)); // 2000-09-05
+        testUser1.setRole("USER");
+        testUser1.setStatus("ACTIVE"); // Đổi thành ACTIVE để có thể login
+        testUser1.setBalance(800000.0);
+        testUser1.setIsVerify(false);
+        users.add(testUser1);
+
         // Thêm user mới - có thể đăng nhập bằng cả username và email
         User newUser = new User();
-        newUser.setUserName("join");
+        newUser.setUserName("john");
         newUser.setPassword(PasswordUtils.hashPassword("john123")); // Hash password
         newUser.setEmail("john.doe@gmail.com");
         newUser.setPhone("0987654321");
@@ -98,7 +141,7 @@ public class DatabaseInitializer {
         newUser.setDob(new Date(95, 5, 15)); // 1995-06-15
         newUser.setRole("USER");
         newUser.setStatus("ACTIVE");
-        newUser.setBalance(75000.0);
+        newUser.setBalance(750000.0);
         newUser.setIsVerify(true);
         users.add(newUser);
 
@@ -149,5 +192,64 @@ public class DatabaseInitializer {
         products.add(product3);
 
         return products;
+    }
+
+    private static void insertSampleAuctions(AppDatabase db) {
+        // Product 1
+        Product p1 = new Product("P001");
+        p1.setProductName("Nhẫn Sức Mạnh Hiếm");
+        p1.setPrice(450000.0);
+        p1.setUserId(1);
+        p1.setIsAuctionItem(true);
+        db.productDao().insert(p1);
+
+        ProductImages img11 = new ProductImages();
+        img11.setProductId("P001");
+        img11.setName("ring1");
+        img11.setPath("local://ring1");
+        db.productImagesDao().insert(img11);
+
+        Auctions a1 = new Auctions();
+        a1.setProductId("P001");
+        a1.setSellerUserId(1);
+        a1.setStartPrice(300000.0);
+        a1.setBuyNowPrice(9000000.0);
+        // Sử dụng thời gian cụ thể thay vì relative time
+        a1.setStartTime(createDate(2025, 8, 24, 20, 0, 0));
+        a1.setEndTime(createDate(2025, 8, 25, 20, 0, 0));
+        a1.setStatus("active");
+        db.auctionsDao().insert(a1);
+
+        // Product 2
+        Product p2 = new Product("P002");
+        p2.setProductName("Áo Giáp Ma Thuật Epic");
+        p2.setPrice(1200000.0);
+        p2.setUserId(1);
+        p2.setIsAuctionItem(true);
+        db.productDao().insert(p2);
+
+        ProductImages img21 = new ProductImages();
+        img21.setProductId("P002");
+        img21.setName("armor1");
+        img21.setPath("local://armor1");
+        db.productImagesDao().insert(img21);
+
+        Auctions a2 = new Auctions();
+        a2.setProductId("P002");
+        a2.setSellerUserId(1);
+        a2.setStartPrice(800000.0);
+        a2.setBuyNowPrice(8000000.0);
+        a2.setStartTime(createDate(2025, 8, 25, 10, 0, 0));
+        a2.setEndTime(createDate(2025, 8, 27, 18, 0, 0));
+        a2.setStatus("active");
+        db.auctionsDao().insert(a2);
+    }
+
+    // Helper method để tạo Date dễ dàng hơn
+    private static Date createDate(int year, int month, int day, int hour, int minute, int second) {
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.set(year, month - 1, day, hour, minute, second); // month - 1 vì Calendar tính từ 0
+        calendar.set(java.util.Calendar.MILLISECOND, 0);
+        return calendar.getTime();
     }
 }

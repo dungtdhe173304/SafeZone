@@ -80,7 +80,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                 intent = new Intent(this, MainActivity.class);
                 break;
             case 2:
-                //intent = new Intent(this, AuctionActivity.class);
+                // Currently route Auction to Main for now
+                intent = new Intent(this, MainActivity.class);
                 break;
             case 3:
                 intent = new Intent(this, WalletActivity.class);
