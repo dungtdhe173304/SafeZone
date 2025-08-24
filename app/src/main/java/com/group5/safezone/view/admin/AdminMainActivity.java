@@ -79,10 +79,17 @@ public class AdminMainActivity extends AppCompatActivity {
         });
 
         cardReports.setOnClickListener(v -> {
-            startActivity(new Intent(this, ReportsActivity.class));
+            // Ưu tiên ReportManagementActivity từ feature/livetreams nếu có
+            try {
+                startActivity(new Intent(this, ReportManagementActivity.class));
+            } catch (Exception e) {
+                // Fallback về ReportsActivity từ master branch
+                startActivity(new Intent(this, ReportsActivity.class));
+            }
         });
 
         cardSystemSettings.setOnClickListener(v -> {
+            // TODO: Implement SystemSettingsActivity
             // startActivity(new Intent(this, SystemSettingsActivity.class));
         });
     }

@@ -90,4 +90,19 @@ public class UserRepository {
     public List<User> getUsersByRole(String role) {
         return userDao.getUsersByRole(role);
     }
+    
+    // Search users by username or email
+    public List<User> searchUsersByUsernameOrEmail(String query) {
+        return userDao.searchUsersByUsernameOrEmail("%" + query + "%");
+    }
+    
+    public Future<List<User>> searchUsersByUsernameOrEmailAsync(String query) {
+        return executor.submit(() -> userDao.searchUsersByUsernameOrEmail("%" + query + "%"));
+    }
+
+    public void shutdown() {
+        if (executor != null) {
+            executor.shutdown();
+        }
+    }
 }

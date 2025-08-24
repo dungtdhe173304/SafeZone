@@ -50,16 +50,34 @@ public class AuthViewModel extends AndroidViewModel {
         return errorMessage;
     }
 
-    public void login(String email, String password) {
+    /**
+     * Đăng nhập với email hoặc username
+     * @param emailOrUsername Email hoặc tên đăng nhập
+     * @param password Mật khẩu
+     */
+    public void login(String emailOrUsername, String password) {
         isLoading.postValue(true);
         executor.execute(() -> {
             try {
-                User user = userRepository.getUserByEmail(email);
-
-                if (user == null) {
-                    errorMessage.postValue("Email không tồn tại trong hệ thống");
-                    isLoading.postValue(false);
-                    return;
+                User user = null;
+                
+                // Kiểm tra xem input là email hay username
+                if (android.util.Patterns.EMAIL_ADDRESS.matcher(emailOrUsername).matches()) {
+                    // Nếu là email format, tìm user bằng email
+                    user = userRepository.getUserByEmail(emailOrUsername);
+                    if (user == null) {
+                        errorMessage.postValue("Email không tồn tại trong hệ thống");
+                        isLoading.postValue(false);
+                        return;
+                    }
+                } else {
+                    // Nếu không phải email format, tìm user bằng username
+                    user = userRepository.getUserByUserName(emailOrUsername);
+                    if (user == null) {
+                        errorMessage.postValue("Tên đăng nhập không tồn tại trong hệ thống");
+                        isLoading.postValue(false);
+                        return;
+                    }
                 }
 
                 // Kiểm tra mật khẩu
@@ -105,6 +123,15 @@ public class AuthViewModel extends AndroidViewModel {
                 isLoading.postValue(false);
             }
         });
+    }
+
+    /**
+     * Overload method để backward compatibility với code cũ chỉ dùng email
+     * @param email Email
+     * @param password Mật khẩu
+     */
+    public void loginWithEmail(String email, String password) {
+        login(email, password);
     }
 
     public void register(String userName, String email, String password, String phone) {

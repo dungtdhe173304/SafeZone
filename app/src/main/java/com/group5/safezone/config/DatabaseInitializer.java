@@ -5,6 +5,7 @@ import com.group5.safezone.model.entity.Product;
 import com.group5.safezone.model.entity.ProductImages;
 import com.group5.safezone.model.entity.Auctions;
 import com.group5.safezone.config.PasswordUtils;
+import com.group5.safezone.R;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,7 +27,7 @@ public class DatabaseInitializer {
             try {
                 // Nếu chưa có user nào (trường hợp DB trống) thì seed user
                 if (db.userDao().getAllUsers() == null || db.userDao().getAllUsers().isEmpty()) {
-                    //db.userDao().insertMultipleUsers(createSampleUsers());
+                    db.userDao().insertMultipleUsers(createSampleUsers());
                 }
 
                 boolean hasActive = false;
@@ -49,16 +50,40 @@ public class DatabaseInitializer {
     private static void populateWithTestData(AppDatabase db) {
         // Xóa tất cả dữ liệu cũ
         db.userDao().deleteAllUsers();
-        // Không xóa các bảng khác để giữ dữ liệu người dùng khi update, chỉ thêm nếu chưa có
+        db.productDao().deleteAllProducts();
 
         // Tạo danh sách users mẫu
         List<User> sampleUsers = createSampleUsers();
+ 
+        // Tạo danh sách products mẫu
+        List<Product> sampleProducts = createSampleProducts();
 
         // Insert dữ liệu vào database
         db.userDao().insertMultipleUsers(sampleUsers);
+        db.productDao().insertMultipleProducts(sampleProducts);
+        
+        // Tạo ảnh mẫu cho products
+        createSampleProductImages(db, sampleProducts);
 
-        // Thêm dữ liệu mẫu cho sản phẩm + ảnh + phiên đấu giá
+        // Thêm dữ liệu mẫu cho phiên đấu giá
         insertSampleAuctions(db);
+    }
+    
+    private static void createSampleProductImages(AppDatabase db, List<Product> products) {
+        // Tạo ảnh mẫu cho từng product
+        for (Product product : products) {
+            // Tạo 1-2 ảnh mẫu cho mỗi product
+            for (int i = 1; i <= 2; i++) {
+                ProductImages image = new ProductImages();
+                image.setProductId(product.getId());
+                image.setName("sample_image_" + i);
+                // Sử dụng ảnh mẫu từ drawable (placeholder)
+                image.setPath("android.resource://com.group5.safezone/" + R.drawable.ic_info);
+                image.setCreatedAt(new Date());
+                image.setUpdatedAt(new Date());
+                db.productImagesDao().insert(image);
+            }
+        }
     }
 
     private static List<User> createSampleUsers() {
@@ -92,7 +117,7 @@ public class DatabaseInitializer {
         testUser.setIsVerify(false);
         users.add(testUser);
 
-        // Test user
+        // Test user 1
         User testUser1 = new User();
         testUser1.setUserName("testuser1");
         testUser1.setPassword(PasswordUtils.hashPassword("test123")); // Hash password
@@ -106,7 +131,67 @@ public class DatabaseInitializer {
         testUser1.setIsVerify(false);
         users.add(testUser1);
 
+        // Thêm user mới - có thể đăng nhập bằng cả username và email
+        User newUser = new User();
+        newUser.setUserName("john");
+        newUser.setPassword(PasswordUtils.hashPassword("john123")); // Hash password
+        newUser.setEmail("john.doe@gmail.com");
+        newUser.setPhone("0987654321");
+        newUser.setGender(false); // false = nữ
+        newUser.setDob(new Date(95, 5, 15)); // 1995-06-15
+        newUser.setRole("USER");
+        newUser.setStatus("ACTIVE");
+        newUser.setBalance(750000.0);
+        newUser.setIsVerify(true);
+        users.add(newUser);
+
         return users;
+    }
+
+    private static List<Product> createSampleProducts() {
+        List<Product> products = new ArrayList<>();
+
+        // Sample product 1
+        Product product1 = new Product();
+        product1.setId("prod_001");
+        product1.setProductName("iPhone 15 Pro");
+        product1.setFee(1.0); // Seller pays fee
+        product1.setPrice(25000000.0);
+        product1.setPublicPrivate("public");
+        product1.setStatus("Active");
+        product1.setUserId(1);
+        product1.setCreatedAt(new Date());
+        product1.setUpdatedAt(new Date());
+        products.add(product1);
+
+        // Sample product 2
+        Product product2 = new Product();
+        product2.setId("prod_002");
+        product2.setProductName("MacBook Air M2");
+        product2.setFee(2.0); // Buyer pays fee
+        product2.setPrice(35000000.0);
+        product2.setPublicPrivate("private");
+        product2.setUserView("admin,testuser");
+        product2.setStatus("Active");
+        product2.setUserId(2);
+        product2.setCreatedAt(new Date());
+        product2.setUpdatedAt(new Date());
+        products.add(product2);
+
+        // Sample product 3
+        Product product3 = new Product();
+        product3.setId("prod_003");
+        product3.setProductName("AirPods Pro");
+        product3.setFee(1.0); // Seller pays fee
+        product3.setPrice(8000000.0);
+        product3.setPublicPrivate("public");
+        product3.setStatus("Active");
+        product3.setUserId(1);
+        product3.setCreatedAt(new Date());
+        product3.setUpdatedAt(new Date());
+        products.add(product3);
+
+        return products;
     }
 
     private static void insertSampleAuctions(AppDatabase db) {
@@ -129,8 +214,9 @@ public class DatabaseInitializer {
         a1.setSellerUserId(1);
         a1.setStartPrice(300000.0);
         a1.setBuyNowPrice(9000000.0);
-        a1.setStartTime(new java.util.Date(System.currentTimeMillis() - 3600_000));
-        a1.setEndTime(new java.util.Date(System.currentTimeMillis() + 24 * 3600_000));
+        // Sử dụng thời gian cụ thể thay vì relative time
+        a1.setStartTime(createDate(2025, 8, 24, 20, 0, 0));
+        a1.setEndTime(createDate(2025, 8, 25, 20, 0, 0));
         a1.setStatus("active");
         db.auctionsDao().insert(a1);
 
@@ -153,9 +239,17 @@ public class DatabaseInitializer {
         a2.setSellerUserId(1);
         a2.setStartPrice(800000.0);
         a2.setBuyNowPrice(8000000.0);
-        a2.setStartTime(new java.util.Date(System.currentTimeMillis() - 7200_000));
-        a2.setEndTime(new java.util.Date(System.currentTimeMillis() + 36 * 3600_000));
+        a2.setStartTime(createDate(2025, 8, 25, 10, 0, 0));
+        a2.setEndTime(createDate(2025, 8, 27, 18, 0, 0));
         a2.setStatus("active");
         db.auctionsDao().insert(a2);
+    }
+
+    // Helper method để tạo Date dễ dàng hơn
+    private static Date createDate(int year, int month, int day, int hour, int minute, int second) {
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.set(year, month - 1, day, hour, minute, second); // month - 1 vì Calendar tính từ 0
+        calendar.set(java.util.Calendar.MILLISECOND, 0);
+        return calendar.getTime();
     }
 }

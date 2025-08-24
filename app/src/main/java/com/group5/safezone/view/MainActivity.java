@@ -4,31 +4,55 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.activity.OnBackPressedCallback;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.IntentFilter;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.group5.safezone.R;
 import com.group5.safezone.config.AuthInterceptor;
 import com.group5.safezone.config.SessionManager;
+import com.group5.safezone.config.NotificationPermissionUtil;
+import com.group5.safezone.config.NotificationEvents;
+import com.group5.safezone.view.Wallet.WalletActivity;
 import com.group5.safezone.view.admin.AdminMainActivity;
 import com.group5.safezone.view.auth.LoginActivity;
 import com.group5.safezone.view.base.BaseActivity;
+import com.group5.safezone.view.notification.NotificationsActivity;
+import com.group5.safezone.view.PurchaseHistoryActivity;
+import com.group5.safezone.view.SalesHistoryActivity;
 import com.group5.safezone.view.UserAuctionManagementActivity;
+import com.google.android.material.navigation.NavigationView;
+import com.group5.safezone.Constant.Chatbox.ConstantKey;
+
+import com.zegocloud.zimkit.BuildConfig;
+import com.zegocloud.zimkit.services.ZIMKit;
 
 public class MainActivity extends BaseActivity {
 
-
     private SessionManager sessionManager;
 
-
+    // UI Components
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private View notificationBellView;
+    private TextView notificationBadge;
+    private BroadcastReceiver notificationReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +65,7 @@ public class MainActivity extends BaseActivity {
 
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        setupToolbar();
-        // Setup footer navigation click handlers
-        setupFooter();
-
+        
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -53,13 +74,41 @@ public class MainActivity extends BaseActivity {
 
         sessionManager = new SessionManager(this);
 
-        // Host HomeFragment
+        // Initialize ZEGOCLOUD SDK
+        initZegoCloud();
+
+        initViews();
+        setupToolbar();
+        setupDrawer();
+        setupBackPressedDispatcher();
+        
+        // Load HomeFragment as default - prioritize the drawer-based layout
         if (savedInstanceState == null) {
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.home_container, new com.group5.safezone.view.home.HomeFragment());
-            ft.commitNow();
+            // Check if we have fragment_container (drawer layout) or home_container (simple layout)
+            if (findViewById(R.id.fragment_container) != null) {
+                // Drawer-based layout
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, new HomeFragment())
+                        .commit();
+            } else if (findViewById(R.id.home_container) != null) {
+                // Simple layout fallback
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.home_container, new com.group5.safezone.view.home.HomeFragment());
+                ft.commitNow();
+            }
         }
+        
+        // Hỏi quyền thông báo nếu đang bị tắt ngay khi vào app
+        NotificationPermissionUtil.promptIfNeeded(this, 7001);
+        
+        // Setup footer for navigation
+        setupFooter();
+    }
+
+    private void initViews() {
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.navigation_view);
     }
 
     private void setupToolbar() {
@@ -70,7 +119,108 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    // Bỏ hiển thị thông tin chi tiết người dùng
+    private void setupDrawer() {
+        if (drawerLayout == null || navigationView == null) {
+            return; // Skip drawer setup if not available
+        }
+        
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawerLayout, toolbar,
+                R.string.nav_open, R.string.nav_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                // Load HomeFragment
+                loadHomeFragment();
+            } else if (id == R.id.nav_products) {
+                // Load HomeFragment (which contains products)
+                loadHomeFragment();
+            } else if (id == R.id.nav_wallet) {
+                startActivity(new Intent(this, WalletActivity.class));
+            } else if (id == R.id.nav_purchase_history) {
+                startActivity(new Intent(this, PurchaseHistoryActivity.class));
+            } else if (id == R.id.nav_sales_history) {
+                startActivity(new Intent(this, SalesHistoryActivity.class));
+            } else if (id == R.id.nav_chat) {
+                startActivity(new Intent(this, com.group5.safezone.view.chat.ChatActivity.class));
+            } else if (id == R.id.nav_livestream) {
+                startActivity(new Intent(this, com.group5.safezone.view.livestreaming.LiveStreamingMainActivity.class));
+            } else if (id == R.id.nav_settings) {
+                Toast.makeText(this, "Cài đặt đang phát triển", Toast.LENGTH_SHORT).show();
+            } else if (id == R.id.nav_about) {
+                Toast.makeText(this, "SafeZone v1.0", Toast.LENGTH_SHORT).show();
+            } else if (id == R.id.nav_logout) {
+                logout();
+            }
+            drawerLayout.closeDrawers();
+            return true;
+        });
+
+        // Bind header data
+        View header = navigationView.getHeaderView(0);
+        if (header != null) {
+            TextView name = header.findViewById(R.id.tv_header_name);
+            TextView email = header.findViewById(R.id.tv_header_email);
+            if (name != null) name.setText(sessionManager.getUserName());
+            if (email != null) email.setText(sessionManager.getEmail());
+
+            // Add notification bell to toolbar
+            setupNotificationBell(toolbar);
+        }
+    }
+
+    private void setupNotificationBell(Toolbar toolbar) {
+        if (toolbar != null) {
+            notificationBellView = getLayoutInflater().inflate(R.layout.action_notification, toolbar, false);
+            Toolbar.LayoutParams lp = new Toolbar.LayoutParams(
+                    Toolbar.LayoutParams.WRAP_CONTENT,
+                    Toolbar.LayoutParams.MATCH_PARENT);
+            lp.gravity = android.view.Gravity.END;
+            notificationBellView.setLayoutParams(lp);
+            toolbar.addView(notificationBellView);
+            notificationBadge = notificationBellView.findViewById(R.id.tvBadge);
+            notificationBellView.setOnClickListener(v -> {
+                startActivity(new Intent(this, NotificationsActivity.class));
+            });
+            refreshUnreadCount();
+        }
+    }
+
+    private void setupBackPressedDispatcher() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (drawerLayout != null && drawerLayout.isDrawerOpen(androidx.core.view.GravityCompat.START)) {
+                    drawerLayout.closeDrawer(androidx.core.view.GravityCompat.START);
+                } else {
+                    setEnabled(false);
+                    MainActivity.super.onBackPressed();
+                }
+            }
+        });
+    }
+
+    private void refreshUnreadCount() {
+        if (notificationBadge == null) return;
+        new Thread(() -> {
+            try {
+                com.group5.safezone.repository.NotificationRepository nr = new com.group5.safezone.repository.NotificationRepository(getApplication());
+                int count = nr.getUnreadByUserIdAsync(sessionManager.getUserId()).get().size();
+                runOnUiThread(() -> {
+                    if (count > 0) {
+                        notificationBadge.setText(String.valueOf(Math.min(count, 99)));
+                        notificationBadge.setVisibility(View.VISIBLE);
+                    } else {
+                        notificationBadge.setVisibility(View.GONE);
+                    }
+                });
+            } catch (Exception ignored) {}
+        }).start();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -126,11 +276,67 @@ public class MainActivity extends BaseActivity {
             return;
         }
         AuthInterceptor.checkAccountStatus(this);
-        // Delegate refresh to fragment
-        Fragment frag = getSupportFragmentManager().findFragmentById(R.id.home_container);
-        if (frag instanceof com.group5.safezone.view.home.HomeFragment) {
-            ((com.group5.safezone.view.home.HomeFragment) frag).refreshData();
+
+        // Lắng nghe cập nhật thông báo để cập nhật badge real-time
+        if (notificationReceiver == null) {
+            notificationReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    if (NotificationEvents.ACTION_UPDATED.equals(intent.getAction())) {
+                        refreshUnreadCount();
+                    }
+                }
+            };
+            LocalBroadcastManager.getInstance(this)
+                    .registerReceiver(notificationReceiver, new IntentFilter(NotificationEvents.ACTION_UPDATED));
+        }
+
+        // Cập nhật lại badge khi quay lại màn hình
+        refreshUnreadCount();
+        
+        // Reload current fragment to refresh data
+        reloadCurrentFragment();
+    }
+    
+    private void reloadCurrentFragment() {
+        // Try both fragment containers
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (currentFragment == null) {
+            currentFragment = getSupportFragmentManager().findFragmentById(R.id.home_container);
+        }
+        
+        if (currentFragment instanceof HomeFragment) {
+            System.out.println("=== MainActivity: Reloading HomeFragment on resume ===");
+            ((HomeFragment) currentFragment).reloadProducts();
+        } else if (currentFragment instanceof com.group5.safezone.view.home.HomeFragment) {
+            ((com.group5.safezone.view.home.HomeFragment) currentFragment).refreshData();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (notificationReceiver != null) {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(notificationReceiver);
+            notificationReceiver = null;
+        }
+    }
+
+    private void initZegoCloud() {
+        ZIMKit.initWith(this.getApplication(), ConstantKey.appID, ConstantKey.appSign);
+        ZIMKit.initNotifications();
+    }
+
+    public void loadHomeFragment() {
+        // Check which container is available and load appropriate fragment
+        if (findViewById(R.id.fragment_container) != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, new HomeFragment())
+                    .commit();
+        } else if (findViewById(R.id.home_container) != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.home_container, new com.group5.safezone.view.home.HomeFragment())
+                    .commit();
         }
     }
 }
-

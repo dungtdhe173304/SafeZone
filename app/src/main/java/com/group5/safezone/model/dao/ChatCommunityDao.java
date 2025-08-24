@@ -32,4 +32,4 @@ public interface ChatCommunityDao {
 
     @Delete
     void delete(ChatCommunity chatCommunity);
-}
+} 

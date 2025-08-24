@@ -19,10 +19,11 @@ import com.group5.safezone.config.SessionManager;
 import com.group5.safezone.view.MainActivity;
 import com.group5.safezone.view.admin.AdminMainActivity;
 import com.group5.safezone.viewmodel.AuthViewModel;
+import com.group5.safezone.config.NotificationPermissionUtil;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private EditText etEmail, etPassword;
+    private EditText etEmailOrUsername, etPassword;
     private Button btnLogin;
     private TextView tvForgotPassword, tvRegister;
     private ProgressBar progressBar;
@@ -45,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        etEmail = findViewById(R.id.etEmail);
+        etEmailOrUsername = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.btnLogin);
         tvForgotPassword = findViewById(R.id.tvForgotPassword);
@@ -91,29 +92,27 @@ public class LoginActivity extends AppCompatActivity {
             String userRole = sessionManager.getUserRole();
             navigateToMainScreen(userRole);
         }
+        // Nhắc người dùng cấp quyền thông báo nếu bị tắt
+        NotificationPermissionUtil.promptIfNeeded(this, 7000);
     }
 
     private void performLogin() {
-        String email = etEmail.getText().toString().trim();
+        String emailOrUsername = etEmailOrUsername.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
-        if (validateInput(email, password)) {
-            authViewModel.login(email, password);
+        if (validateInput(emailOrUsername, password)) {
+            authViewModel.login(emailOrUsername, password);
         }
     }
 
-    private boolean validateInput(String email, String password) {
-        if (TextUtils.isEmpty(email)) {
-            etEmail.setError("Vui lòng nhập email");
-            etEmail.requestFocus();
+    private boolean validateInput(String emailOrUsername, String password) {
+        if (TextUtils.isEmpty(emailOrUsername)) {
+            etEmailOrUsername.setError("Vui lòng nhập email hoặc tên đăng nhập");
+            etEmailOrUsername.requestFocus();
             return false;
         }
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etEmail.setError("Email không hợp lệ");
-            etEmail.requestFocus();
-            return false;
-        }
+        // Không cần validate email format nữa vì có thể là username
 
         if (TextUtils.isEmpty(password)) {
             etPassword.setError("Vui lòng nhập mật khẩu");

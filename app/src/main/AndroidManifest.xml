@@ -2,6 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    
+    <!-- Live Streaming Permissions -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,14 +26,12 @@
         android:theme="@style/Theme.SafeZone"
         tools:ignore="ExtraText">
 
-
         <activity
             android:name=".view.auth.LoginActivity"
-            android:exported="true">
+            android:exported="true"
             android:theme="@style/Theme.SafeZone.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -29,7 +40,6 @@
         <activity
             android:name=".view.MainActivity"
             android:exported="false" />
-
 
         <!-- Admin Main Activity -->
         <activity
@@ -58,6 +68,67 @@
         <activity
             android:name=".view.admin.ReportsActivity"
             android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Report Management Activity -->
+        <activity
+            android:name=".view.admin.ReportManagementActivity"
+            android:exported="false"
+            android:label="Quản lý báo cáo"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Wallet Activity -->
+        <activity
+            android:name=".view.Wallet.WalletActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="safezone" />
+            </intent-filter>
+        </activity>
+
+        <!-- Notifications Activity -->
+        <activity
+            android:name=".view.notification.NotificationsActivity"
+            android:exported="false" />
+
+        <!-- Chat Activity -->
+        <activity
+            android:name=".view.chat.ChatActivity"
+            android:exported="false" />
+
+        <!-- Chat Notification Service -->
+        <service
+            android:name=".service.ChatNotificationService"
+            android:exported="false" />
+
+        <!-- Live Streaming Activities -->
+        <activity
+            android:name=".view.livestreaming.LiveStreamingActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.SafeZone.NoActionBar" />
+
+        <activity
+            android:name=".view.livestreaming.LiveStreamingDemoActivity"
+            android:exported="false"
+            android:label="Live Streaming Demo"
+            android:theme="@style/Theme.SafeZone" />
+
+        <activity
+            android:name=".view.livestreaming.JoinStreamActivity"
+            android:exported="false"
+            android:label="Join Live Stream"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Live Streaming Main Activity -->
+        <activity
+            android:name=".view.livestreaming.LiveStreamingMainActivity"
+            android:exported="false"
+            android:label="Live Streaming"
             android:theme="@style/Theme.SafeZone" />
 
         <!-- Auction Registration Activity -->
@@ -94,6 +165,48 @@
         <activity
             android:name=".view.EditAuctionActivity"
             android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Product Detail Activity -->
+        <activity
+            android:name=".view.ProductDetailActivity"
+            android:exported="false"
+            android:label="Chi tiết sản phẩm"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Edit Product Activity -->
+        <activity
+            android:name=".view.EditProductActivity"
+            android:exported="false"
+            android:label="Chỉnh sửa sản phẩm"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Buy Product Activity -->
+        <activity
+            android:name=".view.BuyProductActivity"
+            android:exported="false"
+            android:label="Mua sản phẩm"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Purchase History Activity -->
+        <activity
+            android:name=".view.PurchaseHistoryActivity"
+            android:exported="false"
+            android:label="Lịch sử mua hàng"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Order Detail Activity -->
+        <activity
+            android:name=".view.OrderDetailActivity"
+            android:exported="false"
+            android:label="Chi tiết đơn hàng"
+            android:theme="@style/Theme.SafeZone" />
+            
+        <!-- Sales History Activity -->
+        <activity
+            android:name=".view.SalesHistoryActivity"
+            android:exported="false"
+            android:label="Lịch sử bán hàng"
             android:theme="@style/Theme.SafeZone" />
 
     </application>

@@ -11,7 +11,7 @@ import java.util.Date;
         foreignKeys = {
                 @ForeignKey(entity = User.class,
                         parentColumns = "id",
-                        childColumns = "UserId",
+                        childColumns = "userId",
                         onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = User.class,
                         parentColumns = "id",
@@ -30,7 +30,7 @@ public class Transactions {
     @PrimaryKey(autoGenerate = true)
     private int id;
 
-    @ColumnInfo(name = "UserId")
+    @ColumnInfo(name = "userId")
     private int userId;
 
     @ColumnInfo(name = "transactionType")
@@ -57,9 +57,20 @@ public class Transactions {
     @ColumnInfo(name = "auctionId")
     private Integer auctionId;
 
+    @ColumnInfo(name = "referenceId")
+    private String referenceId; // ZaloPay transaction ID
+
+    @ColumnInfo(name = "createdAt")
+    private Date createdAt;
+
+    @ColumnInfo(name = "updatedAt")
+    private Date updatedAt;
+
     // Constructor
     public Transactions() {
         this.transactionDate = new Date();
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
     }
 
     // Getters and Setters
@@ -92,4 +103,41 @@ public class Transactions {
 
     public Integer getAuctionId() { return auctionId; }
     public void setAuctionId(Integer auctionId) { this.auctionId = auctionId; }
+
+    public String getReferenceId() { return referenceId; }
+    public void setReferenceId(String referenceId) { this.referenceId = referenceId; }
+
+    public Date getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+
+    public Date getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(Date updatedAt) { this.updatedAt = updatedAt; }
+
+    // Transaction types constants
+    public static final String TYPE_DEPOSIT = "DEPOSIT";
+    public static final String TYPE_WITHDRAW = "WITHDRAW";
+    public static final String TYPE_TRANSFER = "TRANSFER";
+    public static final String TYPE_PAYMENT = "PAYMENT";
+    
+    // Additional transaction types found in database
+    public static final String TYPE_POSTING_FEE = "POSTING_FEI";
+    public static final String TYPE_PRODUCT_PURCHASE = "Mua sản phẩ";
+    public static final String TYPE_REFUND = "Hoàn tiền kh";
+    public static final String TYPE_PAYMENT_COMPLETE = "Thanh toán c";
+    
+    // Donate transaction types
+    public static final String TYPE_DONATE = "DONATE";
+    public static final String TYPE_DONATE_RECEIVED = "DONATE_RECEIVED";
+
+    // Status constants
+    public static final String STATUS_PENDING = "PENDING";
+    public static final String STATUS_SUCCESS = "SUCCESS";
+    public static final String STATUS_FAILED = "FAILED";
+    
+    // Additional status constants found in database
+    public static final String STATUS_COMPLETED = "Hoàn thành";
+    public static final String STATUS_SUCCESSFUL = "Thành công";
+    public static final String STATUS_ERROR = "Lỗi";
+    public static final String STATUS_PROCESSING = "Đang xử lý";
+    public static final String STATUS_WAITING = "Chờ xử lý";
 }

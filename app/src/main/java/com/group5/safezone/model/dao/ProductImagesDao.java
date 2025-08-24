@@ -24,6 +24,12 @@ public interface ProductImagesDao {
     @Insert
     void insert(ProductImages productImages);
 
+    @Insert
+    void insertMultiple(List<ProductImages> productImages);
+
+    @Query("SELECT * FROM productImages WHERE productId = :productId")
+    List<ProductImages> getByProductId(String productId);
+
     @Update
     void update(ProductImages productImages);
 
@@ -32,4 +38,8 @@ public interface ProductImagesDao {
 
     @Query("DELETE FROM productImages WHERE productId = :productId")
     void deleteImagesByProductId(String productId);
+
+
+
+
 }
