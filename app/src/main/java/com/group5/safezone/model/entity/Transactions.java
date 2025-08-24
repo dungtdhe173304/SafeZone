@@ -118,9 +118,26 @@ public class Transactions {
     public static final String TYPE_WITHDRAW = "WITHDRAW";
     public static final String TYPE_TRANSFER = "TRANSFER";
     public static final String TYPE_PAYMENT = "PAYMENT";
+    
+    // Additional transaction types found in database
+    public static final String TYPE_POSTING_FEE = "POSTING_FEI";
+    public static final String TYPE_PRODUCT_PURCHASE = "Mua sản phẩ";
+    public static final String TYPE_REFUND = "Hoàn tiền kh";
+    public static final String TYPE_PAYMENT_COMPLETE = "Thanh toán c";
+    
+    // Donate transaction types
+    public static final String TYPE_DONATE = "DONATE";
+    public static final String TYPE_DONATE_RECEIVED = "DONATE_RECEIVED";
 
     // Status constants
     public static final String STATUS_PENDING = "PENDING";
     public static final String STATUS_SUCCESS = "SUCCESS";
     public static final String STATUS_FAILED = "FAILED";
+    
+    // Additional status constants found in database
+    public static final String STATUS_COMPLETED = "Hoàn thành";
+    public static final String STATUS_SUCCESSFUL = "Thành công";
+    public static final String STATUS_ERROR = "Lỗi";
+    public static final String STATUS_PROCESSING = "Đang xử lý";
+    public static final String STATUS_WAITING = "Chờ xử lý";
 }

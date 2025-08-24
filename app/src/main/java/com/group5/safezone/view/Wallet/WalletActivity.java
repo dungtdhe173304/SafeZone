@@ -41,10 +41,14 @@ import com.group5.safezone.config.AppNotificationHelper;
 import org.json.JSONObject;
 import org.json.JSONException;
 
+import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import android.os.Handler;
 
 import vn.zalopay.sdk.Environment;
 import vn.zalopay.sdk.ZaloPayError;
@@ -85,7 +89,10 @@ public class WalletActivity extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
 
             // Initialize ZaloPay SDK
+            android.util.Log.d("WalletActivity", "Initializing ZaloPay SDK...");
+            android.util.Log.d("WalletActivity", "App ID: 2553, Environment: SANDBOX");
             ZaloPaySDK.init(2553, Environment.SANDBOX);
+            android.util.Log.d("WalletActivity", "ZaloPay SDK initialized successfully");
 
             initViews();
             initData();
@@ -500,162 +507,289 @@ public class WalletActivity extends AppCompatActivity {
         currentDepositAmount = amount;
         showLoading(true);
         
+        android.util.Log.d("WalletActivity", "=== STARTING DEPOSIT PROCESS ===");
+        android.util.Log.d("WalletActivity", "Amount: " + amount);
+        android.util.Log.d("WalletActivity", "User ID: " + sessionManager.getUserId());
+        
+        // Test ZaloPay SDK connection first
         try {
-            // Create ZaloPay order trước
-            CreateOrder orderApi = new CreateOrder();
-            String amountString = String.valueOf((int) amount);
-            android.util.Log.d("WalletActivity", "Creating ZaloPay order with amount: " + amountString);
-            JSONObject data = orderApi.createOrder(amountString);
-            android.util.Log.d("WalletActivity", "ZaloPay API response: " + (data != null ? data.toString() : "NULL"));
-            
-            // Kiểm tra response có hợp lệ không
-            if (!isValidZaloPayResponse(data)) {
-                showLoading(false);
-                Toast.makeText(this, "Lỗi: Response từ ZaloPay không hợp lệ", Toast.LENGTH_LONG).show();
-                return;
-            }
-            
-            String code = data.getString("return_code");
-            if ("1".equals(code)) {
-                // Kiểm tra zp_trans_token có tồn tại không
-                if (!data.has("zp_trans_token")) {
-                    showLoading(false);
-                    Toast.makeText(this, "Lỗi: Response không có zp_trans_token", Toast.LENGTH_LONG).show();
-                    android.util.Log.e("WalletActivity", "ZaloPay API response missing zp_trans_token: " + data.toString());
+            android.util.Log.d("WalletActivity", "Testing ZaloPay SDK connection...");
+            ZaloPaySDK.getInstance();
+            android.util.Log.d("WalletActivity", "ZaloPay SDK instance available");
+        } catch (Exception e) {
+            android.util.Log.e("WalletActivity", "ZaloPay SDK not available", e);
+            showLoading(false);
+            Toast.makeText(this, "Lỗi: ZaloPay SDK không khả dụng. Vui lòng thử lại sau.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        
+        // Thực hiện nạp tiền với retry
+        performDepositWithRetry(amount, 0);
+    }
+    
+    private void performDepositWithRetry(double amount, int retryCount) {
+        final int MAX_RETRIES = 2;
+        
+        android.util.Log.d("WalletActivity", "=== PERFORMING DEPOSIT (Attempt " + (retryCount + 1) + "/" + (MAX_RETRIES + 1) + ") ===");
+        
+        // Sử dụng background thread để tránh ANR
+        new Thread(() -> {
+            try {
+                // Create ZaloPay order trước
+                android.util.Log.d("WalletActivity", "Creating CreateOrder instance...");
+                CreateOrder orderApi = new CreateOrder();
+                String amountString = String.valueOf((int) amount);
+                android.util.Log.d("WalletActivity", "Creating ZaloPay order with amount: " + amountString);
+                android.util.Log.d("WalletActivity", "About to call orderApi.createOrder...");
+                
+                JSONObject data = orderApi.createOrder(amountString);
+                android.util.Log.d("WalletActivity", "=== ZALOPAY API RESPONSE RECEIVED ===");
+                android.util.Log.d("WalletActivity", "Response data: " + (data != null ? data.toString() : "NULL"));
+                android.util.Log.d("WalletActivity", "Response type: " + (data != null ? data.getClass().getSimpleName() : "NULL"));
+                
+                // Kiểm tra response có hợp lệ không
+                if (data == null) {
+                    android.util.Log.e("WalletActivity", "ZaloPay API returned null response");
+                    
+                    // Retry nếu còn cơ hội
+                    if (retryCount < MAX_RETRIES) {
+                        android.util.Log.d("WalletActivity", "Retrying due to null response...");
+                        runOnUiThread(() -> {
+                            new Handler().postDelayed(() -> performDepositWithRetry(amount, retryCount + 1), 2000); // Retry sau 2 giây
+                        });
+                        return;
+                    }
+                    
+                    runOnUiThread(() -> {
+                        showLoading(false);
+                        Toast.makeText(WalletActivity.this, "Lỗi: Không nhận được phản hồi từ ZaloPay sau " + (MAX_RETRIES + 1) + " lần thử. Vui lòng kiểm tra kết nối mạng và thử lại.", Toast.LENGTH_LONG).show();
+                    });
                     return;
                 }
                 
-                String token = data.getString("zp_trans_token");
+                android.util.Log.d("WalletActivity", "Validating ZaloPay response...");
+                if (!isValidZaloPayResponse(data)) {
+                    android.util.Log.e("WalletActivity", "ZaloPay response validation failed");
+                    
+                    // Retry nếu còn cơ hội
+                    if (retryCount < MAX_RETRIES) {
+                        android.util.Log.d("WalletActivity", "Retrying due to invalid response...");
+                        runOnUiThread(() -> {
+                            new Handler().postDelayed(() -> performDepositWithRetry(amount, retryCount + 1), 2000); // Retry sau 2 giây
+                        });
+                        return;
+                    }
+                    
+                    runOnUiThread(() -> {
+                        showLoading(false);
+                        Toast.makeText(WalletActivity.this, "Lỗi: Response từ ZaloPay không hợp lệ sau " + (MAX_RETRIES + 1) + " lần thử.", Toast.LENGTH_LONG).show();
+                    });
+                    return;
+                }
                 
-                // Tạo transaction với status PENDING
-                Transactions pendingTransaction = new Transactions();
-                pendingTransaction.setUserId(sessionManager.getUserId());
-                pendingTransaction.setTransactionType(Transactions.TYPE_DEPOSIT);
-                pendingTransaction.setAmount(amount);
-                pendingTransaction.setDescription(getString(R.string.deposit) + " qua ZaloPay");
-                pendingTransaction.setStatus(Transactions.STATUS_PENDING);
-                pendingTransaction.setReferenceId(token);
+                android.util.Log.d("WalletActivity", "ZaloPay response validation passed");
+                String code = data.getString("return_code");
+                android.util.Log.d("WalletActivity", "ZaloPay return_code: " + code);
                 
-                // Insert transaction vào database
-                android.util.Log.d("WalletActivity", "Inserting transaction: " + pendingTransaction.getAmount());
-                transactionRepository.insertTransaction(pendingTransaction, new TransactionRepository.OnInsertCallback() {
-                    @Override
-                    public void onResult(long transactionId) {
-                        currentTransactionId = transactionId; // Lưu ID để update sau
-                        android.util.Log.d("WalletActivity", "Transaction inserted with ID: " + transactionId);
-                        
-                        // Process ZaloPay payment
-                        android.util.Log.d("WalletActivity", "Starting ZaloPay payment with token: " + token);
-                        android.util.Log.d("WalletActivity", "ZaloPay SDK instance: " + ZaloPaySDK.getInstance());
-                        android.util.Log.d("WalletActivity", "Starting ZaloPay payment with callback URL: safezone://");
-                        android.util.Log.d("WalletActivity", "About to call ZaloPaySDK.payOrder...");
-                        try {
-                            ZaloPaySDK.getInstance().payOrder(WalletActivity.this, token, "safezone://", new PayOrderListener() {
-                                @Override
-                                public void onPaymentSucceeded(String transactionId, String zpTransToken, String appTransId) {
-                                    android.util.Log.d("WalletActivity", "=== ZALOPAY CALLBACK: onPaymentSucceeded ===");
-                                    android.util.Log.d("WalletActivity", "transactionId: " + transactionId);
-                                    android.util.Log.d("WalletActivity", "zpTransToken: " + zpTransToken);
-                                    android.util.Log.d("WalletActivity", "appTransId: " + appTransId);
-                                    android.util.Log.d("WalletActivity", "ZaloPay payment succeeded: " + transactionId);
-                                    
-                                    // Update transaction status to SUCCESS
-                                    android.util.Log.d("WalletActivity", "Updating transaction to SUCCESS: " + transactionId);
-                                    // Update trong database bằng ID
-                                    transactionRepository.updateTransactionStatus(currentTransactionId, Transactions.STATUS_SUCCESS, transactionId);
-                                    
-                                    // Update user balance
-                                    android.util.Log.d("WalletActivity", "Updating user balance with amount: " + amount);
-                                    updateUserBalance(amount);
-                                    
-                                                            // Refresh UI
-                                                            runOnUiThread(() -> {
-                                        showLoading(false);
-                                        currentDepositAmount = 0; // Reset số tiền nạp
-                                        android.util.Log.d("WalletActivity", "Payment UI refresh completed");
+                if ("1".equals(code)) {
+                    android.util.Log.d("WalletActivity", "ZaloPay order created successfully");
+                    // Kiểm tra zp_trans_token có tồn tại không
+                    if (!data.has("zp_trans_token")) {
+                        runOnUiThread(() -> {
+                            showLoading(false);
+                            android.util.Log.e("WalletActivity", "ZaloPay API response missing zp_trans_token: " + data.toString());
+                            Toast.makeText(WalletActivity.this, "Lỗi: Response không có zp_trans_token", Toast.LENGTH_LONG).show();
+                        });
+                        return;
+                    }
+                    
+                    String token = data.getString("zp_trans_token");
+                    android.util.Log.d("WalletActivity", "ZaloPay token received: " + token);
+                    
+                    // Tạo transaction với status PENDING
+                    android.util.Log.d("WalletActivity", "Creating pending transaction...");
+                    Transactions pendingTransaction = new Transactions();
+                    pendingTransaction.setUserId(sessionManager.getUserId());
+                    pendingTransaction.setTransactionType(Transactions.TYPE_DEPOSIT);
+                    pendingTransaction.setAmount(amount);
+                    pendingTransaction.setDescription(getString(R.string.deposit) + " qua ZaloPay");
+                    pendingTransaction.setStatus(Transactions.STATUS_PENDING);
+                    pendingTransaction.setReferenceId(token);
+                    
+                    // Insert transaction vào database
+                    android.util.Log.d("WalletActivity", "Inserting transaction: " + pendingTransaction.getAmount());
+                    transactionRepository.insertTransaction(pendingTransaction, new TransactionRepository.OnInsertCallback() {
+                        @Override
+                        public void onResult(long transactionId) {
+                            currentTransactionId = transactionId; // Lưu ID để update sau
+                            android.util.Log.d("WalletActivity", "Transaction inserted with ID: " + transactionId);
                             
-                            // Balance và transactions sẽ được refresh trong onDepositSuccess
-                            // Không cần gọi refreshBalance() và loadTransactions() ở đây nữa
-                                        // Tạo thông báo nạp tiền thành công (không đổi schema DB)
-                                        try {
-                                            Notification n = new Notification();
-                                            n.setUserId(sessionManager.getUserId());
-                                            n.setType("DEPOSIT_SUCCESS");
-                                            NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("vi","VN"));
-                                            n.setMessage("Nạp tiền thành công " + nf.format(amount));
-                                            n.setRelatedEntityType("TRANSACTION");
-                                            n.setRelatedEntityId((int) currentTransactionId);
-                                            n.setCreatedBy(sessionManager.getUserId());
-                                            notificationRepository.insert(n);
-                                        } catch (Exception e) { /* ignore */ }
+                            // Process ZaloPay payment trên UI thread
+                            runOnUiThread(() -> {
+                                // Process ZaloPay payment
+                                android.util.Log.d("WalletActivity", "Starting ZaloPay payment with token: " + token);
+                                android.util.Log.d("WalletActivity", "ZaloPay SDK instance: " + ZaloPaySDK.getInstance());
+                                android.util.Log.d("WalletActivity", "Starting ZaloPay payment with callback URL: safezone://");
+                                android.util.Log.d("WalletActivity", "About to call ZaloPaySDK.payOrder...");
+                                try {
+                                    ZaloPaySDK.getInstance().payOrder(WalletActivity.this, token, "safezone://", new PayOrderListener() {
+                                        @Override
+                                        public void onPaymentSucceeded(String transactionId, String zpTransToken, String appTransId) {
+                                            android.util.Log.d("WalletActivity", "=== ZALOPAY CALLBACK: onPaymentSucceeded ===");
+                                            android.util.Log.d("WalletActivity", "transactionId: " + transactionId);
+                                            android.util.Log.d("WalletActivity", "zpTransToken: " + zpTransToken);
+                                            android.util.Log.d("WalletActivity", "appTransId: " + appTransId);
+                                            android.util.Log.d("WalletActivity", "ZaloPay payment succeeded: " + transactionId);
+                                            
+                                            // Update transaction status to SUCCESS
+                                            android.util.Log.d("WalletActivity", "Updating transaction to SUCCESS: " + transactionId);
+                                            // Update trong database bằng ID
+                                            transactionRepository.updateTransactionStatus(currentTransactionId, Transactions.STATUS_SUCCESS, transactionId);
+                                            
+                                            // Update user balance
+                                            android.util.Log.d("WalletActivity", "Updating user balance with amount: " + amount);
+                                            updateUserBalance(amount);
+                                            
+                                            // Refresh UI
+                                            runOnUiThread(() -> {
+                                                showLoading(false);
+                                                currentDepositAmount = 0; // Reset số tiền nạp
+                                                android.util.Log.d("WalletActivity", "Payment UI refresh completed");
+                                    
+                                                // Balance và transactions sẽ được refresh trong onDepositSuccess
+                                                // Không cần gọi refreshBalance() và loadTransactions() ở đây nữa
+                                                // Tạo thông báo nạp tiền thành công (không đổi schema DB)
+                                                try {
+                                                    Notification n = new Notification();
+                                                    n.setUserId(sessionManager.getUserId());
+                                                    n.setType("DEPOSIT_SUCCESS");
+                                                    NumberFormat nf = NumberFormat.getCurrencyInstance(new Locale("vi","VN"));
+                                                    n.setMessage("Nạp tiền thành công " + nf.format(amount));
+                                                    n.setRelatedEntityType("TRANSACTION");
+                                                    n.setRelatedEntityId((int) currentTransactionId);
+                                                    n.setCreatedBy(sessionManager.getUserId());
+                                                    notificationRepository.insert(n);
+                                                } catch (Exception e) { /* ignore */ }
 
-                                        // Popup notification ngay trên hệ thống
-                                        if (shouldShowNotification()) {
-                                            AppNotificationHelper.showDepositSuccess(WalletActivity.this, amount, (int) currentTransactionId);
-                                        } else {
-                                            requestNotificationPermissionWithRationale();
+                                                // Popup notification ngay trên hệ thống
+                                                if (shouldShowNotification()) {
+                                                    AppNotificationHelper.showDepositSuccess(WalletActivity.this, amount, (int) currentTransactionId);
+                                                } else {
+                                                    requestNotificationPermissionWithRationale();
+                                                }
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onPaymentCanceled(String zpTransToken, String appTransId) {
+                                            android.util.Log.d("WalletActivity", "=== ZALOPAY CALLBACK: onPaymentCanceled ===");
+                                            android.util.Log.d("WalletActivity", "zpTransToken: " + zpTransToken);
+                                            android.util.Log.d("WalletActivity", "appTransId: " + appTransId);
+                                            android.util.Log.d("WalletActivity", "ZaloPay payment canceled: " + zpTransToken);
+                                            
+                                            // Update transaction status to FAILED
+                                            transactionRepository.updateTransactionStatus(currentTransactionId, Transactions.STATUS_FAILED, zpTransToken);
+                                            
+                                            runOnUiThread(() -> {
+                                                showLoading(false);
+                                                Toast.makeText(WalletActivity.this, "Hủy nạp tiền", Toast.LENGTH_LONG).show();
+                                                loadTransactions();
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onPaymentError(ZaloPayError zaloPayError, String zpTransToken, String appTransId) {
+                                            android.util.Log.d("WalletActivity", "=== ZALOPAY CALLBACK: onPaymentError ===");
+                                            android.util.Log.d("WalletActivity", "zaloPayError: " + zaloPayError.toString());
+                                            android.util.Log.d("WalletActivity", "zpTransToken: " + zpTransToken);
+                                            android.util.Log.d("WalletActivity", "appTransId: " + appTransId);
+                                            android.util.Log.d("WalletActivity", "ZaloPay payment failed: " + zaloPayError.toString());
+                                            
+                                            // Update transaction status to FAILED
+                                            transactionRepository.updateTransactionStatus(currentTransactionId, Transactions.STATUS_FAILED, zpTransToken);
+                                            
+                                            runOnUiThread(() -> {
+                                                showLoading(false);
+                                                Toast.makeText(WalletActivity.this, "Lỗi nạp tiền: " + zaloPayError.toString(), Toast.LENGTH_LONG).show();
+                                                loadTransactions();
+                                            });
                                         }
                                     });
-                                }
-
-                                @Override
-                                public void onPaymentCanceled(String zpTransToken, String appTransId) {
-                                    android.util.Log.d("WalletActivity", "=== ZALOPAY CALLBACK: onPaymentCanceled ===");
-                                    android.util.Log.d("WalletActivity", "zpTransToken: " + zpTransToken);
-                                    android.util.Log.d("WalletActivity", "appTransId: " + appTransId);
-                                    android.util.Log.d("WalletActivity", "ZaloPay payment canceled: " + zpTransToken);
-                                    
-                                    // Update transaction status to FAILED
-                                    transactionRepository.updateTransactionStatus(currentTransactionId, Transactions.STATUS_FAILED, zpTransToken);
-                                    
-                                    runOnUiThread(() -> {
-                                        showLoading(false);
-                                        Toast.makeText(WalletActivity.this, "Hủy nạp tiền", Toast.LENGTH_LONG).show();
-                                        loadTransactions();
-                                    });
-                                }
-
-                                @Override
-                                public void onPaymentError(ZaloPayError zaloPayError, String zpTransToken, String appTransId) {
-                                    android.util.Log.d("WalletActivity", "=== ZALOPAY CALLBACK: onPaymentError ===");
-                                    android.util.Log.d("WalletActivity", "zaloPayError: " + zaloPayError.toString());
-                                    android.util.Log.d("WalletActivity", "zpTransToken: " + zpTransToken);
-                                    android.util.Log.d("WalletActivity", "appTransId: " + appTransId);
-                                    android.util.Log.d("WalletActivity", "ZaloPay payment error: " + zaloPayError.toString());
-                                    
-                                    // Update transaction status to FAILED
-                                    transactionRepository.updateTransactionStatus(currentTransactionId, Transactions.STATUS_FAILED, zpTransToken);
-                                    
-                                    runOnUiThread(() -> {
-                                        showLoading(false);
-                                        Toast.makeText(WalletActivity.this, "Lỗi nạp tiền: " + zaloPayError.toString(), Toast.LENGTH_LONG).show();
-                                        loadTransactions();
-                                    });
+                                    android.util.Log.d("WalletActivity", "ZaloPaySDK.payOrder called successfully");
+                                } catch (Exception e) {
+                                    android.util.Log.e("WalletActivity", "Error calling ZaloPaySDK.payOrder", e);
+                                    showLoading(false);
+                                    Toast.makeText(WalletActivity.this, "Lỗi khởi tạo ZaloPay: " + e.getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             });
-                            android.util.Log.d("WalletActivity", "ZaloPaySDK.payOrder called successfully");
-                        } catch (Exception e) {
-                            android.util.Log.e("WalletActivity", "Error calling ZaloPaySDK.payOrder", e);
-                            showLoading(false);
-                            Toast.makeText(WalletActivity.this, "Lỗi khởi tạo ZaloPay: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
-                    }
-                });
-            } else {
-                showLoading(false);
-                handleZaloPayError(data, "tạo đơn hàng");
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        showLoading(false);
+                        android.util.Log.e("WalletActivity", "ZaloPay order creation failed with code: " + code);
+                        handleZaloPayError(data, "tạo đơn hàng");
+                    });
+                }
+            } catch (Exception e) {
+                android.util.Log.e("WalletActivity", "=== EXCEPTION IN PROCESS DEPOSIT ===", e);
+                String errorMessage = "Lỗi: " + e.getMessage();
+                
+                // Xử lý các loại lỗi cụ thể
+                if (e instanceof JSONException) {
+                    errorMessage = "Lỗi xử lý dữ liệu từ ZaloPay: " + e.getMessage();
+                } else if (e instanceof IllegalArgumentException) {
+                    errorMessage = "Lỗi tham số: " + e.getMessage();
+                } else if (e instanceof SocketTimeoutException) {
+                    errorMessage = "Lỗi kết nối: ZaloPay không phản hồi trong thời gian chờ. Vui lòng thử lại.";
+                } else if (e instanceof UnknownHostException) {
+                    errorMessage = "Lỗi kết nối: Không thể kết nối đến ZaloPay. Vui lòng kiểm tra kết nối mạng.";
+                } else if (e instanceof IOException) {
+                    errorMessage = "Lỗi kết nối mạng: " + e.getMessage() + ". Vui lòng kiểm tra kết nối và thử lại.";
+                }
+                
+                android.util.Log.e("WalletActivity", "Final error message: " + errorMessage);
+                
+                // Retry nếu còn cơ hội và là lỗi network
+                if (retryCount < MAX_RETRIES && (e instanceof SocketTimeoutException || 
+                    e instanceof UnknownHostException || e instanceof IOException)) {
+                    
+                    android.util.Log.d("WalletActivity", "Retrying due to network error...");
+                    runOnUiThread(() -> {
+                        new Handler().postDelayed(() -> performDepositWithRetry(amount, retryCount + 1), 3000); // Retry sau 3 giây
+                    });
+                    return;
+                }
+                
+                // Hiển thị dialog với tùy chọn retry cho lỗi network
+                final String finalErrorMessage = errorMessage;
+                if (e instanceof SocketTimeoutException || 
+                    e instanceof UnknownHostException || 
+                    e instanceof IOException) {
+                    
+                    runOnUiThread(() -> {
+                        new AlertDialog.Builder(WalletActivity.this)
+                            .setTitle("Lỗi Kết Nối")
+                            .setMessage(finalErrorMessage + "\n\nBạn có muốn thử lại không?")
+                            .setPositiveButton("Thử lại", (dialog, which) -> {
+                                if (currentDepositAmount > 0) {
+                                    android.util.Log.d("WalletActivity", "Manual retry after network error with amount: " + currentDepositAmount);
+                                    performDepositWithRetry(currentDepositAmount, 0); // Reset retry count
+                                }
+                            })
+                            .setNegativeButton("Hủy", (dialog, which) -> {
+                                currentDepositAmount = 0; // Reset số tiền nạp
+                            })
+                            .setCancelable(false)
+                            .show();
+                    });
+                } else {
+                    runOnUiThread(() -> {
+                        Toast.makeText(WalletActivity.this, finalErrorMessage, Toast.LENGTH_LONG).show();
+                    });
+                }
             }
-        } catch (Exception e) {
-            showLoading(false);
-            String errorMessage = "Lỗi: " + e.getMessage();
-            if (e instanceof JSONException) {
-                errorMessage = "Lỗi xử lý dữ liệu từ ZaloPay: " + e.getMessage();
-            } else if (e instanceof IllegalArgumentException) {
-                errorMessage = "Lỗi tham số: " + e.getMessage();
-            }
-            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
-            android.util.Log.e("WalletActivity", "Error in processDeposit", e);
-        }
+        }).start();
     }
 
     private void updateUserBalance(double amount) {
@@ -708,16 +842,29 @@ public class WalletActivity extends AppCompatActivity {
             return false;
         }
         
+        android.util.Log.d("WalletActivity", "Validating ZaloPay response: " + response.toString());
+        
+        // Kiểm tra cơ bản - response phải có ít nhất return_code
         if (!response.has("return_code")) {
             android.util.Log.e("WalletActivity", "ZaloPay response missing return_code: " + response.toString());
             return false;
         }
         
-        if (!response.has("return_message")) {
-            android.util.Log.e("WalletActivity", "ZaloPay response missing return_message: " + response.toString());
-            return false;
+        String returnCode = response.optString("return_code", "");
+        android.util.Log.d("WalletActivity", "ZaloPay return_code: " + returnCode);
+        
+        // Nếu return_code = "1" (thành công), cần kiểm tra thêm zp_trans_token
+        if ("1".equals(returnCode)) {
+            if (!response.has("zp_trans_token")) {
+                android.util.Log.e("WalletActivity", "ZaloPay success response missing zp_trans_token: " + response.toString());
+                return false;
+            }
+            android.util.Log.d("WalletActivity", "ZaloPay response validation passed - success with token");
+            return true;
         }
         
+        // Nếu return_code khác "1", vẫn là response hợp lệ (có thể là lỗi)
+        android.util.Log.d("WalletActivity", "ZaloPay response validation passed - error response");
         return true;
     }
     
@@ -741,11 +888,13 @@ public class WalletActivity extends AppCompatActivity {
                 .setPositiveButton("Thử lại", (dialog, which) -> {
                     // Retry với số tiền hiện tại
                     if (currentDepositAmount > 0) {
+                        android.util.Log.d("WalletActivity", "Retrying deposit with amount: " + currentDepositAmount);
                         processDeposit(currentDepositAmount);
                     }
                 })
                 .setNegativeButton("Hủy", (dialog, which) -> {
                     showLoading(false);
+                    currentDepositAmount = 0; // Reset số tiền nạp
                 })
                 .setCancelable(false)
                 .show();
@@ -754,6 +903,7 @@ public class WalletActivity extends AppCompatActivity {
             android.util.Log.e("WalletActivity", "Error handling ZaloPay error response", e);
             Toast.makeText(this, "Lỗi xử lý phản hồi từ ZaloPay", Toast.LENGTH_LONG).show();
             showLoading(false);
+            currentDepositAmount = 0; // Reset số tiền nạp
         }
     }
 

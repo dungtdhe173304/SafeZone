@@ -30,6 +30,20 @@
             android:textColor="@android:color/white"
             android:gravity="center_vertical" />
 
+        <!-- Donate Button - Chỉ hiển thị cho audience -->
+        <Button
+            android:id="@+id/btn_donate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="💝 Donate"
+            android:textAllCaps="false"
+            android:backgroundTint="@android:color/holo_red_light"
+            android:textColor="@android:color/white"
+            android:padding="8dp"
+            android:minWidth="80dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone" />
+
         <Button
             android:id="@+id/btn_share_stream"
             android:layout_width="wrap_content"
@@ -68,7 +82,7 @@
 
     </LinearLayout>
 
-    <!-- Fragment container for live streaming -->
+    <!-- Fragment Container for ZEGOCLOUD -->
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="0dp"
@@ -76,6 +90,16 @@
         app:layout_constraintTop_toBottomOf="@id/top_bar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Donate Animation View - Overlay trên livestream -->
+    <com.group5.safezone.view.livestreaming.DonateAnimationView
+        android:id="@+id/donate_animation_view"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

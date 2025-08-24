@@ -6,39 +6,39 @@
     android:orientation="vertical"
     android:background="@android:color/white">
 
-    <!-- Search Header Section -->
+    <!-- Search Header Section - Giảm padding và kích thước -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/gradient_toolbar"
         android:elevation="4dp"
-        android:paddingTop="16dp"
-        android:paddingBottom="20dp">
+        android:paddingTop="8dp"
+        android:paddingBottom="12dp">
 
-        <!-- Search Section -->
+        <!-- Search Section - Giảm kích thước -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingHorizontal="20dp">
+            android:paddingHorizontal="16dp">
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="40dp"
                 android:layout_weight="1"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:background="@drawable/search_background"
-                android:paddingHorizontal="16dp"
+                android:paddingHorizontal="12dp"
                 android:elevation="2dp">
 
                 <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:src="@drawable/ic_search"
-                    android:layout_marginEnd="12dp"
+                    android:layout_marginEnd="10dp"
                     app:tint="@android:color/darker_gray" />
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -48,15 +48,15 @@
                     android:layout_weight="1"
                     android:hint="Tìm kiếm sản phẩm..."
                     android:inputType="text"
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     android:textColor="@android:color/black"
                     android:background="@android:color/transparent"
                     android:textColorHint="@android:color/darker_gray" />
 
                 <ImageButton
                     android:id="@+id/btnClearSearch"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
                     android:background="?android:attr/selectableItemBackgroundBorderless"
                     android:visibility="gone"
@@ -65,12 +65,12 @@
 
             <ImageButton
                 android:id="@+id/btnFilter"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginStart="12dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
                 android:src="@android:drawable/ic_menu_sort_by_size"
                 android:background="@drawable/circle_background"
-                android:padding="12dp"
+                android:padding="10dp"
                 app:tint="@android:color/white" />
         </LinearLayout>
     </LinearLayout>
@@ -81,15 +81,15 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="16dp">
 
-        <!-- Add Product Section -->
+        <!-- Add Product Section - Giảm kích thước và padding -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
+            android:layout_marginBottom="12dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="2dp"
             android:background="@drawable/modern_card_background">
 
             <LinearLayout
@@ -97,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:padding="20dp">
+                android:padding="12dp">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -109,29 +109,29 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Bán sản phẩm của bạn"
-                        android:textSize="18sp"
+                        android:textSize="15sp"
                         android:textStyle="bold"
                         android:textColor="@android:color/black"
-                        android:layout_marginBottom="4dp" />
+                        android:layout_marginBottom="2dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Chia sẻ sản phẩm với cộng đồng SafeZone"
-                        android:textSize="14sp"
+                        android:textSize="11sp"
                         android:textColor="@android:color/darker_gray" />
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/btnOpenAddProduct"
                     android:layout_width="wrap_content"
-                    android:layout_height="48dp"
+                    android:layout_height="36dp"
                     android:text="+ Đăng bài"
-                    android:textSize="14sp"
+                    android:textSize="12sp"
                     android:textStyle="bold"
-                    android:background="@drawable/modern_button_primary"
-                    android:textColor="@android:color/white"
-                    android:paddingHorizontal="20dp"
+                    android:background="@android:color/white"
+                    android:textColor="@android:color/holo_blue_dark"
+                    android:paddingHorizontal="12dp"
                     android:elevation="2dp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -142,14 +142,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="12dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Sản phẩm nổi bật"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black" />
 
@@ -158,11 +158,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0 sản phẩm"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textColor="@android:color/darker_gray"
                 android:background="@drawable/rounded_button_background"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="6dp" />
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp" />
         </LinearLayout>
 
         <!-- Loading Progress for Products -->
@@ -172,20 +172,20 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="40dp"
+            android:padding="32dp"
             android:visibility="gone">
 
             <ProgressBar
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginBottom="16dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginBottom="12dp"
                 android:indeterminateTint="@android:color/holo_blue_dark" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Đang tải sản phẩm..."
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textColor="@android:color/darker_gray" />
         </LinearLayout>
 
@@ -196,31 +196,31 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:padding="40dp"
+            android:padding="32dp"
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:src="@drawable/ic_shopping_bag"
                 android:alpha="0.5"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="12dp"
                 app:tint="@android:color/darker_gray" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Chưa có sản phẩm nào"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="6dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hãy là người đầu tiên đăng sản phẩm!"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textColor="@android:color/darker_gray"
                 android:gravity="center" />
         </LinearLayout>
@@ -232,7 +232,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:clipToPadding="false"
-            android:paddingBottom="20dp" />
+            android:paddingBottom="16dp" />
 
         <!-- Loading Progress -->
         <ProgressBar

@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,7 +20,9 @@ import com.group5.safezone.R;
 import com.zegocloud.uikit.prebuilt.livestreaming.ZegoUIKitPrebuiltLiveStreamingConfig;
 import com.zegocloud.uikit.prebuilt.livestreaming.ZegoUIKitPrebuiltLiveStreamingFragment;
 
-public class LiveStreamingActivity extends AppCompatActivity implements ShareDialog.OnShareListener {
+import android.util.Log;
+
+public class LiveStreamingActivity extends AppCompatActivity implements ShareDialog.OnShareListener, DonateDialog.OnDonateListener {
 
     // ZEGOCLOUD credentials from documentation
     private static final long APP_ID = 306600199L;
@@ -37,17 +40,26 @@ public class LiveStreamingActivity extends AppCompatActivity implements ShareDia
     private String userName;
     private String liveID;
     private boolean isHost;
+    
+    // Donate system
+    private DonateManager donateManager;
+    private DonateAnimationView donateAnimationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_live_streaming);
 
+        // Initialize donate system
+        donateManager = new DonateManager(this);
+        donateAnimationView = findViewById(R.id.donate_animation_view);
+
         // Check permissions before starting live stream
         if (checkPermissions()) {
             addFragment();
         }
         setupShareButton();
+        setupDonateButton();
         updateStreamTitle();
     }
 
@@ -137,66 +149,123 @@ public class LiveStreamingActivity extends AppCompatActivity implements ShareDia
     private void setupShareButton() {
         Button btnShare = findViewById(R.id.btn_share_stream);
         if (btnShare != null) {
-            btnShare.setOnClickListener(v -> {
-                showShareDialog();
-            });
+            btnShare.setOnClickListener(v -> showShareDialog());
         }
+    }
 
-        // Add camera and microphone status check buttons
-        Button btnCheckCamera = findViewById(R.id.btn_check_camera);
-        Button btnCheckMic = findViewById(R.id.btn_check_mic);
-        
-        if (btnCheckCamera != null) {
-            btnCheckCamera.setOnClickListener(v -> {
-                LiveStreamingHelper.showCameraStatus(this);
-                showTroubleshootingDialog("Camera", LiveStreamingHelper.getCameraTroubleshootingTips());
+    private void setupDonateButton() {
+        Button btnDonate = findViewById(R.id.btn_donate);
+        if (btnDonate != null) {
+            // Chỉ hiển thị nút donate cho audience (người xem)
+            if (!isHost) {
+                btnDonate.setVisibility(View.VISIBLE);
+                btnDonate.setOnClickListener(v -> showDonateDialog());
+            } else {
+                btnDonate.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void showDonateDialog() {
+        try {
+            // Lấy host ID từ userID hiện tại (trong trường hợp này, host là người đang stream)
+            // userID có thể là "user_3", chúng ta cần lấy số thực
+            String hostId = userID;
+            String hostName = userName;
+            
+            if (hostId == null || hostName == null || liveID == null) {
+                Toast.makeText(this, "Lỗi: Thông tin livestream không hợp lệ", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            // Log để debug
+            Log.d("LiveStreaming", "Showing donate dialog - hostId: " + hostId + ", hostName: " + hostName + ", liveID: " + liveID);
+            
+            DonateDialog dialog = DonateDialog.newInstance(hostId, hostName, liveID);
+            if (dialog != null) {
+                dialog.setOnDonateListener(this);
+                dialog.show(getSupportFragmentManager(), "DonateDialog");
+            } else {
+                Toast.makeText(this, "Lỗi: Không thể tạo dialog donate", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Log.e("LiveStreaming", "Error showing donate dialog: " + e.getMessage());
+            Toast.makeText(this, "Lỗi: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onDonate(int amount, String hostId, String liveId) {
+        // Xử lý donate
+        donateManager.processDonate(amount, hostId, liveId, new DonateManager.OnDonateResultListener() {
+            @Override
+            public void onDonateSuccess(int donatedAmount, double hostReceivedAmount) {
+                // Hiển thị animation donate
+                showDonateAnimation(donatedAmount);
+                
+                // Có thể thêm notification cho host
+                Toast.makeText(LiveStreamingActivity.this, 
+                    "Cảm ơn bạn đã donate " + formatCurrency(donatedAmount) + "!", 
+                    Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onDonateFailed(String errorMessage) {
+                Toast.makeText(LiveStreamingActivity.this, 
+                    "Donate thất bại: " + errorMessage, 
+                    Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void showDonateAnimation(int amount) {
+        if (donateAnimationView != null) {
+            // Chọn emoji dựa trên số tiền
+            String emoji = getEmojiForAmount(amount);
+            
+            donateAnimationView.startDonateAnimation(amount, emoji, () -> {
+                // Animation hoàn thành
+                Toast.makeText(this, "Animation donate hoàn thành!", Toast.LENGTH_SHORT).show();
             });
         }
-        
-        if (btnCheckMic != null) {
-            btnCheckMic.setOnClickListener(v -> {
-                LiveStreamingHelper.showMicrophoneStatus(this);
-                showTroubleshootingDialog("Microphone", LiveStreamingHelper.getMicrophoneTroubleshootingTips());
-            });
+    }
+
+    private String getEmojiForAmount(int amount) {
+        if (amount >= 100000) return "👑";
+        if (amount >= 50000) return "💎";
+        if (amount >= 20000) return "🌟";
+        if (amount >= 10000) return "🎉";
+        return "💖";
+    }
+
+    private String formatCurrency(int amount) {
+        if (amount >= 1000) {
+            return String.format("%.0fK VNĐ", amount / 1000.0);
         }
+        return amount + " VNĐ";
     }
 
     private void updateStreamTitle() {
-        TextView tvTitle = findViewById(R.id.tv_stream_title);
-        if (tvTitle != null) {
-            String title = isHost ? "🎥 Live Stream (Host)" : "👁️ Live Stream (Viewer)";
-            tvTitle.setText(title);
+        TextView tvStreamTitle = findViewById(R.id.tv_stream_title);
+        if (tvStreamTitle != null) {
+            String title = isHost ? "Live Stream - " + userName : "Watching - " + userName;
+            tvStreamTitle.setText(title);
         }
     }
 
-    /**
-     * Check if required permissions are granted
-     */
     private boolean checkPermissions() {
         for (String permission : REQUIRED_PERMISSIONS) {
             if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                // Request permissions
-                requestPermissions();
+                ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, PERMISSION_REQUEST_CODE);
                 return false;
             }
         }
         return true;
     }
 
-    /**
-     * Request required permissions
-     */
-    private void requestPermissions() {
-        ActivityCompat.requestPermissions(this, REQUIRED_PERMISSIONS, PERMISSION_REQUEST_CODE);
-    }
-
-    /**
-     * Handle permission request result
-     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        
         if (requestCode == PERMISSION_REQUEST_CODE) {
             boolean allGranted = true;
             for (int result : grantResults) {
@@ -207,57 +276,11 @@ public class LiveStreamingActivity extends AppCompatActivity implements ShareDia
             }
             
             if (allGranted) {
-                // All permissions granted, start live stream
                 addFragment();
-                Toast.makeText(this, "Camera and microphone permissions granted!", Toast.LENGTH_SHORT).show();
             } else {
-                // Some permissions denied
-                Toast.makeText(this, "Camera and microphone permissions are required for live streaming!", Toast.LENGTH_LONG).show();
-                // You can show a dialog explaining why permissions are needed
-                showPermissionExplanationDialog();
+                Toast.makeText(this, "Camera and microphone permissions are required for live streaming", Toast.LENGTH_LONG).show();
+                finish();
             }
         }
-    }
-
-    /**
-     * Show dialog explaining why permissions are needed
-     */
-    private void showPermissionExplanationDialog() {
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle("Permissions Required")
-            .setMessage("Camera and microphone permissions are required to start live streaming. Please grant these permissions in Settings.")
-            .setPositiveButton("Grant Permissions", (dialog, which) -> {
-                requestPermissions();
-            })
-            .setNegativeButton("Cancel", (dialog, which) -> {
-                finish(); // Close activity if permissions not granted
-            })
-            .setCancelable(false)
-            .show();
-    }
-
-    /**
-     * Show troubleshooting dialog for camera or microphone issues
-     */
-    private void showTroubleshootingDialog(String title, String tips) {
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-            .setTitle(title + " Troubleshooting")
-            .setMessage(tips)
-            .setPositiveButton("Got it", null)
-            .setNeutralButton("Check Status", (dialog, which) -> {
-                if ("Camera".equals(title)) {
-                    LiveStreamingHelper.showCameraStatus(this);
-                } else {
-                    LiveStreamingHelper.showMicrophoneStatus(this);
-                }
-            })
-            .show();
-    }
-
-    @SuppressLint("GestureBackNavigation")
-    @Override
-    public void onBackPressed() {
-        // Handle back button press for live streaming
-        super.onBackPressed();
     }
 }

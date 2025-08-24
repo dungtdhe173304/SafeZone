@@ -94,17 +94,24 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             // Set amount with color
             if (transaction.getAmount() != null) {
                 NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
-                String amountText = formatter.format(transaction.getAmount());
+                String amountText = formatter.format(Math.abs(transaction.getAmount()));
                 
                 // Add + or - prefix based on transaction type
-                if (Transactions.TYPE_DEPOSIT.equals(transaction.getTransactionType())) {
+                if (Transactions.TYPE_DEPOSIT.equals(transaction.getTransactionType()) ||
+                    Transactions.TYPE_REFUND.equals(transaction.getTransactionType()) ||
+                    Transactions.TYPE_PAYMENT_COMPLETE.equals(transaction.getTransactionType())) {
+                    // Giao dịch nhận tiền (dương)
                     amountText = "+" + amountText;
                     tvTransactionAmount.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark));
                 } else if (Transactions.TYPE_WITHDRAW.equals(transaction.getTransactionType()) || 
-                           Transactions.TYPE_PAYMENT.equals(transaction.getTransactionType())) {
+                           Transactions.TYPE_PAYMENT.equals(transaction.getTransactionType()) ||
+                           Transactions.TYPE_POSTING_FEE.equals(transaction.getTransactionType()) ||
+                           Transactions.TYPE_PRODUCT_PURCHASE.equals(transaction.getTransactionType())) {
+                    // Giao dịch chi tiền (âm)
                     amountText = "-" + amountText;
                     tvTransactionAmount.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
                 } else {
+                    // Giao dịch khác
                     tvTransactionAmount.setTextColor(context.getResources().getColor(android.R.color.holo_blue_dark));
                 }
                 
@@ -118,12 +125,19 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
             tvTransactionStatus.setText(statusText);
             
             // Set status color
-            if (Transactions.STATUS_SUCCESS.equals(transaction.getStatus())) {
+            if (Transactions.STATUS_SUCCESS.equals(transaction.getStatus()) || 
+                Transactions.STATUS_COMPLETED.equals(transaction.getStatus()) || 
+                Transactions.STATUS_SUCCESSFUL.equals(transaction.getStatus())) {
                 tvTransactionStatus.setTextColor(context.getResources().getColor(android.R.color.holo_green_dark));
-            } else if (Transactions.STATUS_FAILED.equals(transaction.getStatus())) {
+            } else if (Transactions.STATUS_FAILED.equals(transaction.getStatus()) || 
+                       Transactions.STATUS_ERROR.equals(transaction.getStatus())) {
                 tvTransactionStatus.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
-            } else {
+            } else if (Transactions.STATUS_PENDING.equals(transaction.getStatus()) || 
+                       Transactions.STATUS_PROCESSING.equals(transaction.getStatus()) || 
+                       Transactions.STATUS_WAITING.equals(transaction.getStatus())) {
                 tvTransactionStatus.setTextColor(context.getResources().getColor(android.R.color.holo_orange_dark));
+            } else {
+                tvTransactionStatus.setTextColor(context.getResources().getColor(android.R.color.darker_gray));
             }
 
             // Set icon based on transaction type
@@ -131,6 +145,10 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
         }
 
         private String getTransactionTypeText(String type) {
+            if (type == null) {
+                return "Giao dịch";
+            }
+            
             if (Transactions.TYPE_DEPOSIT.equals(type)) {
                 return "Nạp tiền";
             } else if (Transactions.TYPE_WITHDRAW.equals(type)) {
@@ -139,18 +157,46 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
                 return "Chuyển tiền";
             } else if (Transactions.TYPE_PAYMENT.equals(type)) {
                 return "Thanh toán";
+            } else if (Transactions.TYPE_POSTING_FEE.equals(type)) {
+                return "Phí đăng bài";
+            } else if (Transactions.TYPE_PRODUCT_PURCHASE.equals(type)) {
+                return "Mua sản phẩm";
+            } else if (Transactions.TYPE_REFUND.equals(type)) {
+                return "Hoàn tiền";
+            } else if (Transactions.TYPE_PAYMENT_COMPLETE.equals(type)) {
+                return "Thanh toán";
+            } else if (Transactions.TYPE_DONATE.equals(type)) {
+                return "Donate";
+            } else if (Transactions.TYPE_DONATE_RECEIVED.equals(type)) {
+                return "Nhận donate";
             }
+            
             return "Giao dịch";
         }
 
         private String getStatusText(String status) {
-            if (Transactions.STATUS_SUCCESS.equals(status)) {
+            if (status == null) {
+                return "Không xác định";
+            }
+            
+            // Xử lý các trạng thái thành công
+            if (Transactions.STATUS_SUCCESS.equals(status) || 
+                Transactions.STATUS_COMPLETED.equals(status) || 
+                Transactions.STATUS_SUCCESSFUL.equals(status)) {
                 return "Thành công";
-            } else if (Transactions.STATUS_FAILED.equals(status)) {
+            } 
+            // Xử lý các trạng thái thất bại
+            else if (Transactions.STATUS_FAILED.equals(status) || 
+                     Transactions.STATUS_ERROR.equals(status)) {
                 return "Thất bại";
-            } else if (Transactions.STATUS_PENDING.equals(status)) {
+            } 
+            // Xử lý các trạng thái đang xử lý
+            else if (Transactions.STATUS_PENDING.equals(status) || 
+                     Transactions.STATUS_PROCESSING.equals(status) || 
+                     Transactions.STATUS_WAITING.equals(status)) {
                 return "Đang xử lý";
             }
+            
             return "Không xác định";
         }
 
