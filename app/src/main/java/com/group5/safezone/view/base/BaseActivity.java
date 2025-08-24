@@ -15,7 +15,7 @@ import com.group5.safezone.view.MainActivity;
 //import com.group5.safezone.view.HomeActivity;
 //import com.group5.safezone.view.ProductsActivity;
 //import com.group5.safezone.view.ProfileActivity;
-import com.group5.safezone.view.Wallet.WalletActivity;
+//import com.group5.safezone.view.WalletActivity;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -72,19 +72,14 @@ public abstract class BaseActivity extends AppCompatActivity {
                 intent = new Intent(this, MainActivity.class);
                 break;
             case 1:
-                // Products page - stay in MainActivity but load HomeFragment
-                if (this instanceof MainActivity) {
-                    ((MainActivity) this).loadHomeFragment();
-                    return;
-                }
-                intent = new Intent(this, MainActivity.class);
+                //intent = new Intent(this, ProductsActivity.class);
                 break;
             case 2:
                 // Currently route Auction to Main for now
                 intent = new Intent(this, MainActivity.class);
                 break;
             case 3:
-                intent = new Intent(this, WalletActivity.class);
+                //intent = new Intent(this, WalletActivity.class);
                 break;
             case 4:
                // intent = new Intent(this, ProfileActivity.class);
@@ -93,20 +88,9 @@ public abstract class BaseActivity extends AppCompatActivity {
                 return;
         }
 
-        if (intent != null) {
-            try {
-                startActivity(intent);
-                overridePendingTransition(0, 0); // Không có animation
-                // Chỉ finish() khi chuyển về MainActivity
-                if (pageIndex == 0) {
-                    finish();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                // Log lỗi để debug
-                android.util.Log.e("BaseActivity", "Error navigating to page " + pageIndex, e);
-            }
-        }
+        startActivity(intent);
+        overridePendingTransition(0, 0); // Không có animation
+        finish();
     }
 
     private void updateFooterSelection() {

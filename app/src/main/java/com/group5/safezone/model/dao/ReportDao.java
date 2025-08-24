@@ -23,9 +23,6 @@ public interface ReportDao {
 
     @Query("SELECT * FROM report WHERE orderId = :orderId AND IsDeleted = 0")
     List<Report> getReportsByOrderId(int orderId);
-    
-    @Query("SELECT * FROM report WHERE orderId = :orderId AND IsDeleted = 0 LIMIT 1")
-    Report getReportByOrderId(int orderId);
 
     @Query("SELECT * FROM report WHERE status = :status AND IsDeleted = 0")
     List<Report> getReportsByStatus(String status);
@@ -34,7 +31,7 @@ public interface ReportDao {
     void updateReportStatus(int id, String status);
 
     @Insert
-    long insert(Report report);
+    void insert(Report report);
 
     @Update
     void update(Report report);
