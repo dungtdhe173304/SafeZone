@@ -15,12 +15,87 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
+    <!-- Search and Filter Section -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@drawable/gradient_card_white"
+        android:elevation="2dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <EditText
+                android:id="@+id/etSearchUser"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Tìm kiếm người dùng..."
+                android:padding="12dp"
+                android:background="@drawable/gradient_card_white"
+                android:elevation="1dp"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tìm"
+                android:backgroundTint="@color/primary_color"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinnerRoleFilter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/gradient_card_white"
+                android:padding="8dp" />
+
+            <Button
+                android:id="@+id/btnAddUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+ Thêm"
+                android:backgroundTint="@color/primary_color"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- User List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewUsers"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"
+        android:clipToPadding="false" />
+
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/llEmptyState"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center"
-        android:padding="32dp">
+        android:padding="32dp"
+        android:visibility="gone">
 
         <ImageView
             android:layout_width="120dp"
@@ -32,21 +107,20 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Quản lý người dùng"
-            android:textSize="24sp"
+            android:text="Không có người dùng nào"
+            android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/text_secondary"
             android:gravity="center"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="8dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Chức năng này đang được phát triển.\nSẽ có sẵn trong phiên bản tiếp theo."
-            android:textSize="16sp"
+            android:text="Hãy thêm người dùng mới hoặc thay đổi bộ lọc tìm kiếm"
+            android:textSize="14sp"
             android:textColor="@color/text_secondary"
-            android:gravity="center"
-            android:lineSpacingExtra="4dp" />
+            android:gravity="center" />
 
     </LinearLayout>
 

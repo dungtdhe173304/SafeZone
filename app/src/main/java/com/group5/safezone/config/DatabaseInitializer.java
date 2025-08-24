@@ -26,7 +26,7 @@ public class DatabaseInitializer {
             try {
                 // Nếu chưa có user nào (trường hợp DB trống) thì seed user
                 if (db.userDao().getAllUsers() == null || db.userDao().getAllUsers().isEmpty()) {
-                    db.userDao().insertMultipleUsers(createSampleUsers());
+                    //db.userDao().insertMultipleUsers(createSampleUsers());
                 }
 
                 boolean hasActive = false;

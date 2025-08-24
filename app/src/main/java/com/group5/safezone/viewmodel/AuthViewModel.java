@@ -82,6 +82,20 @@ public class AuthViewModel extends AndroidViewModel {
                     return;
                 }
 
+                // Tự động cập nhật mật khẩu lên format mới nếu cần
+                if (PasswordUtils.needsUpgrade(user.getPassword())) {
+                    try {
+                        String newHashedPassword = PasswordUtils.upgradePassword(password, user.getPassword());
+                        if (!newHashedPassword.equals(user.getPassword())) {
+                            user.setPassword(newHashedPassword);
+                            userRepository.updateUser(user);
+                        }
+                    } catch (Exception e) {
+                        // Log lỗi nhưng không ảnh hưởng đến đăng nhập
+                        System.err.println("Error upgrading password: " + e.getMessage());
+                    }
+                }
+
                 // Đăng nhập thành công
                 loginResult.postValue(user);
                 isLoading.postValue(false);

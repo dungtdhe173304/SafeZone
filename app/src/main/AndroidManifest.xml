@@ -90,6 +90,12 @@
             android:exported="false"
             android:theme="@style/Theme.SafeZone" />
 
+        <!-- Edit Auction Activity -->
+        <activity
+            android:name=".view.EditAuctionActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
     </application>
 
 </manifest>

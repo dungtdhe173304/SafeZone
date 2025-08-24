@@ -45,6 +45,8 @@ public class UserAuctionManagementActivity extends AppCompatActivity {
     private ExecutorService executorService;
     private NumberFormat currencyFormatter;
     
+    private static final int REQUEST_EDIT_AUCTION = 1001;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,8 +117,16 @@ public class UserAuctionManagementActivity extends AppCompatActivity {
     }
     
     private void editAuction(UserAuctionItem item) {
-        // TODO: Implement edit functionality
-        Toast.makeText(this, "Tính năng sửa bài đăng đang được phát triển", Toast.LENGTH_SHORT).show();
+        // Check if auction is still pending
+        if (!"pending".equals(item.getAuction().getStatus())) {
+            Toast.makeText(this, "Chỉ có thể sửa bài đấu giá đang chờ duyệt", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
+        // Launch EditAuctionActivity
+        Intent intent = new Intent(this, EditAuctionActivity.class);
+        intent.putExtra("product_id", item.getProduct().getId());
+        startActivityForResult(intent, REQUEST_EDIT_AUCTION);
     }
     
     private void deleteAuction(UserAuctionItem item) {
@@ -336,6 +346,16 @@ public class UserAuctionManagementActivity extends AppCompatActivity {
         public Product getProduct() { return product; }
         public User getSeller() { return seller; }
         public List<ProductImages> getImages() { return images; }
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_EDIT_AUCTION && resultCode == RESULT_OK) {
+            // Reload the auction list after successful edit
+            loadUserAuctions();
+            Toast.makeText(this, "Đã cập nhật bài đấu giá thành công", Toast.LENGTH_SHORT).show();
+        }
     }
     
     @Override
