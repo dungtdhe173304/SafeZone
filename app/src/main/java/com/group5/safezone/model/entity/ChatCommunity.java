@@ -28,21 +28,9 @@ public class ChatCommunity {
     @ColumnInfo(name = "UserId")
     private int userId;
 
-    @ColumnInfo(name = "userName")
-    private String userName;
-
-    @ColumnInfo(name = "isDisplayed")
-    private boolean isDisplayed;
-
-    @ColumnInfo(name = "displayOrder")
-    private int displayOrder;
-
     // Constructor
     public ChatCommunity() {
         this.createdAt = new Date();
-        this.updatedAt = new Date();
-        this.isDisplayed = false;
-        this.displayOrder = 0;
     }
 
     // Getters and Setters
@@ -60,13 +48,4 @@ public class ChatCommunity {
 
     public int getUserId() { return userId; }
     public void setUserId(int userId) { this.userId = userId; }
-
-    public String getUserName() { return userName; }
-    public void setUserName(String userName) { this.userName = userName; }
-
-    public boolean isDisplayed() { return isDisplayed; }
-    public void setDisplayed(boolean displayed) { isDisplayed = displayed; }
-
-    public int getDisplayOrder() { return displayOrder; }
-    public void setDisplayOrder(int displayOrder) { this.displayOrder = displayOrder; }
 }

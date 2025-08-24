@@ -1,58 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base Colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Primary Brand Colors -->
-    <color name="primary">#2196F3</color>
-    <color name="primary_color">#2196F3</color>
-    <color name="primary_dark">#1976D2</color>
-    <color name="primary_light">#BBDEFB</color>
-    <color name="accent_color">#FF4081</color>
-    <color name="secondary_color">#FF9800</color>
-
-    <!-- SafeZone Theme Colors -->
-    <color name="safezone_blue">#1E88E5</color>
-    <color name="safezone_green">#4CAF50</color>
-    <color name="safezone_orange">#FF9800</color>
-    <color name="safezone_red">#F44336</color>
-    <color name="safezone_gray">#9E9E9E</color>
-
-    <!-- Status & Semantic Colors -->
-    <color name="success_color">#4CAF50</color>
-    <color name="error_color">#F44336</color>
-    <color name="warning_color">#FF9800</color>
-    <color name="info_color">#2196F3</color>
-
-    <!-- Standard Material Colors -->
-    <color name="blue">#2196F3</color>
-    <color name="green">#4CAF50</color>
-    <color name="red">#F44336</color>
-    <color name="orange">#FF9800</color>
-
-    <!-- Holo Colors for Enhanced Status -->
-    <color name="holo_red_dark">#D32F2F</color>
-    <color name="holo_blue_dark">#1976D2</color>
-    <color name="holo_green_dark">#388E3C</color>
-    <color name="holo_orange_dark">#F57C00</color>
-
-    <!-- Gray Scale Colors -->
-    <color name="gray">#757575</color>
-    <color name="light_gray">#BDBDBD</color>
-    <color name="darker_gray">#616161</color>
-
-    <!-- Background & Surface Colors -->
-    <color name="background_color">#F5F5F5</color>
-    <color name="chip_background">#F5F5F5</color>
-    <color name="info_background">#E3F2FD</color>
-
-    <!-- Text Colors -->
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
-    <color name="divider_color">#BDBDBD</color>
-
-    <!-- Footer Specific Colors -->
+    <!-- Footer Colors -->
     <color name="footer_background">#FFFFFF</color>
     <color name="footer_border">#E0E0E0</color>
     <color name="footer_icon_color">#757575</color>
@@ -61,20 +12,37 @@
     <color name="footer_text_selected">#2196F3</color>
     <color name="footer_selected_background">#E3F2FD</color>
 
-    <!-- Navigation Drawer Colors -->
-    <color name="nav_item_icon_color">#757575</color>
-    <color name="nav_item_text_color">#212121</color>
-    <color name="nav_item_ripple_color">#E3F2FD</color>
+    <!-- Primary Colors -->
+    <color name="primary_color">#2196F3</color>
+    <color name="primary_dark">#1976D2</color>
+    <color name="accent_color">#FF4081</color>
 
-    <!-- Auction Room Specific Colors -->
-    <color name="auction_active">#4CAF50</color>
-    <color name="auction_pending">#FF9800</color>
-    <color name="auction_ended">#F44336</color>
-    <color name="bid_highlight">#E3F2FD</color>
+    <!-- SafeZone Theme Colors -->
+    <color name="safezone_blue">#1E88E5</color>
+    <color name="safezone_green">#4CAF50</color>
+    <color name="safezone_orange">#FF9800</color>
+    <color name="safezone_red">#F44336</color>
+    <color name="safezone_gray">#9E9E9E</color>
 
-    <!-- Wallet Transaction Colors -->
-    <color name="wallet_income">#4CAF50</color>
-    <color name="wallet_expense">#F44336</color>
-    <color name="wallet_pending">#FF9800</color>
+    <!-- Additional Colors for Auction Room -->
+    <color name="blue">#2196F3</color>
+    <color name="green">#4CAF50</color>
+    <color name="red">#F44336</color>
+
+    <color name="background_color">#F5F5F5</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="divider_color">#BDBDBD</color>
+    
+    <!-- Additional Colors for Admin Auction Approval -->
+    <color name="primary">#2196F3</color>
+    <color name="orange">#FF9800</color>
+    <color name="darker_gray">#616161</color>
+
+    <!-- Holo Colors for Status -->
+    <color name="holo_red_dark">#D32F2F</color>
+    <color name="holo_blue_dark">#1976D2</color>
+    <color name="holo_green_dark">#388E3C</color>
+    <color name="holo_orange_dark">#F57C00</color>
 
 </resources>

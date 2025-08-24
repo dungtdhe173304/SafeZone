@@ -26,18 +26,12 @@ public interface OrderDao {
 
     @Query("SELECT * FROM `order` WHERE status = :status AND IsDeleted = 0")
     List<Order> getOrdersByStatus(String status);
-    
-    @Query("SELECT o.* FROM `order` o " +
-           "INNER JOIN product p ON o.productId = p.id " +
-           "WHERE p.userId = :sellerId AND o.IsDeleted = 0 " +
-           "ORDER BY o.orderDate DESC")
-    List<Order> getOrdersBySellerId(int sellerId);
 
     @Query("UPDATE `order` SET status = :status WHERE id = :id")
     void updateOrderStatus(int id, String status);
 
     @Insert
-    long insert(Order order);
+    void insert(Order order);
 
     @Update
     void update(Order order);
