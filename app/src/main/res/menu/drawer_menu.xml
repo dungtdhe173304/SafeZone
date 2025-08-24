@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_home"
+            android:title="@string/nav_home"
+            android:icon="@drawable/ic_home" />
+
+        <item
+            android:id="@+id/nav_products"
+            android:title="@string/products"
+            android:icon="@drawable/ic_shopping_bag" />
+
+        <item
+            android:id="@+id/nav_wallet"
+            android:title="@string/nav_wallet"
+            android:icon="@drawable/ic_wallet" />
+
+        <item
+            android:id="@+id/nav_purchase_history"
+            android:title="@string/nav_purchase_history"
+            android:icon="@drawable/ic_shopping_bag" />
+            
+        <item
+            android:id="@+id/nav_sales_history"
+            android:title="@string/nav_sales_history"
+            android:icon="@drawable/ic_analytics" />
+            
+
+
+        <item
+            android:id="@+id/nav_chat"
+            android:title="@string/nav_chat"
+            android:icon="@drawable/ic_person" />
+
+        <item
+            android:id="@+id/nav_livestream"
+            android:title="@string/livestream_title"
+            android:icon="@drawable/ic_livestream" />
+
+        <item
+            android:id="@+id/nav_settings"
+            android:title="@string/nav_settings"
+            android:icon="@drawable/ic_settings" />
+
+        <item
+            android:id="@+id/nav_about"
+            android:title="@string/nav_about"
+            android:icon="@drawable/ic_info" />
+    </group>
+
+    <item
+        android:id="@+id/nav_logout"
+        android:title="@string/nav_logout"
+        android:icon="@drawable/ic_logout" />
+
+</menu>
+

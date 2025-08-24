@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <item
+        android:id="@+id/action_view"
+        android:icon="@drawable/ic_info"
+        android:title="Xem chi tiết"
+        app:showAsAction="never" />
+    
+    <item
+        android:id="@+id/action_edit"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="Chỉnh sửa"
+        app:showAsAction="never" />
+    
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="Xóa"
+        app:showAsAction="never" />
+    
+    <item
+        android:id="@+id/action_copy_link"
+        android:icon="@android:drawable/ic_menu_share"
+        android:title="Copy link"
+        app:showAsAction="never" />
+        
+</menu>
