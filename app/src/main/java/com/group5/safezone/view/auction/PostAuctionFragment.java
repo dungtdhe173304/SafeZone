@@ -30,6 +30,7 @@ import com.group5.safezone.config.SessionManager;
 import com.group5.safezone.model.entity.Auctions;
 import com.group5.safezone.model.entity.Product;
 import com.group5.safezone.model.entity.ProductImages;
+import com.group5.safezone.model.entity.User;
 import com.group5.safezone.repository.AuctionRepository;
 import com.group5.safezone.repository.UserRepository;
 
@@ -47,6 +48,8 @@ import java.util.UUID;
 
 public class PostAuctionFragment extends Fragment {
 
+	private static final double AUCTION_FEE = 200000.0; // Phí đăng bài đấu giá
+	
 	private EditText etProductName, etDescription, etPrice, etStartPrice, etMinIncrement;
 	private EditText etStartTime, etEndTime;
 	private Button btnPickStart, btnPickEnd, btnSubmit, btnPickImages;
@@ -127,6 +130,45 @@ public class PostAuctionFragment extends Fragment {
 			Toast.makeText(requireContext(), "Vui lòng đăng nhập", Toast.LENGTH_SHORT).show();
 			return;
 		}
+		
+		// Kiểm tra balance trước khi submit
+		
+		// Lấy thông tin user hiện tại để kiểm tra balance
+		new Thread(() -> {
+			try {
+				AppDatabase db = AppDatabase.getDatabase(requireContext().getApplicationContext());
+				User currentUser = db.userDao().getUserById(userId);
+				
+				if (currentUser == null) {
+					requireActivity().runOnUiThread(() -> {
+						Toast.makeText(requireContext(), "Không tìm thấy thông tin người dùng", Toast.LENGTH_SHORT).show();
+					});
+					return;
+				}
+				
+				if (currentUser.getBalance() == null || currentUser.getBalance() < AUCTION_FEE) {
+					requireActivity().runOnUiThread(() -> {
+						Toast.makeText(requireContext(), "Số dư không đủ để đăng bài đấu giá. Cần ít nhất " + 
+							String.format("%,.0f", AUCTION_FEE) + " VNĐ", Toast.LENGTH_LONG).show();
+					});
+					return;
+				}
+				
+				// Nếu balance đủ, tiếp tục xử lý
+				requireActivity().runOnUiThread(() -> {
+					processAuctionSubmission(userId, AUCTION_FEE);
+				});
+				
+			} catch (Exception e) {
+				Log.e("PostAuction", "Error checking balance: " + e.getMessage(), e);
+				requireActivity().runOnUiThread(() -> {
+					Toast.makeText(requireContext(), "Lỗi khi kiểm tra số dư: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+				});
+			}
+		}).start();
+	}
+	
+	private void processAuctionSubmission(int userId, double auctionFee) {
 		String name = etProductName.getText().toString().trim();
 		String desc = etDescription.getText().toString().trim();
 		String priceStr = etPrice.getText().toString().trim();
@@ -202,8 +244,21 @@ public class PostAuctionFragment extends Fragment {
 				a.setStatus("pending");
 				db.auctionsDao().insert(a);
 				
+				// Trừ phí đăng bài đấu giá
+				User currentUser = db.userDao().getUserById(userId);
+				if (currentUser != null) {
+					double newBalance = currentUser.getBalance() - auctionFee;
+					currentUser.setBalance(newBalance);
+					db.userDao().updateUser(currentUser);
+					
+					// Log transaction (optional)
+					Log.d("PostAuction", "Deducted " + auctionFee + " VND auction fee from user " + userId + 
+						". New balance: " + newBalance);
+				}
+				
 				requireActivity().runOnUiThread(() -> {
-					Toast.makeText(requireContext(), "Đã gửi yêu cầu đăng bán, chờ admin duyệt", Toast.LENGTH_LONG).show();
+					Toast.makeText(requireContext(), "Đã gửi yêu cầu đăng bán và trừ " + 
+						String.format("%,.0f", auctionFee) + " VNĐ phí. Chờ admin duyệt", Toast.LENGTH_LONG).show();
 					requireActivity().getSupportFragmentManager().popBackStack();
 				});
 				
