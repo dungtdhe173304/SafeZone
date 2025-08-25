@@ -181,6 +181,12 @@
             android:name=".view.AuctionDetailActivity"
             android:exported="false"
             android:theme="@style/Theme.SafeZone" />
+
+        <!-- Auction Result Activity -->
+        <activity
+            android:name=".view.AuctionResultActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
     </application>
 
 </manifest>

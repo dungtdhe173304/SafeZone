@@ -1,5 +1,6 @@
 package com.group5.safezone.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -49,7 +51,7 @@ public class AuctionRoomActivity extends AppCompatActivity {
 
     // UI Components
     private ImageView ivProductImage;
-    private TextView tvProductName, tvSellerName, tvCurrentPrice, tvTimer;
+    private TextView tvProductName, tvSellerName, tvCurrentPrice, tvTimer, tvExtensionIndicator;
     private RecyclerView rvBidHistory;
     private EditText etBidStep;
     private TextView tvQuantity, tvTotalBid;
@@ -65,6 +67,12 @@ public class AuctionRoomActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private long timeRemaining;
     private BidHistoryAdapter bidHistoryAdapter;
+
+    // Auto-extension variables
+    private static final long EXTENSION_TIME = 10000; // 10 seconds in milliseconds
+    private boolean isInExtensionMode = false;
+    private boolean isAuctionEnded = false;
+    private User winnerUser = null;
 
     // Formatters
     private NumberFormat currencyFormatter;
@@ -103,6 +111,7 @@ public class AuctionRoomActivity extends AppCompatActivity {
         tvSellerName = findViewById(R.id.tv_seller_name);
         tvCurrentPrice = findViewById(R.id.tv_current_price);
         tvTimer = findViewById(R.id.tv_timer);
+        tvExtensionIndicator = findViewById(R.id.tv_extension_indicator);
         rvBidHistory = findViewById(R.id.rv_bid_history);
         etBidStep = findViewById(R.id.et_bid_step);
         tvQuantity = findViewById(R.id.tv_quantity);
@@ -316,8 +325,216 @@ public class AuctionRoomActivity extends AppCompatActivity {
         }
     }
 
+    private void startTimer() {
+        try {
+            if (currentItem != null && currentItem.getAuction() != null && currentItem.getAuction().getEndTime() != null) {
+                timeRemaining = currentItem.getAuction().getEndTime().getTime() - System.currentTimeMillis();
+                
+                if (timeRemaining > 0) {
+                    startCountDownTimer(timeRemaining);
+                } else {
+                    tvTimer.setText("00:00");
+                    btnPlaceBid.setEnabled(false);
+                }
+            } else {
+                tvTimer.setText("--:--");
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Lỗi khi khởi tạo timer: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            tvTimer.setText("--:--");
+        }
+    }
+
+    private void startCountDownTimer(long duration) {
+        if (countDownTimer != null) {
+            countDownTimer.cancel();
+        }
+
+        countDownTimer = new CountDownTimer(duration, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                timeRemaining = millisUntilFinished;
+                updateTimerDisplay();
+            }
+
+            @Override
+            public void onFinish() {
+                if (isInExtensionMode) {
+                    // Extension time finished, end the auction
+                    endAuction();
+                } else {
+                    // Main time finished, start extension
+                    startExtension();
+                }
+            }
+        }.start();
+    }
+
+    private void startExtension() {
+        isInExtensionMode = true;
+        timeRemaining = EXTENSION_TIME;
+        
+        // Show extension notification
+        Toast.makeText(this, "Thời gian đấu giá đã hết! Gia hạn thêm 10 giây...", Toast.LENGTH_LONG).show();
+        
+        // Update timer display to show extension
+        tvTimer.setTextColor(getResources().getColor(android.R.color.holo_orange_dark));
+        
+        // Show extension indicator
+        tvExtensionIndicator.setText("⏰ GIA HẠN THÊM 10 GIÂY");
+        tvExtensionIndicator.setVisibility(android.view.View.VISIBLE);
+        
+        // Start extension countdown
+        startCountDownTimer(EXTENSION_TIME);
+    }
+
+    private void resetExtensionTimer() {
+        if (isInExtensionMode) {
+            // Cancel current timer
+            if (countDownTimer != null) {
+                countDownTimer.cancel();
+            }
+            
+            // Reset extension timer
+            timeRemaining = EXTENSION_TIME;
+            startCountDownTimer(EXTENSION_TIME);
+            
+            // Show reset notification
+            Toast.makeText(this, "Thời gian được gia hạn thêm 10 giây!", Toast.LENGTH_SHORT).show();
+            
+            // Update extension indicator
+            tvExtensionIndicator.setText("⏰ GIA HẠN THÊM 10 GIÂY - ĐÃ RESET!");
+            tvExtensionIndicator.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+        }
+    }
+
+    private void endAuction() {
+        isAuctionEnded = true;
+        isInExtensionMode = false;
+        
+        // Disable bidding
+        btnPlaceBid.setEnabled(false);
+        etBidStep.setEnabled(false);
+        btnMinus.setEnabled(false);
+        btnPlus.setEnabled(false);
+        
+        // Update timer display
+        tvTimer.setText("00:00");
+        tvTimer.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+        
+        // Hide extension indicator
+        tvExtensionIndicator.setVisibility(android.view.View.GONE);
+        
+        // Show auction ended message
+        Toast.makeText(this, "Phiên đấu giá đã kết thúc!", Toast.LENGTH_LONG).show();
+        
+        // Determine winner and show result
+        determineWinnerAndShowResult();
+    }
+
+    private void determineWinnerAndShowResult() {
+        executorService.execute(() -> {
+            try {
+                AuctionRepository repository = auctionViewModel.getRepository();
+                
+                // Get the highest bid
+                List<Bids> bids = repository.getDatabase().bidsDao().getBidsByAuctionId(auctionId);
+                Bids highestBid = null;
+                
+                if (bids != null && !bids.isEmpty()) {
+                    // Find the highest bid amount
+                    double maxAmount = 0;
+                    for (Bids bid : bids) {
+                        if (bid.getBidAmount() > maxAmount) {
+                            maxAmount = bid.getBidAmount();
+                            highestBid = bid;
+                        }
+                    }
+                }
+                
+                // Get winner user info
+                if (highestBid != null && highestBid.getBidAmount() > startPrice) {
+                    User winner = repository.getDatabase().userDao().getUserById(highestBid.getBidderUserId());
+                    winnerUser = winner;
+                    currentHighestBid = highestBid.getBidAmount();
+                } else {
+                    // No valid bids, auction ends without winner
+                    winnerUser = null;
+                    currentHighestBid = startPrice;
+                }
+                
+                // Update auction status
+                Auctions auction = currentItem.getAuction();
+                if (auction != null) {
+                    auction.setStatus("completed");
+                    auction.setCurrentHighestBid(currentHighestBid);
+                    if (winnerUser != null) {
+                        auction.setHighestBidderUserId(winnerUser.getId());
+                    }
+                    repository.getDatabase().auctionsDao().update(auction);
+                }
+                
+                runOnUiThread(() -> {
+                    showAuctionResultDialog();
+                });
+                
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    Toast.makeText(AuctionRoomActivity.this, "Lỗi khi xử lý kết quả: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+            }
+        });
+    }
+
+    private void showAuctionResultDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("🏆 Kết quả đấu giá");
+        
+        String message;
+        if (winnerUser != null) {
+            message = String.format("🎉 Chúc mừng!\n\nNgười thắng cuộc: %s\nGiá trúng: %s\nSản phẩm: %s", 
+                winnerUser.getUserName(), 
+                currencyFormatter.format(currentHighestBid),
+                currentItem.getProduct() != null ? currentItem.getProduct().getProductName() : "Sản phẩm");
+        } else {
+            message = String.format("😔 Phiên đấu giá kết thúc\n\nKhông có người tham gia đấu giá\nSản phẩm: %s\nGiá khởi điểm: %s", 
+                currentItem.getProduct() != null ? currentItem.getProduct().getProductName() : "Sản phẩm",
+                currencyFormatter.format(startPrice));
+        }
+        
+        builder.setMessage(message);
+        builder.setPositiveButton("Xem chi tiết", (dialog, which) -> {
+            showDetailedResultActivity();
+        });
+        builder.setNegativeButton("Đóng", (dialog, which) -> {
+            dialog.dismiss();
+            finish();
+        });
+        
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+    private void showDetailedResultActivity() {
+        // Create intent to show detailed result
+        Intent intent = new Intent(this, AuctionResultActivity.class);
+        intent.putExtra("auction_id", auctionId);
+        intent.putExtra("winner_name", winnerUser != null ? winnerUser.getUserName() : "Không có");
+        intent.putExtra("winning_bid", currentHighestBid);
+        intent.putExtra("product_name", currentItem.getProduct() != null ? currentItem.getProduct().getProductName() : "Sản phẩm");
+        intent.putExtra("winner_id", winnerUser != null ? winnerUser.getId() : -1);
+        startActivity(intent);
+        finish();
+    }
+
     private void placeBid() {
         try {
+            // Check if auction is ended
+            if (isAuctionEnded) {
+                Toast.makeText(this, "Phiên đấu giá đã kết thúc!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             // Check session first
             int userId = sessionManager.getUserId();
             boolean isLoggedIn = sessionManager.isLoggedIn();
@@ -403,6 +620,16 @@ public class AuctionRoomActivity extends AppCompatActivity {
                             // Show success message
                             Toast.makeText(AuctionRoomActivity.this, "Trả giá thành công!", Toast.LENGTH_SHORT).show();
                             
+                            // Reset extension timer if in extension mode
+                            if (isInExtensionMode) {
+                                resetExtensionTimer();
+                                
+                                // Show special message for extension bid
+                                Toast.makeText(AuctionRoomActivity.this, 
+                                    "🎯 Trả giá thành công trong thời gian gia hạn! Thời gian được reset 10 giây!", 
+                                    Toast.LENGTH_LONG).show();
+                            }
+                            
                             // Re-enable button
                             btnPlaceBid.setEnabled(true);
                         } catch (Exception e) {
@@ -425,44 +652,28 @@ public class AuctionRoomActivity extends AppCompatActivity {
         }
     }
 
-    private void startTimer() {
-        try {
-            if (currentItem != null && currentItem.getAuction() != null && currentItem.getAuction().getEndTime() != null) {
-                timeRemaining = currentItem.getAuction().getEndTime().getTime() - System.currentTimeMillis();
-                
-                if (timeRemaining > 0) {
-                    countDownTimer = new CountDownTimer(timeRemaining, 1000) {
-                        @Override
-                        public void onTick(long millisUntilFinished) {
-                            timeRemaining = millisUntilFinished;
-                            updateTimerDisplay();
-                        }
-
-                        @Override
-                        public void onFinish() {
-                            tvTimer.setText("00:00");
-                            btnPlaceBid.setEnabled(false);
-                            Toast.makeText(AuctionRoomActivity.this, "Phiên đấu giá đã kết thúc!", Toast.LENGTH_LONG).show();
-                        }
-                    }.start();
-                } else {
-                    tvTimer.setText("00:00");
-                    btnPlaceBid.setEnabled(false);
-                }
-            } else {
-                tvTimer.setText("--:--");
-            }
-        } catch (Exception e) {
-            Toast.makeText(this, "Lỗi khi khởi tạo timer: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            tvTimer.setText("--:--");
-        }
-    }
-
     private void updateTimerDisplay() {
         try {
             long minutes = timeRemaining / 60000;
             long seconds = (timeRemaining % 60000) / 1000;
             tvTimer.setText(String.format("%02d:%02d", minutes, seconds));
+            
+            // Change color based on time remaining
+            if (isInExtensionMode) {
+                if (timeRemaining <= 3000) { // Last 3 seconds
+                    tvTimer.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+                    tvExtensionIndicator.setText("⚠️ CÒN LẠI " + seconds + " GIÂY!");
+                } else if (timeRemaining <= 5000) { // Last 5 seconds
+                    tvTimer.setTextColor(getResources().getColor(android.R.color.holo_orange_dark));
+                    tvExtensionIndicator.setText("⏰ GIA HẠN - CÒN LẠI " + seconds + " GIÂY");
+                }
+            } else {
+                if (timeRemaining <= 60000) { // Last minute
+                    tvTimer.setTextColor(getResources().getColor(android.R.color.holo_orange_dark));
+                } else {
+                    tvTimer.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+                }
+            }
         } catch (Exception e) {
             tvTimer.setText("--:--");
         }

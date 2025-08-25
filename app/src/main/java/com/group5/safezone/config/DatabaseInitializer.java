@@ -8,6 +8,7 @@ import com.group5.safezone.model.entity.ProductImages;
 import com.group5.safezone.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -151,8 +152,15 @@ public class DatabaseInitializer {
         a1.setSellerUserId(1);
         a1.setStartPrice(300000.0);
         a1.setBuyNowPrice(9000000.0);
-        a1.setStartTime(new java.util.Date(System.currentTimeMillis() - 3600_000));
-        a1.setEndTime(new java.util.Date(System.currentTimeMillis() + 24 * 3600_000));
+        Calendar cal = Calendar.getInstance();
+
+// Start: 2025-08-25 09:00:00
+        cal.set(2025, Calendar.AUGUST, 26, 1, 12, 0);
+        a1.setStartTime(cal.getTime());
+// End: 2025-08-26 09:00:00
+        cal.set(2025, Calendar.AUGUST, 26, 1, 50, 0);
+        a1.setEndTime(cal.getTime());
+
         a1.setStatus("active");
         db.auctionsDao().insert(a1);
 
