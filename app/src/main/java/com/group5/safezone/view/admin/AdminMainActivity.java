@@ -13,13 +13,14 @@ import androidx.cardview.widget.CardView;
 import com.group5.safezone.R;
 import com.group5.safezone.config.AuthInterceptor;
 import com.group5.safezone.config.SessionManager;
+import com.group5.safezone.view.AdminAuctionApprovalActivity;
 import com.group5.safezone.view.auth.LoginActivity;
 
 public class AdminMainActivity extends AppCompatActivity {
 
     private SessionManager sessionManager;
     private TextView tvWelcome;
-    private CardView cardUserManagement, cardProductManagement, cardOrderManagement, cardReports;
+    private CardView cardUserManagement, cardProductManagement, cardOrderManagement, cardReports, cardAuctionManagement, cardSystemSettings ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +47,8 @@ public class AdminMainActivity extends AppCompatActivity {
         cardProductManagement = findViewById(R.id.cardProductManagement);
         cardOrderManagement = findViewById(R.id.cardOrderManagement);
         cardReports = findViewById(R.id.cardReports);
+        cardAuctionManagement = findViewById(R.id.cardAuctionManagement);
+        cardSystemSettings = findViewById(R.id.cardSystemSettings);
     }
 
     private void setupToolbar() {
@@ -57,16 +60,28 @@ public class AdminMainActivity extends AppCompatActivity {
     private void setupClickListeners() {
 
 
+        cardUserManagement.setOnClickListener(v -> {
+            startActivity(new Intent(this, UserManagementActivity.class));
+        });
+
         cardProductManagement.setOnClickListener(v -> {
-            // startActivity(new Intent(this, ProductManagementActivity.class));
+            startActivity(new Intent(this, ProductManagementActivity.class));
         });
 
         cardOrderManagement.setOnClickListener(v -> {
-            // startActivity(new Intent(this, OrderManagementActivity.class));
+            startActivity(new Intent(this, OrderManagementActivity.class));
+        });
+
+        cardAuctionManagement.setOnClickListener(v -> {
+            startActivity(new Intent(this, AdminAuctionApprovalActivity.class));
         });
 
         cardReports.setOnClickListener(v -> {
             startActivity(new Intent(this, ReportManagementActivity.class));
+        });
+
+        cardSystemSettings.setOnClickListener(v -> {
+            // startActivity(new Intent(this, SystemSettingsActivity.class));
         });
     }
 

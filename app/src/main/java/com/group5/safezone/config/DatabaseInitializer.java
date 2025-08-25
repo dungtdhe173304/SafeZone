@@ -1,5 +1,6 @@
 package com.group5.safezone.config;
 
+import com.group5.safezone.model.entity.Auctions;
 import com.group5.safezone.model.entity.User;
 import com.group5.safezone.model.entity.Product;
 import com.group5.safezone.config.PasswordUtils;
@@ -18,6 +19,31 @@ public class DatabaseInitializer {
     public static void populateAsync(AppDatabase db) {
         executor.execute(() -> {
             populateWithTestData(db);
+        });
+    }
+
+    public static void ensureSeedDataAsync(AppDatabase db) {
+        executor.execute(() -> {
+            try {
+                // Nếu chưa có user nào (trường hợp DB trống) thì seed user
+                if (db.userDao().getAllUsers() == null || db.userDao().getAllUsers().isEmpty()) {
+                    //db.userDao().insertMultipleUsers(createSampleUsers());
+                }
+
+                boolean hasActive = false;
+                if (db.auctionsDao().getAllAuctions() != null) {
+                    java.util.Date now = new java.util.Date();
+                    for (com.group5.safezone.model.entity.Auctions a : db.auctionsDao().getAllAuctions()) {
+                        if (a.getStatus() != null && a.getStatus().equalsIgnoreCase("active") && a.getEndTime() != null && a.getEndTime().after(now)) {
+                            hasActive = true;
+                            break;
+                        }
+                    }
+                }
+                if (!hasActive) {
+                    insertSampleAuctions(db);
+                }
+            } catch (Exception ignored) { }
         });
     }
 
@@ -84,7 +110,7 @@ public class DatabaseInitializer {
         testUser.setDob(new Date(100, 8, 5)); // 2000-09-05
         testUser.setRole("USER");
         testUser.setStatus("ACTIVE"); // Đổi thành ACTIVE để có thể login
-        testUser.setBalance(0.0);
+        testUser.setBalance(1000000.0);
         testUser.setIsVerify(false);
         users.add(testUser);
 
@@ -103,6 +129,56 @@ public class DatabaseInitializer {
         users.add(newUser);
 
         return users;
+    }
+
+    private static void insertSampleAuctions(AppDatabase db) {
+        // Product 1
+        Product p1 = new Product("P001");
+        p1.setProductName("Nhẫn Sức Mạnh Hiếm");
+        p1.setPrice(450000.0);
+        p1.setUserId(1);
+        p1.setIsAuctionItem(true);
+        db.productDao().insert(p1);
+
+        ProductImages img11 = new ProductImages();
+        img11.setProductId("P001");
+        img11.setName("ring1");
+        img11.setPath("local://ring1");
+        db.productImagesDao().insert(img11);
+
+        Auctions a1 = new Auctions();
+        a1.setProductId("P001");
+        a1.setSellerUserId(1);
+        a1.setStartPrice(300000.0);
+        a1.setBuyNowPrice(9000000.0);
+        a1.setStartTime(new java.util.Date(System.currentTimeMillis() - 3600_000));
+        a1.setEndTime(new java.util.Date(System.currentTimeMillis() + 24 * 3600_000));
+        a1.setStatus("active");
+        db.auctionsDao().insert(a1);
+
+        // Product 2
+        Product p2 = new Product("P002");
+        p2.setProductName("Áo Giáp Ma Thuật Epic");
+        p2.setPrice(1200000.0);
+        p2.setUserId(1);
+        p2.setIsAuctionItem(true);
+        db.productDao().insert(p2);
+
+        ProductImages img21 = new ProductImages();
+        img21.setProductId("P002");
+        img21.setName("armor1");
+        img21.setPath("local://armor1");
+        db.productImagesDao().insert(img21);
+
+        Auctions a2 = new Auctions();
+        a2.setProductId("P002");
+        a2.setSellerUserId(1);
+        a2.setStartPrice(800000.0);
+        a2.setBuyNowPrice(8000000.0);
+        a2.setStartTime(new java.util.Date(System.currentTimeMillis() - 7200_000));
+        a2.setEndTime(new java.util.Date(System.currentTimeMillis() + 36 * 3600_000));
+        a2.setStatus("active");
+        db.auctionsDao().insert(a2);
     }
 
     private static List<Product> createSampleProducts() {

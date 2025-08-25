@@ -98,7 +98,7 @@
     <string name="visibility_public">Công khai</string>
     <string name="visibility_private">Riêng tư</string>
     <string name="users_who_can_view">Người có thể xem (phân cách bằng dấu phẩy)</string>
-    
+
     <!-- Community Chat -->
     <string name="community_chat_title">Chat Cộng Đồng</string>
     <string name="community_chat_message_hint">Nhập tin nhắn (tối đa 200 ký tự)...</string>
@@ -135,13 +135,13 @@
     <string name="view_details">Xem chi tiết</string>
     <string name="seller">Người bán</string>
     <string name="buy_now">Mua ngay</string>
-    
+
     <!-- Posting Fee -->
     <string name="insufficient_balance">Số dư không đủ</string>
     <string name="posting_fee_message">Bạn cần %1$s VNĐ để đăng bài, nhưng hiện chỉ có %2$s VNĐ.\n\nBạn có muốn nạp tiền ngay không?</string>
     <string name="deposit_money">Nạp tiền</string>
     <string name="posting_success">Đăng bài thành công! Đã trừ phí 5.000 VNĐ</string>
-    
+
     <!-- Validation Messages -->
     <string name="price_must_be_greater_than_10000">Giá phải lớn hơn 10.000 VNĐ</string>
     <string name="private_info_required">Thông tin riêng tư là bắt buộc</string>

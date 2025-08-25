@@ -2,6 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="green">#4CAF50</color>
+    <color name="red">#F44336</color>
+    <color name="blue">#2196F3</color>
+    <color name="orange">#FF9800</color>
 
     <!-- Footer Colors -->
     <color name="footer_background">#FFFFFF</color>
@@ -42,5 +46,11 @@
     <color name="text_primary">#212121</color>
     <color name="text_secondary">#757575</color>
     <color name="divider_color">#BDBDBD</color>
+
+    <color name="holo_red_dark">#D32F2F</color>
+
+    <color name="holo_green_dark">#388E3C</color>
+    <color name="holo_orange_dark">#F57C00</color>
+    <color name="darker_gray">#616161</color>
 
 </resources>

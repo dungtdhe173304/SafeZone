@@ -5,11 +5,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    
-    <!-- Live Streaming Permissions -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- Live Streaming Permissions -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
@@ -25,8 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SafeZone"
         tools:ignore="ExtraText">
-
-
+        <activity
+            android:name=".view.AuctionMainActivity"
+            android:exported="false" />
         <activity
             android:name=".view.auth.LoginActivity"
             android:exported="true"
@@ -36,129 +37,150 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- Needed for showing notifications on Android 13+ (optional if targeting 33+) -->
+        </activity> <!-- Needed for showing notifications on Android 13+ (optional if targeting 33+) -->
         <!-- Main Activity -->
         <activity
             android:name=".view.MainActivity"
-            android:exported="false" />
-
-        <!-- Admin Main Activity -->
+            android:exported="false" /> <!-- Admin Main Activity -->
         <activity
             android:name=".view.admin.AdminMainActivity"
-            android:exported="false" />
-
-        <!-- Wallet Activity -->
+            android:exported="false" /> <!-- Wallet Activity -->
         <activity
             android:name=".view.Wallet.WalletActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="safezone" />
             </intent-filter>
-        </activity>
-
-        <!-- Notifications Activity -->
+        </activity> <!-- Notifications Activity -->
         <activity
             android:name=".view.notification.NotificationsActivity"
-            android:exported="false" />
-
-        <!-- Chat Activity -->
+            android:exported="false" /> <!-- Chat Activity -->
         <activity
             android:name=".view.chat.ChatActivity"
-            android:exported="false" />
-
-        <!-- Community Chat Activity -->
+            android:exported="false" /> <!-- Community Chat Activity -->
         <activity
             android:name=".view.CommunityChatActivity"
             android:exported="false"
             android:label="Chat Cộng Đồng"
-            android:theme="@style/Theme.SafeZone" />
-
-        <!-- Chat Notification Service -->
+            android:theme="@style/Theme.SafeZone" /> <!-- Chat Notification Service -->
         <service
             android:name=".service.ChatNotificationService"
-            android:exported="false" />
-
-        <!-- Live Streaming Activities -->
+            android:exported="false" /> <!-- Live Streaming Activities -->
         <activity
             android:name=".view.livestreaming.LiveStreamingActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.SafeZone.NoActionBar" />
-
         <activity
             android:name=".view.livestreaming.LiveStreamingDemoActivity"
             android:exported="false"
             android:label="Live Streaming Demo"
             android:theme="@style/Theme.SafeZone" />
-
         <activity
             android:name=".view.livestreaming.JoinStreamActivity"
             android:exported="false"
             android:label="Join Live Stream"
-            android:theme="@style/Theme.SafeZone" />
-
-        <!-- Live Streaming Main Activity -->
+            android:theme="@style/Theme.SafeZone" /> <!-- Live Streaming Main Activity -->
         <activity
             android:name=".view.livestreaming.LiveStreamingMainActivity"
             android:exported="false"
             android:label="Live Streaming"
-            android:theme="@style/Theme.SafeZone" />
-
-        <!-- Product Detail Activity -->
+            android:theme="@style/Theme.SafeZone" /> <!-- Product Detail Activity -->
         <activity
             android:name=".view.ProductDetailActivity"
             android:exported="false"
             android:label="Chi tiết sản phẩm"
-            android:theme="@style/Theme.SafeZone" />
-
-        <!-- Edit Product Activity -->
+            android:theme="@style/Theme.SafeZone" /> <!-- Edit Product Activity -->
         <activity
             android:name=".view.EditProductActivity"
             android:exported="false"
             android:label="Chỉnh sửa sản phẩm"
-            android:theme="@style/Theme.SafeZone" />
-
-        <!-- Buy Product Activity -->
+            android:theme="@style/Theme.SafeZone" /> <!-- Buy Product Activity -->
         <activity
             android:name=".view.BuyProductActivity"
             android:exported="false"
             android:label="Mua sản phẩm"
-            android:theme="@style/Theme.SafeZone" />
-
-        <!-- Purchase History Activity -->
+            android:theme="@style/Theme.SafeZone" /> <!-- Purchase History Activity -->
         <activity
             android:name=".view.PurchaseHistoryActivity"
             android:exported="false"
             android:label="Lịch sử mua hàng"
-            android:theme="@style/Theme.SafeZone" />
-
-        <!-- Order Detail Activity -->
+            android:theme="@style/Theme.SafeZone" /> <!-- Order Detail Activity -->
         <activity
             android:name=".view.OrderDetailActivity"
             android:exported="false"
             android:label="Chi tiết đơn hàng"
-            android:theme="@style/Theme.SafeZone" />
-            
-        <!-- Sales History Activity -->
+            android:theme="@style/Theme.SafeZone" /> <!-- Sales History Activity -->
         <activity
             android:name=".view.SalesHistoryActivity"
             android:exported="false"
             android:label="Lịch sử bán hàng"
-            android:theme="@style/Theme.SafeZone" />
-            
-        <!-- Report Management Activity -->
+            android:theme="@style/Theme.SafeZone" /> <!-- Report Management Activity -->
         <activity
             android:name=".view.admin.ReportManagementActivity"
             android:exported="false"
             android:label="Quản lý báo cáo"
             android:theme="@style/Theme.SafeZone" />
 
+        <!-- Auction Registration Activity -->
+        <activity
+            android:name=".view.AuctionRegistrationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Auction Room Activity -->
+        <activity
+            android:name=".view.AuctionRoomActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- User Auction Management Activity -->
+        <activity
+            android:name=".view.UserAuctionManagementActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Edit Auction Activity -->
+        <activity
+            android:name=".view.EditAuctionActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Admin User Management Activity -->
+        <activity
+            android:name=".view.admin.UserManagementActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Admin Product Management Activity -->
+        <activity
+            android:name=".view.admin.ProductManagementActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Admin Order Management Activity -->
+        <activity
+            android:name=".view.admin.OrderManagementActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Admin Auction Approval Activity -->
+        <activity
+            android:name=".view.AdminAuctionApprovalActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
+
+        <!-- Auction Detail Activity -->
+        <activity
+            android:name=".view.AuctionDetailActivity"
+            android:exported="false"
+            android:theme="@style/Theme.SafeZone" />
     </application>
 
 </manifest>

@@ -27,11 +27,11 @@ public interface AuctionsDao {
     @Query("SELECT * FROM auctions WHERE status = :status")
     List<Auctions> getAuctionsByStatus(String status);
 
-    @Query("SELECT * FROM auctions WHERE status = 'active' AND endTime > datetime('now')")
-    List<Auctions> getActiveAuctions();
+    @Query("SELECT * FROM auctions WHERE status = 'active' AND endTime > :nowMillis")
+    List<Auctions> getActiveAuctions(long nowMillis);
 
-    @Query("SELECT * FROM auctions WHERE status = 'active' AND endTime <= datetime('now')")
-    List<Auctions> getExpiredAuctions();
+    @Query("SELECT * FROM auctions WHERE status = 'active' AND endTime <= :nowMillis")
+    List<Auctions> getExpiredAuctions(long nowMillis);
 
     @Query("UPDATE auctions SET currentHighestBid = :bidAmount, highestBidderUserId = :bidderId WHERE id = :auctionId")
     void updateHighestBid(int auctionId, double bidAmount, int bidderId);

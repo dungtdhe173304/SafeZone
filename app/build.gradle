@@ -38,7 +38,7 @@ dependencies {
     implementation libs.constraintlayout
     implementation libs.room.common.jvm
     implementation libs.room.runtime
-    implementation fileTree(dir: 'C:\\Users\\truon\\Downloads\\ZaloPayLib', include: ['*.aar', '*.jar'], exclude: [])
+    implementation fileTree(dir: 'D:\\ZaloPayLib', include: ['*.aar', '*.jar'], exclude: [])
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
