@@ -98,6 +98,23 @@
     <string name="visibility_public">Công khai</string>
     <string name="visibility_private">Riêng tư</string>
     <string name="users_who_can_view">Người có thể xem (phân cách bằng dấu phẩy)</string>
+    
+    <!-- Community Chat -->
+    <string name="community_chat_title">Chat Cộng Đồng</string>
+    <string name="community_chat_message_hint">Nhập tin nhắn (tối đa 200 ký tự)...</string>
+    <string name="community_chat_send">Gửi</string>
+    <string name="community_chat_balance">Số dư: %1$s VND</string>
+    <string name="community_chat_cost">Mỗi tin nhắn: %1$s VND</string>
+    <string name="community_chat_insufficient_balance">Số dư không đủ</string>
+    <string name="community_chat_insufficient_balance_message">Bạn cần %1$s VND để gửi tin nhắn. Bạn có muốn nạp tiền không?</string>
+    <string name="community_chat_deposit">Nạp tiền</string>
+    <string name="community_chat_cancel">Hủy</string>
+    <string name="community_chat_message_too_long">Tin nhắn quá dài (tối đa %1$d ký tự)</string>
+    <string name="community_chat_message_sent">Tin nhắn đã gửi!</string>
+    <string name="community_chat_send_error">Không thể gửi tin nhắn</string>
+    <string name="community_chat_user_error">Không thể xác định người dùng</string>
+    <string name="community_chat_view_all">Xem tất cả</string>
+    <string name="community_chat_header">💬 Chat Cộng Đồng</string>
     <string name="private_information">Thông tin riêng tư (sẽ được mã hóa)</string>
     <string name="add_images">Thêm ảnh</string>
     <string name="add_product">Thêm sản phẩm</string>

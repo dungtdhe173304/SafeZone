@@ -72,6 +72,13 @@
             android:name=".view.chat.ChatActivity"
             android:exported="false" />
 
+        <!-- Community Chat Activity -->
+        <activity
+            android:name=".view.CommunityChatActivity"
+            android:exported="false"
+            android:label="Chat Cộng Đồng"
+            android:theme="@style/Theme.SafeZone" />
+
         <!-- Chat Notification Service -->
         <service
             android:name=".service.ChatNotificationService"

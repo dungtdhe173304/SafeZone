@@ -33,11 +33,19 @@ import com.group5.safezone.view.base.BaseActivity;
 import com.group5.safezone.view.notification.NotificationsActivity;
 import com.group5.safezone.view.PurchaseHistoryActivity;
 import com.group5.safezone.view.SalesHistoryActivity;
+import com.group5.safezone.view.component.CommunityChatHeaderView;
+import com.group5.safezone.service.CommunityChatService;
+import com.group5.safezone.config.AppDatabase;
+import com.group5.safezone.config.ZegoCloudConfig;
+import com.group5.safezone.model.entity.ChatCommunity;
+import com.group5.safezone.model.entity.User;
 import com.google.android.material.navigation.NavigationView;
 import com.group5.safezone.Constant.Chatbox.ConstantKey;
 
 import com.zegocloud.zimkit.BuildConfig;
 import com.zegocloud.zimkit.services.ZIMKit;
+import java.util.List;
+import java.util.Date;
 
 public class MainActivity extends BaseActivity {
 
@@ -49,6 +57,10 @@ public class MainActivity extends BaseActivity {
     private View notificationBellView;
     private TextView notificationBadge;
     private BroadcastReceiver notificationReceiver;
+    
+    // Community Chat Components
+    private CommunityChatHeaderView communityChatHeaderView;
+    private CommunityChatService communityChatService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +82,14 @@ public class MainActivity extends BaseActivity {
 
         sessionManager = new SessionManager(this);
 
-        // Initialize ZEGOCLOUD SDK
-        initZegoCloud();
+        // Initialize ZEGOCLOUD SDK safely
+        ZegoCloudConfig.initSafely(this);
 
         initViews();
         setupToolbar();
         setupDrawer();
         setupBackPressedDispatcher();
+        setupCommunityChat();
         
         // Load HomeFragment as default
         if (savedInstanceState == null) {
@@ -95,14 +108,110 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initViews() {
+        System.out.println("=== MainActivity: initViews() called ===");
+        
         drawerLayout = findViewById(R.id.drawer_layout);
+        System.out.println("=== MainActivity: drawerLayout: " + (drawerLayout != null ? "NOT NULL" : "NULL") + " ===");
+        
         navigationView = findViewById(R.id.navigation_view);
+        System.out.println("=== MainActivity: navigationView: " + (navigationView != null ? "NOT NULL" : "NULL") + " ===");
+        
+        communityChatHeaderView = findViewById(R.id.community_chat_header);
+        System.out.println("=== MainActivity: communityChatHeaderView: " + (communityChatHeaderView != null ? "NOT NULL" : "NULL") + " ===");
+        
+        if (communityChatHeaderView == null) {
+            System.out.println("=== MainActivity: ERROR - community_chat_header not found in layout! ===");
+        }
     }
 
     private void setupToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("SafeZone");
+    }
+    
+    private void setupCommunityChat() {
+        System.out.println("=== MainActivity: setupCommunityChat() called ===");
+        
+        if (communityChatHeaderView != null) {
+            System.out.println("=== MainActivity: communityChatHeaderView is NOT NULL ===");
+            
+            try {
+                AppDatabase database = AppDatabase.getDatabase(this);
+                System.out.println("=== MainActivity: Database initialized successfully ===");
+                
+                communityChatService = new CommunityChatService(database, sessionManager);
+                System.out.println("=== MainActivity: CommunityChatService created successfully ===");
+                
+                communityChatHeaderView.setChatService(communityChatService);
+                System.out.println("=== MainActivity: ChatService set to header view ===");
+                
+                // Load recent messages
+                new Thread(() -> {
+                    try {
+                        System.out.println("=== MainActivity: Loading recent messages... ===");
+                        List<ChatCommunity> recentMessages = communityChatService.getRecentMessages(10);
+                        System.out.println("=== MainActivity: Got " + (recentMessages != null ? recentMessages.size() : 0) + " messages ===");
+                        
+                        runOnUiThread(() -> {
+                            if (recentMessages != null && !recentMessages.isEmpty()) {
+                                System.out.println("=== MainActivity: Setting " + recentMessages.size() + " messages to header ===");
+                                communityChatHeaderView.setMessages(recentMessages);
+                            } else {
+                                System.out.println("=== MainActivity: No messages found, creating sample message ===");
+                                // Nếu không có tin nhắn, tạo tin nhắn mẫu để test
+                                createSampleMessages();
+                            }
+                        });
+                    } catch (Exception e) {
+                        System.out.println("=== MainActivity: Error loading messages: " + e.getMessage() + " ===");
+                        e.printStackTrace();
+                        // Tạo tin nhắn mẫu nếu có lỗi
+                        runOnUiThread(this::createSampleMessages);
+                    }
+                }).start();
+                
+            } catch (Exception e) {
+                System.out.println("=== MainActivity: Error in setupCommunityChat: " + e.getMessage() + " ===");
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("=== MainActivity: communityChatHeaderView is NULL ===");
+        }
+    }
+    
+    private void createSampleMessages() {
+        // Tạo tin nhắn mẫu để test
+        new Thread(() -> {
+            try {
+                AppDatabase database = AppDatabase.getDatabase(this);
+                User currentUser = database.userDao().getUserById(sessionManager.getUserId());
+                
+                if (currentUser != null) {
+                    // Tạo tin nhắn mẫu
+                    ChatCommunity sampleMessage = new ChatCommunity();
+                    sampleMessage.setMessage("Chào mừng bạn đến với SafeZone! Đây là tin nhắn cộng đồng đầu tiên.");
+                    sampleMessage.setUserId(currentUser.getId());
+                    sampleMessage.setUserName(currentUser.getUserName());
+                    sampleMessage.setCreatedAt(new Date());
+                    sampleMessage.setUpdatedAt(new Date());
+                    sampleMessage.setDisplayed(false);
+                    sampleMessage.setDisplayOrder(0);
+                    
+                    database.chatCommunityDao().insert(sampleMessage);
+                    
+                    // Reload messages
+                    List<ChatCommunity> recentMessages = communityChatService.getRecentMessages(10);
+                    runOnUiThread(() -> {
+                        if (recentMessages != null && !recentMessages.isEmpty()) {
+                            communityChatHeaderView.setMessages(recentMessages);
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
     }
 
     private void setupDrawer() {
@@ -134,6 +243,8 @@ public class MainActivity extends BaseActivity {
                     startActivity(new Intent(this, SalesHistoryActivity.class));
                 } else if (id == R.id.nav_chat) {
                     startActivity(new Intent(this, com.group5.safezone.view.chat.ChatActivity.class));
+                } else if (id == R.id.nav_community_chat) {
+                    startActivity(new Intent(this, CommunityChatActivity.class));
                 } else if (id == R.id.nav_livestream) {
                     startActivity(new Intent(this, com.group5.safezone.view.livestreaming.LiveStreamingMainActivity.class));
                 } else if (id == R.id.nav_settings) {
@@ -306,6 +417,11 @@ public class MainActivity extends BaseActivity {
         
         // Reload HomeFragment if it's the current fragment to refresh product list
         reloadCurrentFragment();
+        
+        // Refresh community chat header khi quay lại MainActivity
+        if (communityChatHeaderView != null) {
+            refreshCommunityChatHeader();
+        }
     }
     
     private void reloadCurrentFragment() {
@@ -318,6 +434,35 @@ public class MainActivity extends BaseActivity {
             ((HomeFragment) currentFragment).reloadProducts();
         }
     }
+    
+    private void refreshCommunityChatHeader() {
+        android.util.Log.d("MainActivity", "refreshCommunityChatHeader called");
+        
+        if (communityChatService != null) {
+            android.util.Log.d("MainActivity", "communityChatService is not null, getting recent messages");
+            
+            // Lấy tin nhắn mới nhất và cập nhật header
+            new Thread(() -> {
+                try {
+                    List<ChatCommunity> recentMessages = communityChatService.getRecentMessages(50);
+                    android.util.Log.d("MainActivity", "Retrieved " + (recentMessages != null ? recentMessages.size() : 0) + " messages");
+                    
+                    if (recentMessages != null && !recentMessages.isEmpty()) {
+                        runOnUiThread(() -> {
+                            android.util.Log.d("MainActivity", "Setting messages to header view");
+                            communityChatHeaderView.setMessages(recentMessages);
+                        });
+                    } else {
+                        android.util.Log.d("MainActivity", "No messages to display");
+                    }
+                } catch (Exception e) {
+                    android.util.Log.e("MainActivity", "Error refreshing chat header", e);
+                }
+            }).start();
+        } else {
+            android.util.Log.d("MainActivity", "communityChatService is null");
+        }
+    }
 
     @Override
     protected void onPause() {
@@ -328,9 +473,14 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-    private void initZegoCloud() {
-        ZIMKit.initWith(this.getApplication(), ConstantKey.appID, ConstantKey.appSign);
-        ZIMKit.initNotifications();
+
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (communityChatService != null) {
+            communityChatService.shutdown();
+        }
     }
 
     public void loadHomeFragment() {

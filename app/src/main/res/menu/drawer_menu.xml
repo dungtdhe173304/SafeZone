@@ -36,6 +36,11 @@
             android:icon="@drawable/ic_person" />
 
         <item
+            android:id="@+id/nav_community_chat"
+            android:title="@string/community_chat_title"
+            android:icon="@drawable/ic_people" />
+
+        <item
             android:id="@+id/nav_livestream"
             android:title="@string/livestream_title"
             android:icon="@drawable/ic_livestream" />

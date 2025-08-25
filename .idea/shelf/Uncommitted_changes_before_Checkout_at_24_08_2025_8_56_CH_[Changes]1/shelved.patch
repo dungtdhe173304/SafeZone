@@ -1,0 +1,890 @@
+Index: .idea/dbnavigator.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/dbnavigator.xml b/.idea/dbnavigator.xml
+deleted file mode 100644
+--- a/.idea/dbnavigator.xml	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ /dev/null	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
+@@ -1,446 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="DBNavigator.Project.DDLFileAttachmentManager">
+-    <mappings />
+-    <preferences />
+-  </component>
+-  <component name="DBNavigator.Project.DatabaseAssistantManager">
+-    <assistants />
+-  </component>
+-  <component name="DBNavigator.Project.DatabaseBrowserManager">
+-    <autoscroll-to-editor value="false" />
+-    <autoscroll-from-editor value="true" />
+-    <show-object-properties value="true" />
+-    <loaded-nodes />
+-  </component>
+-  <component name="DBNavigator.Project.DatabaseFileManager">
+-    <open-files />
+-  </component>
+-  <component name="DBNavigator.Project.Settings">
+-    <connections />
+-    <browser-settings>
+-      <general>
+-        <display-mode value="TABBED" />
+-        <navigation-history-size value="100" />
+-        <show-object-details value="false" />
+-        <enable-sticky-paths value="true" />
+-        <enable-quick-filters value="false" />
+-      </general>
+-      <filters>
+-        <object-type-filter>
+-          <object-type name="SCHEMA" enabled="true" />
+-          <object-type name="USER" enabled="true" />
+-          <object-type name="ROLE" enabled="true" />
+-          <object-type name="PRIVILEGE" enabled="true" />
+-          <object-type name="CHARSET" enabled="true" />
+-          <object-type name="TABLE" enabled="true" />
+-          <object-type name="VIEW" enabled="true" />
+-          <object-type name="JSON_VIEW" enabled="true" />
+-          <object-type name="MATERIALIZED_VIEW" enabled="true" />
+-          <object-type name="NESTED_TABLE" enabled="true" />
+-          <object-type name="COLUMN" enabled="true" />
+-          <object-type name="INDEX" enabled="true" />
+-          <object-type name="CONSTRAINT" enabled="true" />
+-          <object-type name="DATASET_TRIGGER" enabled="true" />
+-          <object-type name="DATABASE_TRIGGER" enabled="true" />
+-          <object-type name="SYNONYM" enabled="true" />
+-          <object-type name="SEQUENCE" enabled="true" />
+-          <object-type name="PROCEDURE" enabled="true" />
+-          <object-type name="FUNCTION" enabled="true" />
+-          <object-type name="PACKAGE" enabled="true" />
+-          <object-type name="TYPE" enabled="true" />
+-          <object-type name="TYPE_ATTRIBUTE" enabled="true" />
+-          <object-type name="ARGUMENT" enabled="true" />
+-          <object-type name="JAVA_CLASS" enabled="true" />
+-          <object-type name="JAVA_FIELD" enabled="true" />
+-          <object-type name="JAVA_METHOD" enabled="true" />
+-          <object-type name="JAVA_RESOURCE" enabled="true" />
+-          <object-type name="DIMENSION" enabled="true" />
+-          <object-type name="CLUSTER" enabled="true" />
+-          <object-type name="DBLINK" enabled="true" />
+-          <object-type name="CREDENTIAL" enabled="true" />
+-          <object-type name="AI_PROFILE" enabled="true" />
+-        </object-type-filter>
+-      </filters>
+-      <sorting>
+-        <object-type name="COLUMN" sorting-type="NAME" />
+-        <object-type name="FUNCTION" sorting-type="NAME" />
+-        <object-type name="PROCEDURE" sorting-type="NAME" />
+-        <object-type name="ARGUMENT" sorting-type="POSITION" />
+-        <object-type name="TYPE ATTRIBUTE" sorting-type="POSITION" />
+-      </sorting>
+-      <default-editors>
+-        <object-type name="VIEW" editor-type="SELECTION" />
+-        <object-type name="PACKAGE" editor-type="SELECTION" />
+-        <object-type name="TYPE" editor-type="SELECTION" />
+-      </default-editors>
+-    </browser-settings>
+-    <navigation-settings>
+-      <lookup-filters>
+-        <lookup-objects>
+-          <object-type name="SCHEMA" enabled="true" />
+-          <object-type name="USER" enabled="false" />
+-          <object-type name="ROLE" enabled="false" />
+-          <object-type name="PRIVILEGE" enabled="false" />
+-          <object-type name="CHARSET" enabled="false" />
+-          <object-type name="TABLE" enabled="true" />
+-          <object-type name="VIEW" enabled="true" />
+-          <object-type name="JSON VIEW" enabled="true" />
+-          <object-type name="MATERIALIZED VIEW" enabled="true" />
+-          <object-type name="INDEX" enabled="true" />
+-          <object-type name="CONSTRAINT" enabled="true" />
+-          <object-type name="DATASET TRIGGER" enabled="true" />
+-          <object-type name="DATABASE TRIGGER" enabled="true" />
+-          <object-type name="SYNONYM" enabled="false" />
+-          <object-type name="SEQUENCE" enabled="true" />
+-          <object-type name="PROCEDURE" enabled="true" />
+-          <object-type name="FUNCTION" enabled="true" />
+-          <object-type name="PACKAGE" enabled="true" />
+-          <object-type name="TYPE" enabled="true" />
+-          <object-type name="JAVA CLASS" enabled="true" />
+-          <object-type name="INNER CLASS" enabled="true" />
+-          <object-type name="JAVA FIELD" enabled="true" />
+-          <object-type name="JAVA METHOD" enabled="true" />
+-          <object-type name="JAVA PARAMETER" enabled="true" />
+-          <object-type name="JAVA RESOURCE" enabled="true" />
+-          <object-type name="DIMENSION" enabled="false" />
+-          <object-type name="CLUSTER" enabled="false" />
+-          <object-type name="DBLINK" enabled="false" />
+-          <object-type name="CREDENTIAL" enabled="false" />
+-        </lookup-objects>
+-        <force-database-load value="false" />
+-        <prompt-connection-selection value="true" />
+-        <prompt-schema-selection value="true" />
+-      </lookup-filters>
+-    </navigation-settings>
+-    <dataset-grid-settings>
+-      <general>
+-        <enable-zooming value="true" />
+-        <enable-column-tooltip value="true" />
+-      </general>
+-      <sorting>
+-        <nulls-first value="true" />
+-        <max-sorting-columns value="4" />
+-      </sorting>
+-      <audit-columns>
+-        <column-names value="" />
+-        <visible value="true" />
+-        <editable value="false" />
+-      </audit-columns>
+-    </dataset-grid-settings>
+-    <dataset-editor-settings>
+-      <text-editor-popup>
+-        <active value="false" />
+-        <active-if-empty value="false" />
+-        <data-length-threshold value="100" />
+-        <popup-delay value="1000" />
+-      </text-editor-popup>
+-      <values-actions-popup>
+-        <show-popup-button value="true" />
+-        <element-count-threshold value="1000" />
+-        <data-length-threshold value="250" />
+-      </values-actions-popup>
+-      <general>
+-        <fetch-block-size value="100" />
+-        <fetch-timeout value="30" />
+-        <trim-whitespaces value="true" />
+-        <convert-empty-strings-to-null value="true" />
+-        <select-content-on-cell-edit value="true" />
+-        <large-value-preview-active value="true" />
+-      </general>
+-      <filters>
+-        <prompt-filter-dialog value="true" />
+-        <default-filter-type value="BASIC" />
+-      </filters>
+-      <qualified-text-editor text-length-threshold="300">
+-        <content-types>
+-          <content-type name="Text" enabled="true" />
+-          <content-type name="Properties" enabled="true" />
+-          <content-type name="XML" enabled="true" />
+-          <content-type name="DTD" enabled="true" />
+-          <content-type name="HTML" enabled="true" />
+-          <content-type name="XHTML" enabled="true" />
+-          <content-type name="Java" enabled="true" />
+-          <content-type name="SQL" enabled="true" />
+-          <content-type name="PL/SQL" enabled="true" />
+-          <content-type name="JSON" enabled="true" />
+-          <content-type name="JSON5" enabled="true" />
+-          <content-type name="Groovy" enabled="true" />
+-          <content-type name="AIDL" enabled="true" />
+-          <content-type name="YAML" enabled="true" />
+-          <content-type name="Manifest" enabled="true" />
+-        </content-types>
+-      </qualified-text-editor>
+-      <record-navigation>
+-        <navigation-target value="VIEWER" />
+-      </record-navigation>
+-    </dataset-editor-settings>
+-    <code-editor-settings>
+-      <general>
+-        <show-object-navigation-gutter value="false" />
+-        <show-spec-declaration-navigation-gutter value="true" />
+-        <enable-spellchecking value="true" />
+-        <enable-reference-spellchecking value="false" />
+-      </general>
+-      <confirmations>
+-        <save-changes value="false" />
+-        <revert-changes value="true" />
+-        <exit-on-changes value="ASK" />
+-      </confirmations>
+-    </code-editor-settings>
+-    <code-completion-settings>
+-      <filters>
+-        <basic-filter>
+-          <filter-element type="RESERVED_WORD" id="keyword" selected="true" />
+-          <filter-element type="RESERVED_WORD" id="function" selected="true" />
+-          <filter-element type="RESERVED_WORD" id="parameter" selected="true" />
+-          <filter-element type="RESERVED_WORD" id="datatype" selected="true" />
+-          <filter-element type="RESERVED_WORD" id="exception" selected="true" />
+-          <filter-element type="OBJECT" id="schema" selected="true" />
+-          <filter-element type="OBJECT" id="role" selected="true" />
+-          <filter-element type="OBJECT" id="user" selected="true" />
+-          <filter-element type="OBJECT" id="privilege" selected="true" />
+-          <user-schema>
+-            <filter-element type="OBJECT" id="table" selected="true" />
+-            <filter-element type="OBJECT" id="view" selected="true" />
+-            <filter-element type="OBJECT" id="json view" selected="true" />
+-            <filter-element type="OBJECT" id="materialized view" selected="true" />
+-            <filter-element type="OBJECT" id="index" selected="true" />
+-            <filter-element type="OBJECT" id="constraint" selected="true" />
+-            <filter-element type="OBJECT" id="trigger" selected="true" />
+-            <filter-element type="OBJECT" id="synonym" selected="false" />
+-            <filter-element type="OBJECT" id="sequence" selected="true" />
+-            <filter-element type="OBJECT" id="procedure" selected="true" />
+-            <filter-element type="OBJECT" id="function" selected="true" />
+-            <filter-element type="OBJECT" id="package" selected="true" />
+-            <filter-element type="OBJECT" id="type" selected="true" />
+-            <filter-element type="OBJECT" id="dimension" selected="true" />
+-            <filter-element type="OBJECT" id="cluster" selected="true" />
+-            <filter-element type="OBJECT" id="dblink" selected="true" />
+-          </user-schema>
+-          <public-schema>
+-            <filter-element type="OBJECT" id="table" selected="false" />
+-            <filter-element type="OBJECT" id="view" selected="false" />
+-            <filter-element type="OBJECT" id="json view" selected="false" />
+-            <filter-element type="OBJECT" id="materialized view" selected="false" />
+-            <filter-element type="OBJECT" id="index" selected="false" />
+-            <filter-element type="OBJECT" id="constraint" selected="false" />
+-            <filter-element type="OBJECT" id="trigger" selected="false" />
+-            <filter-element type="OBJECT" id="synonym" selected="false" />
+-            <filter-element type="OBJECT" id="sequence" selected="false" />
+-            <filter-element type="OBJECT" id="procedure" selected="false" />
+-            <filter-element type="OBJECT" id="function" selected="false" />
+-            <filter-element type="OBJECT" id="package" selected="false" />
+-            <filter-element type="OBJECT" id="type" selected="false" />
+-            <filter-element type="OBJECT" id="dimension" selected="false" />
+-            <filter-element type="OBJECT" id="cluster" selected="false" />
+-            <filter-element type="OBJECT" id="dblink" selected="false" />
+-          </public-schema>
+-          <any-schema>
+-            <filter-element type="OBJECT" id="table" selected="true" />
+-            <filter-element type="OBJECT" id="view" selected="true" />
+-            <filter-element type="OBJECT" id="json view" selected="true" />
+-            <filter-element type="OBJECT" id="materialized view" selected="true" />
+-            <filter-element type="OBJECT" id="index" selected="true" />
+-            <filter-element type="OBJECT" id="constraint" selected="true" />
+-            <filter-element type="OBJECT" id="trigger" selected="true" />
+-            <filter-element type="OBJECT" id="synonym" selected="true" />
+-            <filter-element type="OBJECT" id="sequence" selected="true" />
+-            <filter-element type="OBJECT" id="procedure" selected="true" />
+-            <filter-element type="OBJECT" id="function" selected="true" />
+-            <filter-element type="OBJECT" id="package" selected="true" />
+-            <filter-element type="OBJECT" id="type" selected="true" />
+-            <filter-element type="OBJECT" id="dimension" selected="true" />
+-            <filter-element type="OBJECT" id="cluster" selected="true" />
+-            <filter-element type="OBJECT" id="dblink" selected="true" />
+-          </any-schema>
+-        </basic-filter>
+-        <extended-filter>
+-          <filter-element type="RESERVED_WORD" id="keyword" selected="true" />
+-          <filter-element type="RESERVED_WORD" id="function" selected="true" />
+-          <filter-element type="RESERVED_WORD" id="parameter" selected="true" />
+-          <filter-element type="RESERVED_WORD" id="datatype" selected="true" />
+-          <filter-element type="RESERVED_WORD" id="exception" selected="true" />
+-          <filter-element type="OBJECT" id="schema" selected="true" />
+-          <filter-element type="OBJECT" id="user" selected="true" />
+-          <filter-element type="OBJECT" id="role" selected="true" />
+-          <filter-element type="OBJECT" id="privilege" selected="true" />
+-          <user-schema>
+-            <filter-element type="OBJECT" id="table" selected="true" />
+-            <filter-element type="OBJECT" id="view" selected="true" />
+-            <filter-element type="OBJECT" id="json view" selected="true" />
+-            <filter-element type="OBJECT" id="materialized view" selected="true" />
+-            <filter-element type="OBJECT" id="index" selected="true" />
+-            <filter-element type="OBJECT" id="constraint" selected="true" />
+-            <filter-element type="OBJECT" id="trigger" selected="true" />
+-            <filter-element type="OBJECT" id="synonym" selected="true" />
+-            <filter-element type="OBJECT" id="sequence" selected="true" />
+-            <filter-element type="OBJECT" id="procedure" selected="true" />
+-            <filter-element type="OBJECT" id="function" selected="true" />
+-            <filter-element type="OBJECT" id="package" selected="true" />
+-            <filter-element type="OBJECT" id="type" selected="true" />
+-            <filter-element type="OBJECT" id="dimension" selected="true" />
+-            <filter-element type="OBJECT" id="cluster" selected="true" />
+-            <filter-element type="OBJECT" id="dblink" selected="true" />
+-          </user-schema>
+-          <public-schema>
+-            <filter-element type="OBJECT" id="table" selected="true" />
+-            <filter-element type="OBJECT" id="view" selected="true" />
+-            <filter-element type="OBJECT" id="json view" selected="true" />
+-            <filter-element type="OBJECT" id="materialized view" selected="true" />
+-            <filter-element type="OBJECT" id="index" selected="true" />
+-            <filter-element type="OBJECT" id="constraint" selected="true" />
+-            <filter-element type="OBJECT" id="trigger" selected="true" />
+-            <filter-element type="OBJECT" id="synonym" selected="true" />
+-            <filter-element type="OBJECT" id="sequence" selected="true" />
+-            <filter-element type="OBJECT" id="procedure" selected="true" />
+-            <filter-element type="OBJECT" id="function" selected="true" />
+-            <filter-element type="OBJECT" id="package" selected="true" />
+-            <filter-element type="OBJECT" id="type" selected="true" />
+-            <filter-element type="OBJECT" id="dimension" selected="true" />
+-            <filter-element type="OBJECT" id="cluster" selected="true" />
+-            <filter-element type="OBJECT" id="dblink" selected="true" />
+-          </public-schema>
+-          <any-schema>
+-            <filter-element type="OBJECT" id="table" selected="true" />
+-            <filter-element type="OBJECT" id="view" selected="true" />
+-            <filter-element type="OBJECT" id="json view" selected="true" />
+-            <filter-element type="OBJECT" id="materialized view" selected="true" />
+-            <filter-element type="OBJECT" id="index" selected="true" />
+-            <filter-element type="OBJECT" id="constraint" selected="true" />
+-            <filter-element type="OBJECT" id="trigger" selected="true" />
+-            <filter-element type="OBJECT" id="synonym" selected="true" />
+-            <filter-element type="OBJECT" id="sequence" selected="true" />
+-            <filter-element type="OBJECT" id="procedure" selected="true" />
+-            <filter-element type="OBJECT" id="function" selected="true" />
+-            <filter-element type="OBJECT" id="package" selected="true" />
+-            <filter-element type="OBJECT" id="type" selected="true" />
+-            <filter-element type="OBJECT" id="dimension" selected="true" />
+-            <filter-element type="OBJECT" id="cluster" selected="true" />
+-            <filter-element type="OBJECT" id="dblink" selected="true" />
+-          </any-schema>
+-        </extended-filter>
+-      </filters>
+-      <sorting enabled="true">
+-        <sorting-element type="RESERVED_WORD" id="keyword" />
+-        <sorting-element type="RESERVED_WORD" id="datatype" />
+-        <sorting-element type="OBJECT" id="column" />
+-        <sorting-element type="OBJECT" id="table" />
+-        <sorting-element type="OBJECT" id="view" />
+-        <sorting-element type="OBJECT" id="json view" />
+-        <sorting-element type="OBJECT" id="materialized view" />
+-        <sorting-element type="OBJECT" id="index" />
+-        <sorting-element type="OBJECT" id="constraint" />
+-        <sorting-element type="OBJECT" id="trigger" />
+-        <sorting-element type="OBJECT" id="synonym" />
+-        <sorting-element type="OBJECT" id="sequence" />
+-        <sorting-element type="OBJECT" id="procedure" />
+-        <sorting-element type="OBJECT" id="function" />
+-        <sorting-element type="OBJECT" id="package" />
+-        <sorting-element type="OBJECT" id="type" />
+-        <sorting-element type="OBJECT" id="dimension" />
+-        <sorting-element type="OBJECT" id="cluster" />
+-        <sorting-element type="OBJECT" id="dblink" />
+-        <sorting-element type="OBJECT" id="schema" />
+-        <sorting-element type="OBJECT" id="role" />
+-        <sorting-element type="OBJECT" id="user" />
+-        <sorting-element type="RESERVED_WORD" id="function" />
+-        <sorting-element type="RESERVED_WORD" id="parameter" />
+-      </sorting>
+-      <format>
+-        <enforce-code-style-case value="true" />
+-      </format>
+-    </code-completion-settings>
+-    <execution-engine-settings>
+-      <statement-execution>
+-        <fetch-block-size value="100" />
+-        <execution-timeout value="20" />
+-        <debug-execution-timeout value="600" />
+-        <focus-result value="false" />
+-        <prompt-execution value="false" />
+-      </statement-execution>
+-      <script-execution>
+-        <command-line-interfaces />
+-        <execution-timeout value="300" />
+-      </script-execution>
+-      <method-execution>
+-        <execution-timeout value="30" />
+-        <debug-execution-timeout value="600" />
+-        <parameter-history-size value="10" />
+-      </method-execution>
+-    </execution-engine-settings>
+-    <operation-settings>
+-      <transactions>
+-        <uncommitted-changes>
+-          <on-project-close value="ASK" />
+-          <on-disconnect value="ASK" />
+-          <on-autocommit-toggle value="ASK" />
+-        </uncommitted-changes>
+-        <multiple-uncommitted-changes>
+-          <on-commit value="ASK" />
+-          <on-rollback value="ASK" />
+-        </multiple-uncommitted-changes>
+-      </transactions>
+-      <session-browser>
+-        <disconnect-session value="ASK" />
+-        <kill-session value="ASK" />
+-        <reload-on-filter-change value="false" />
+-      </session-browser>
+-      <compiler>
+-        <compile-type value="KEEP" />
+-        <compile-dependencies value="ASK" />
+-        <always-show-controls value="false" />
+-      </compiler>
+-    </operation-settings>
+-    <ddl-file-settings>
+-      <extensions>
+-        <mapping file-type-id="VIEW" extensions="vw" />
+-        <mapping file-type-id="TRIGGER" extensions="trg" />
+-        <mapping file-type-id="PROCEDURE" extensions="prc" />
+-        <mapping file-type-id="FUNCTION" extensions="fnc" />
+-        <mapping file-type-id="PACKAGE" extensions="pkg" />
+-        <mapping file-type-id="PACKAGE_SPEC" extensions="pks" />
+-        <mapping file-type-id="PACKAGE_BODY" extensions="pkb" />
+-        <mapping file-type-id="TYPE" extensions="tpe" />
+-        <mapping file-type-id="TYPE_SPEC" extensions="tps" />
+-        <mapping file-type-id="TYPE_BODY" extensions="tpb" />
+-        <mapping file-type-id="JAVA_SOURCE" extensions="sql" />
+-      </extensions>
+-      <general>
+-        <lookup-ddl-files value="true" />
+-        <create-ddl-files value="false" />
+-        <synchronize-ddl-files value="true" />
+-        <use-qualified-names value="false" />
+-        <make-scripts-rerunnable value="true" />
+-      </general>
+-    </ddl-file-settings>
+-    <assistant-settings>
+-      <credential-settings>
+-        <credentials />
+-      </credential-settings>
+-    </assistant-settings>
+-    <general-settings>
+-      <regional-settings>
+-        <date-format value="MEDIUM" />
+-        <number-format value="UNGROUPED" />
+-        <locale value="SYSTEM_DEFAULT" />
+-        <use-custom-formats value="false" />
+-      </regional-settings>
+-      <environment>
+-        <environment-types>
+-          <environment-type id="development" name="Development" description="Development environment" color="-2430209/-12296320" readonly-code="false" readonly-data="false" />
+-          <environment-type id="integration" name="Integration" description="Integration environment" color="-2621494/-12163514" readonly-code="true" readonly-data="false" />
+-          <environment-type id="production" name="Production" description="Productive environment" color="-11574/-10271420" readonly-code="true" readonly-data="true" />
+-          <environment-type id="other" name="Other" description="" color="-1576/-10724543" readonly-code="false" readonly-data="false" />
+-        </environment-types>
+-        <visibility-settings>
+-          <connection-tabs value="true" />
+-          <dialog-headers value="true" />
+-          <object-editor-tabs value="true" />
+-          <script-editor-tabs value="false" />
+-          <execution-result-tabs value="true" />
+-        </visibility-settings>
+-      </environment>
+-    </general-settings>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/appInsightsSettings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/appInsightsSettings.xml b/.idea/appInsightsSettings.xml
+deleted file mode 100644
+--- a/.idea/appInsightsSettings.xml	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ /dev/null	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
+@@ -1,40 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="AppInsightsSettings">
+-    <option name="tabSettings">
+-      <map>
+-        <entry key="Android Vitals">
+-          <value>
+-            <InsightsFilterSettings>
+-              <option name="failureTypes">
+-                <list>
+-                  <option value="ANR" />
+-                </list>
+-              </option>
+-              <option name="signal" value="SIGNAL_UNSPECIFIED" />
+-              <option name="timeIntervalDays" value="SEVEN_DAYS" />
+-              <option name="visibilityType" value="ALL" />
+-            </InsightsFilterSettings>
+-          </value>
+-        </entry>
+-        <entry key="Firebase Crashlytics">
+-          <value>
+-            <InsightsFilterSettings>
+-              <option name="connection">
+-                <ConnectionSetting>
+-                  <option name="appId" value="PLACEHOLDER" />
+-                  <option name="mobileSdkAppId" value="" />
+-                  <option name="projectId" value="" />
+-                  <option name="projectNumber" value="" />
+-                </ConnectionSetting>
+-              </option>
+-              <option name="signal" value="SIGNAL_UNSPECIFIED" />
+-              <option name="timeIntervalDays" value="THIRTY_DAYS" />
+-              <option name="visibilityType" value="ALL" />
+-            </InsightsFilterSettings>
+-          </value>
+-        </entry>
+-      </map>
+-    </option>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/deploymentTargetSelector.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+deleted file mode 100644
+--- a/.idea/deploymentTargetSelector.xml	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ /dev/null	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
+@@ -1,18 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="deploymentTargetSelector">
+-    <selectionStates>
+-      <SelectionState runConfigName="app">
+-        <option name="selectionMode" value="DROPDOWN" />
+-        <DropdownSelection timestamp="2025-08-20T08:59:41.141290400Z">
+-          <Target type="DEFAULT_BOOT">
+-            <handle>
+-              <DeviceId pluginId="PhysicalDevice" identifier="serial=43d54c4f" />
+-            </handle>
+-          </Target>
+-        </DropdownSelection>
+-        <DialogSelection />
+-      </SelectionState>
+-    </selectionStates>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/runConfigurations.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/runConfigurations.xml b/.idea/runConfigurations.xml
+deleted file mode 100644
+--- a/.idea/runConfigurations.xml	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ /dev/null	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
+@@ -1,17 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="RunConfigurationProducerService">
+-    <option name="ignoredProducers">
+-      <set>
+-        <option value="com.intellij.execution.junit.AbstractAllInDirectoryConfigurationProducer" />
+-        <option value="com.intellij.execution.junit.AllInPackageConfigurationProducer" />
+-        <option value="com.intellij.execution.junit.PatternConfigurationProducer" />
+-        <option value="com.intellij.execution.junit.TestInClassConfigurationProducer" />
+-        <option value="com.intellij.execution.junit.UniqueIdConfigurationProducer" />
+-        <option value="com.intellij.execution.junit.testDiscovery.JUnitTestDiscoveryConfigurationProducer" />
+-        <option value="org.jetbrains.kotlin.idea.junit.KotlinJUnitRunConfigurationProducer" />
+-        <option value="org.jetbrains.kotlin.idea.junit.KotlinPatternConfigurationProducer" />
+-      </set>
+-    </option>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+deleted file mode 100644
+--- a/.idea/misc.xml	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ /dev/null	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
+@@ -1,9 +0,0 @@
+-<project version="4">
+-  <component name="ExternalStorageConfigurationManager" enabled="true" />
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK">
+-    <output url="file://$PROJECT_DIR$/build/classes" />
+-  </component>
+-  <component name="ProjectType">
+-    <option name="id" value="Android" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/AndroidProjectSystem.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/AndroidProjectSystem.xml b/.idea/AndroidProjectSystem.xml
+deleted file mode 100644
+--- a/.idea/AndroidProjectSystem.xml	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ /dev/null	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="AndroidProjectSystem">
+-    <option name="providerId" value="com.android.tools.idea.GradleProjectSystem" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/compiler.xml b/.idea/compiler.xml
+deleted file mode 100644
+--- a/.idea/compiler.xml	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ /dev/null	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="CompilerConfiguration">
+-    <bytecodeTargetLevel target="21" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/migrations.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/migrations.xml b/.idea/migrations.xml
+deleted file mode 100644
+--- a/.idea/migrations.xml	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ /dev/null	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
+@@ -1,10 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="ProjectMigrations">
+-    <option name="MigrateToGradleLocalJavaHome">
+-      <set>
+-        <option value="$PROJECT_DIR$" />
+-      </set>
+-    </option>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+deleted file mode 100644
+--- a/.idea/gradle.xml	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ /dev/null	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
+@@ -1,19 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="GradleMigrationSettings" migrationVersion="1" />
+-  <component name="GradleSettings">
+-    <option name="linkedExternalProjectsSettings">
+-      <GradleProjectSettings>
+-        <option name="testRunner" value="CHOOSE_PER_TEST" />
+-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+-        <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
+-        <option name="modules">
+-          <set>
+-            <option value="$PROJECT_DIR$" />
+-            <option value="$PROJECT_DIR$/app" />
+-          </set>
+-        </option>
+-      </GradleProjectSettings>
+-    </option>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/.gitignore
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+deleted file mode 100644
+--- a/.idea/.gitignore	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ /dev/null	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
+@@ -1,3 +0,0 @@
+-# Default ignored files
+-/shelf/
+-/workspace.xml
+Index: .idea/deviceManager.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deviceManager.xml b/.idea/deviceManager.xml
+deleted file mode 100644
+--- a/.idea/deviceManager.xml	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ /dev/null	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
+@@ -1,13 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="DeviceTable">
+-    <option name="columnSorters">
+-      <list>
+-        <ColumnSorterState>
+-          <option name="column" value="Name" />
+-          <option name="order" value="ASCENDING" />
+-        </ColumnSorterState>
+-      </list>
+-    </option>
+-  </component>
+-</project>
+\ No newline at end of file
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+deleted file mode 100644
+--- a/.idea/vcs.xml	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ /dev/null	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
+@@ -1,6 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<project version="4">
+-  <component name="VcsDirectoryMappings">
+-    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+-  </component>
+-</project>
+\ No newline at end of file
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><resources>\n    <string name=\"app_name\">SafeZone</string>\n\n    <!-- Footer Navigation -->\n    <string name=\"home\">Trang chủ</string>\n    <string name=\"products\">Sản phẩm</string>\n    <string name=\"auction\">Đấu giá</string>\n    <string name=\"wallet\">Ví tiền</string>\n    <string name=\"profile\">Hồ sơ</string>\n\n    <!-- Content Descriptions -->\n    <string name=\"home_icon\">Biểu tượng trang chủ</string>\n    <string name=\"products_icon\">Biểu tượng sản phẩm</string>\n    <string name=\"auction_icon\">Biểu tượng đấu giá</string>\n    <string name=\"wallet_icon\">Biểu tượng ví tiền</string>\n    <string name=\"profile_icon\">Biểu tượng hồ sơ</string>\n\n    <!-- Authentication -->\n    <string name=\"login\">Đăng nhập</string>\n    <string name=\"register\">Đăng ký</string>\n    <string name=\"logout\">Đăng xuất</string>\n    <string name=\"forgot_password\">Quên mật khẩu</string>\n\n    <!-- Wallet -->\n    <string name=\"wallet_title\">Ví tiền</string>\n    <string name=\"current_balance\">Số dư hiện tại</string>\n    <string name=\"deposit\">Nạp tiền</string>\n    <string name=\"withdraw\">Rút tiền</string>\n    <string name=\"transaction_history\">Lịch sử giao dịch</string>\n    <string name=\"view_all\">Xem tất cả</string>\n    <string name=\"deposit_amount\">Số tiền muốn nạp</string>\n    <string name=\"enter_amount\">Nhập số tiền (VNĐ)</string>\n    <string name=\"quick_select\">Chọn nhanh</string>\n    <string name=\"payment_info\">Thanh toán sẽ được thực hiện qua ZaloPay</string>\n    <string name=\"confirm\">Xác nhận</string>\n    <string name=\"empty_transactions\">Chưa có giao dịch nào</string>\n    <string name=\"start_first_transaction\">Bắt đầu giao dịch đầu tiên của bạn</string>\n    <string name=\"please_enter_amount\">Vui lòng nhập số tiền</string>\n    <string name=\"amount_must_be_positive\">Số tiền phải lớn hơn 0</string>\n    <string name=\"invalid_amount\">Số tiền không hợp lệ</string>\n    <string name=\"deposit_success\">Nạp tiền thành công!</string>\n    <string name=\"deposit_cancelled\">Hủy nạp tiền</string>\n    <string name=\"deposit_error\">Lỗi nạp tiền</string>\n    <string name=\"order_creation_error\">Lỗi tạo đơn hàng</string>\n    <string name=\"withdraw_development\">Tính năng rút tiền đang phát triển</string>\n\n    <!-- Common -->\n    <string name=\"loading\">Đang tải...</string>\n    <string name=\"error\">Lỗi</string>\n    <string name=\"success\">Thành công</string>\n    <string name=\"cancel\">Hủy</string>\n    <string name=\"ok\">OK</string>\n\n    <!-- Navigation Drawer -->\n    <string name=\"nav_open\">Mở menu</string>\n    <string name=\"nav_close\">Đóng menu</string>\n    <string name=\"notifications\">Thông báo</string>\n    <string name=\"notif_permission_title\">Cho phép hiển thị thông báo?</string>\n    <string name=\"notif_permission_msg\">SafeZone cần quyền gửi thông báo để báo cho bạn khi nạp tiền thành công và các cập nhật quan trọng.</string>\n    <string name=\"allow\">Cho phép</string>\n</resources>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+--- a/app/src/main/res/values/strings.xml	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/src/main/res/values/strings.xml	(date 1755967393566)
+@@ -1,14 +1,12 @@
+ <resources>
+     <string name="app_name">SafeZone</string>
+ 
+-    <!-- Footer Navigation -->
+     <string name="home">Trang chủ</string>
+     <string name="products">Sản phẩm</string>
+     <string name="auction">Đấu giá</string>
+     <string name="wallet">Ví tiền</string>
+     <string name="profile">Hồ sơ</string>
+ 
+-    <!-- Content Descriptions -->
+     <string name="home_icon">Biểu tượng trang chủ</string>
+     <string name="products_icon">Biểu tượng sản phẩm</string>
+     <string name="auction_icon">Biểu tượng đấu giá</string>
+@@ -58,4 +56,78 @@
+     <string name="notif_permission_title">Cho phép hiển thị thông báo?</string>
+     <string name="notif_permission_msg">SafeZone cần quyền gửi thông báo để báo cho bạn khi nạp tiền thành công và các cập nhật quan trọng.</string>
+     <string name="allow">Cho phép</string>
++
++    <!-- Live Streaming -->
++    <string name="livestream_title">Live Streaming</string>
++    <string name="livestream_welcome">Chào mừng đến với Live Streaming!</string>
++    <string name="livestream_instructions">Chọn một tùy chọn để bắt đầu</string>
++    <string name="start_stream">Bắt đầu Live Stream</string>
++    <string name="start_stream_desc">Tạo một live stream mới và chia sẻ với bạn bè</string>
++    <string name="start_stream_btn">🚀 Bắt đầu Stream</string>
++    <string name="join_stream">Tham gia Stream</string>
++    <string name="join_stream_desc">Tham gia vào live stream của người khác</string>
++    <string name="join_stream_btn">🔗 Tham gia Stream</string>
++    <string name="my_streams">Stream của tôi</string>
++    <string name="my_streams_desc">Xem các stream đã tạo hoặc đã tham gia</string>
++    <string name="my_streams_btn">📺 Xem Stream</string>
++    <string name="livestream_guide_title">💡 Hướng dẫn sử dụng:</string>
++    <string name="livestream_guide_text">• Để bắt đầu stream: Nhấn \'Bắt đầu Stream\' và chia sẻ Stream ID với bạn bè\n\n• Để tham gia stream: Nhấn \'Tham gia Stream\' và nhập Stream ID được chia sẻ\n\n• Để xem stream của mình: Nhấn \'Xem Stream\' để xem danh sách</string>
++    <string name="livestream_user_instructions">Bạn có thể bắt đầu một live stream mới hoặc tham gia vào stream của người khác.</string>
++    <string name="livestream_guest_instructions">Tham gia vào live stream của người khác hoặc xem các stream đã lưu.</string>
++
++    <!-- Navigation Menu -->
++    <string name="nav_home">Trang chủ</string>
++    <string name="nav_wallet">Ví tiền</string>
++    <string name="nav_purchase_history">Lịch sử mua hàng</string>
++    <string name="nav_sales_history">Lịch sử bán hàng</string>
++    <string name="nav_chat">Tin nhắn</string>
++    <string name="nav_settings">Cài đặt</string>
++    <string name="nav_about">Về chúng tôi</string>
++    <string name="nav_logout">Đăng xuất</string>
++
++    <!-- Home Fragment -->
++    <string name="add_new_product">Thêm sản phẩm mới</string>
++    <string name="product_name">Tên sản phẩm</string>
++    <string name="description">Mô tả sản phẩm</string>
++    <string name="information">Thông tin chi tiết</string>
++    <string name="transaction_fee">Phí giao dịch</string>
++    <string name="seller_fee">Người bán (1)</string>
++    <string name="buyer_fee">Người mua (2)</string>
++    <string name="price">Giá</string>
++    <string name="visibility">Hiển thị</string>
++    <string name="visibility_public">Công khai</string>
++    <string name="visibility_private">Riêng tư</string>
++    <string name="users_who_can_view">Người có thể xem (phân cách bằng dấu phẩy)</string>
++    <string name="private_information">Thông tin riêng tư (sẽ được mã hóa)</string>
++    <string name="add_images">Thêm ảnh</string>
++    <string name="add_product">Thêm sản phẩm</string>
++    <string name="products_list">Danh sách sản phẩm</string>
++    <string name="product_name_required">Tên sản phẩm là bắt buộc</string>
++    <string name="price_required">Giá là bắt buộc</string>
++    <string name="invalid_price_format">Định dạng giá không hợp lệ</string>
++    <string name="failed_to_encrypt">Failed to encrypt private information</string>
++    <string name="delete_product">Delete Product</string>
++    <string name="delete_product_confirmation">Are you sure you want to delete this product?</string>
++    <string name="delete">Delete</string>
++    <string name="product_deleted">Sản phẩm đã bị xóa</string>
++    <string name="permission_denied">Quyền bị từ chối</string>
++    <string name="select_images">Chọn ảnh</string>
++    <string name="selected_images">Đã chọn %d ảnh</string>
++    <string name="loading_products">Đang tải sản phẩm...</string>
++    <string name="no_products_found">Không tìm thấy sản phẩm nào</string>
++    <string name="view_details">Xem chi tiết</string>
++    <string name="seller">Người bán</string>
++    <string name="buy_now">Mua ngay</string>
++    
++    <!-- Posting Fee -->
++    <string name="insufficient_balance">Số dư không đủ</string>
++    <string name="posting_fee_message">Bạn cần %1$s VNĐ để đăng bài, nhưng hiện chỉ có %2$s VNĐ.\n\nBạn có muốn nạp tiền ngay không?</string>
++    <string name="deposit_money">Nạp tiền</string>
++    <string name="posting_success">Đăng bài thành công! Đã trừ phí 5.000 VNĐ</string>
++    
++    <!-- Validation Messages -->
++    <string name="price_must_be_greater_than_10000">Giá phải lớn hơn 10.000 VNĐ</string>
++    <string name="private_info_required">Thông tin riêng tư là bắt buộc</string>
++    <string name="edit_product">Chỉnh sửa sản phẩm</string>
++    <string name="copy_link_success">Đã copy link sản phẩm</string>
+ </resources>
+\ No newline at end of file
+Index: app/src/main/java/com/group5/safezone/model/dao/ReportDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.group5.safezone.model.dao;\n\nimport androidx.room.Dao;\nimport androidx.room.Delete;\nimport androidx.room.Insert;\nimport androidx.room.Query;\nimport androidx.room.Update;\n\nimport com.group5.safezone.model.entity.Report;\n\nimport java.util.List;\n\n@Dao\npublic interface ReportDao {\n    @Query(\"SELECT * FROM report WHERE IsDeleted = 0\")\n    List<Report> getAllReports();\n\n    @Query(\"SELECT * FROM report WHERE id = :id AND IsDeleted = 0\")\n    Report getReportById(int id);\n\n    @Query(\"SELECT * FROM report WHERE CreatedBy = :userId AND IsDeleted = 0\")\n    List<Report> getReportsByUserId(int userId);\n\n    @Query(\"SELECT * FROM report WHERE orderId = :orderId AND IsDeleted = 0\")\n    List<Report> getReportsByOrderId(int orderId);\n\n    @Query(\"SELECT * FROM report WHERE status = :status AND IsDeleted = 0\")\n    List<Report> getReportsByStatus(String status);\n\n    @Query(\"UPDATE report SET status = :status WHERE id = :id\")\n    void updateReportStatus(int id, String status);\n\n    @Insert\n    void insert(Report report);\n\n    @Update\n    void update(Report report);\n\n    @Delete\n    void delete(Report report);\n\n    @Query(\"UPDATE report SET IsDeleted = 1, DeletedAt = datetime('now') WHERE id = :id\")\n    void softDelete(int id);\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/group5/safezone/model/dao/ReportDao.java b/app/src/main/java/com/group5/safezone/model/dao/ReportDao.java
+--- a/app/src/main/java/com/group5/safezone/model/dao/ReportDao.java	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/src/main/java/com/group5/safezone/model/dao/ReportDao.java	(date 1755963149016)
+@@ -23,6 +23,9 @@
+ 
+     @Query("SELECT * FROM report WHERE orderId = :orderId AND IsDeleted = 0")
+     List<Report> getReportsByOrderId(int orderId);
++    
++    @Query("SELECT * FROM report WHERE orderId = :orderId AND IsDeleted = 0 LIMIT 1")
++    Report getReportByOrderId(int orderId);
+ 
+     @Query("SELECT * FROM report WHERE status = :status AND IsDeleted = 0")
+     List<Report> getReportsByStatus(String status);
+@@ -31,7 +34,7 @@
+     void updateReportStatus(int id, String status);
+ 
+     @Insert
+-    void insert(Report report);
++    long insert(Report report);
+ 
+     @Update
+     void update(Report report);
+Index: app/src/main/java/com/group5/safezone/model/dao/ProductImagesDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.group5.safezone.model.dao;\n\nimport androidx.room.Dao;\nimport androidx.room.Delete;\nimport androidx.room.Insert;\nimport androidx.room.Query;\nimport androidx.room.Update;\n\nimport com.group5.safezone.model.entity.ProductImages;\n\nimport java.util.List;\n\n@Dao\npublic interface ProductImagesDao {\n    @Query(\"SELECT * FROM productImages\")\n    List<ProductImages> getAllProductImages();\n\n    @Query(\"SELECT * FROM productImages WHERE id = :id\")\n    ProductImages getProductImageById(int id);\n\n    @Query(\"SELECT * FROM productImages WHERE productId = :productId ORDER BY CreatedAt ASC\")\n    List<ProductImages> getImagesByProductId(String productId);\n\n    @Insert\n    void insert(ProductImages productImages);\n\n    @Update\n    void update(ProductImages productImages);\n\n    @Delete\n    void delete(ProductImages productImages);\n\n    @Query(\"DELETE FROM productImages WHERE productId = :productId\")\n    void deleteImagesByProductId(String productId);\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/group5/safezone/model/dao/ProductImagesDao.java b/app/src/main/java/com/group5/safezone/model/dao/ProductImagesDao.java
+--- a/app/src/main/java/com/group5/safezone/model/dao/ProductImagesDao.java	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/src/main/java/com/group5/safezone/model/dao/ProductImagesDao.java	(date 1755930351849)
+@@ -24,6 +24,12 @@
+     @Insert
+     void insert(ProductImages productImages);
+ 
++    @Insert
++    void insertMultiple(List<ProductImages> productImages);
++
++    @Query("SELECT * FROM productImages WHERE productId = :productId")
++    List<ProductImages> getByProductId(String productId);
++
+     @Update
+     void update(ProductImages productImages);
+ 
+@@ -32,4 +38,8 @@
+ 
+     @Query("DELETE FROM productImages WHERE productId = :productId")
+     void deleteImagesByProductId(String productId);
++
++
++
++
+ }

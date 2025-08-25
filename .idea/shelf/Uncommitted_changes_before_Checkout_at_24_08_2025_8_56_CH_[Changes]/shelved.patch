@@ -1,0 +1,1305 @@
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:tools=\"http://schemas.android.com/tools\">\n\n    <uses-permission android:name=\"android.permission.INTERNET\" />\n    <uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />\n    <uses-permission android:name=\"android.permission.POST_NOTIFICATIONS\" />\n    <uses-permission android:name=\"android.permission.SYSTEM_ALERT_WINDOW\" />\n\n    <application\n        android:allowBackup=\"true\"\n        android:dataExtractionRules=\"@xml/data_extraction_rules\"\n        android:fullBackupContent=\"@xml/backup_rules\"\n        android:icon=\"@mipmap/ic_launcher\"\n        android:label=\"@string/app_name\"\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\n        android:supportsRtl=\"true\"\n        android:theme=\"@style/Theme.SafeZone\"\n        tools:ignore=\"ExtraText\">\n\n\n        <activity\n            android:name=\".view.auth.LoginActivity\"\n            android:exported=\"true\"\n            android:theme=\"@style/Theme.SafeZone.NoActionBar\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\" />\n\n                <category android:name=\"android.intent.category.LAUNCHER\" />\n            </intent-filter>\n        </activity>\n\n        <!-- Needed for showing notifications on Android 13+ (optional if targeting 33+) -->\n        <!-- Main Activity -->\n        <activity\n            android:name=\".view.MainActivity\"\n            android:exported=\"false\" />\n\n        <!-- Admin Main Activity -->\n        <activity\n            android:name=\".view.admin.AdminMainActivity\"\n            android:exported=\"false\" />\n\n        <!-- Wallet Activity -->\n        <activity\n            android:name=\".view.Wallet.WalletActivity\"\n            android:exported=\"true\"\n            android:launchMode=\"singleTask\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.VIEW\" />\n                <category android:name=\"android.intent.category.DEFAULT\" />\n                <category android:name=\"android.intent.category.BROWSABLE\" />\n                <data android:scheme=\"safezone\" />\n            </intent-filter>\n        </activity>\n\n        <!-- Notifications Activity -->\n        <activity\n            android:name=\".view.notification.NotificationsActivity\"\n            android:exported=\"false\" />\n\n        <!-- Chat Activity -->\n        <activity\n            android:name=\".view.chat.ChatActivity\"\n            android:exported=\"false\" />\n\n        <!-- Chat Notification Service -->\n        <service\n            android:name=\".service.ChatNotificationService\"\n            android:exported=\"false\" />\n\n    </application>\n\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/src/main/AndroidManifest.xml	(date 1756034928288)
+@@ -4,8 +4,16 @@
+ 
+     <uses-permission android:name="android.permission.INTERNET" />
+     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
++    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
++    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
++    
++    <!-- Live Streaming Permissions -->
++    <uses-permission android:name="android.permission.CAMERA" />
++    <uses-permission android:name="android.permission.RECORD_AUDIO" />
++    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
++    <uses-permission android:name="android.permission.WAKE_LOCK" />
+ 
+     <application
+         android:allowBackup="true"
+@@ -69,6 +77,81 @@
+             android:name=".service.ChatNotificationService"
+             android:exported="false" />
+ 
++        <!-- Live Streaming Activities -->
++        <activity
++            android:name=".view.livestreaming.LiveStreamingActivity"
++            android:exported="false"
++            android:screenOrientation="portrait"
++            android:theme="@style/Theme.SafeZone.NoActionBar" />
++
++        <activity
++            android:name=".view.livestreaming.LiveStreamingDemoActivity"
++            android:exported="false"
++            android:label="Live Streaming Demo"
++            android:theme="@style/Theme.SafeZone" />
++
++        <activity
++            android:name=".view.livestreaming.JoinStreamActivity"
++            android:exported="false"
++            android:label="Join Live Stream"
++            android:theme="@style/Theme.SafeZone" />
++
++        <!-- Live Streaming Main Activity -->
++        <activity
++            android:name=".view.livestreaming.LiveStreamingMainActivity"
++            android:exported="false"
++            android:label="Live Streaming"
++            android:theme="@style/Theme.SafeZone" />
++
++        <!-- Product Detail Activity -->
++        <activity
++            android:name=".view.ProductDetailActivity"
++            android:exported="false"
++            android:label="Chi tiết sản phẩm"
++            android:theme="@style/Theme.SafeZone" />
++
++        <!-- Edit Product Activity -->
++        <activity
++            android:name=".view.EditProductActivity"
++            android:exported="false"
++            android:label="Chỉnh sửa sản phẩm"
++            android:theme="@style/Theme.SafeZone" />
++
++        <!-- Buy Product Activity -->
++        <activity
++            android:name=".view.BuyProductActivity"
++            android:exported="false"
++            android:label="Mua sản phẩm"
++            android:theme="@style/Theme.SafeZone" />
++
++        <!-- Purchase History Activity -->
++        <activity
++            android:name=".view.PurchaseHistoryActivity"
++            android:exported="false"
++            android:label="Lịch sử mua hàng"
++            android:theme="@style/Theme.SafeZone" />
++
++        <!-- Order Detail Activity -->
++        <activity
++            android:name=".view.OrderDetailActivity"
++            android:exported="false"
++            android:label="Chi tiết đơn hàng"
++            android:theme="@style/Theme.SafeZone" />
++            
++        <!-- Sales History Activity -->
++        <activity
++            android:name=".view.SalesHistoryActivity"
++            android:exported="false"
++            android:label="Lịch sử bán hàng"
++            android:theme="@style/Theme.SafeZone" />
++            
++        <!-- Report Management Activity -->
++        <activity
++            android:name=".view.admin.ReportManagementActivity"
++            android:exported="false"
++            android:label="Quản lý báo cáo"
++            android:theme="@style/Theme.SafeZone" />
++
+     </application>
+ 
+ </manifest>
+\ No newline at end of file
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>plugins {\n    alias(libs.plugins.android.application)\n}\n\nandroid {\n    namespace 'com.group5.safezone'\n    compileSdk 36\n\n    defaultConfig {\n        applicationId \"com.group5.safezone\"\n        minSdk 24\n        targetSdk 36\n        versionCode 1\n        versionName \"1.0\"\n\n        testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\n    }\n\n    buildTypes {\n        release {\n            minifyEnabled false\n            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'\n        }\n    }\n    compileOptions {\n        sourceCompatibility JavaVersion.VERSION_11\n        targetCompatibility JavaVersion.VERSION_11\n    }\n    buildFeatures {\n        dataBinding true\n    }\n}\n\ndependencies {\n\n    implementation libs.appcompat\n    implementation libs.material\n    implementation libs.activity\n    implementation libs.constraintlayout\n    implementation libs.room.common.jvm\n    implementation libs.room.runtime\n    implementation fileTree(dir: 'C:\\\\Users\\\\truon\\\\Downloads\\\\ZaloPayLib', include: ['*.aar', '*.jar'], exclude: [])\n    testImplementation libs.junit\n    androidTestImplementation libs.ext.junit\n    androidTestImplementation libs.espresso.core\n    annotationProcessor libs.room.compiler\n\n    implementation \"androidx.room:room-runtime:2.5.0\"\n    annotationProcessor \"androidx.room:room-compiler:2.5.0\"\n\n    implementation \"androidx.lifecycle:lifecycle-viewmodel:2.6.2\"\n    implementation \"androidx.lifecycle:lifecycle-livedata:2.6.2\"\n\n    implementation \"androidx.room:room-rxjava2:2.5.0\"\n\n    implementation \"androidx.room:room-rxjava3:2.5.0\"\n\n    implementation \"androidx.room:room-guava:2.5.0\"\n\n    testImplementation \"androidx.room:room-testing:2.5.0\"\n\n    implementation \"androidx.room:room-paging:2.5.0\"\n\n\n    /// zalo pay\n    implementation(\"com.squareup.okhttp3:okhttp:4.6.0\")\n    implementation(\"commons-codec:commons-codec:1.14\")\n\n    //chat\n    implementation 'com.github.ZEGOCLOUD:zego_inapp_chat_uikit_android:+'\n    \n    // ZEGOCLOUD dependencies - fix crash\n    implementation 'com.google.code.gson:gson:2.10.1'\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle b/app/build.gradle
+--- a/app/build.gradle	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/build.gradle	(date 1755925507203)
+@@ -50,6 +50,7 @@
+ 
+     implementation "androidx.lifecycle:lifecycle-viewmodel:2.6.2"
+     implementation "androidx.lifecycle:lifecycle-livedata:2.6.2"
++    implementation "androidx.fragment:fragment:1.6.2"
+ 
+     implementation "androidx.room:room-rxjava2:2.5.0"
+ 
+@@ -69,6 +70,14 @@
+     //chat
+     implementation 'com.github.ZEGOCLOUD:zego_inapp_chat_uikit_android:+'
+     
++    // Live Streaming Kit
++    implementation 'com.github.ZEGOCLOUD:zego_uikit_prebuilt_live_streaming_android:+'
++    
+     // ZEGOCLOUD dependencies - fix crash
+     implementation 'com.google.code.gson:gson:2.10.1'
++    
++    // Image loading library
++    implementation 'com.github.bumptech.glide:glide:4.16.0'
++    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
++    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
+ }
+\ No newline at end of file
+Index: app/src/main/java/com/group5/safezone/view/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.group5.safezone.view;\n\nimport android.content.Intent;\nimport android.os.Bundle;\nimport android.view.Menu;\nimport android.view.MenuItem;\nimport android.view.View;\nimport android.widget.Button;\nimport android.widget.ProgressBar;\nimport android.widget.TextView;\nimport android.widget.Toast;\n\nimport androidx.activity.EdgeToEdge;\nimport androidx.activity.OnBackPressedCallback;\nimport android.content.BroadcastReceiver;\nimport android.content.Context;\nimport android.content.IntentFilter;\nimport androidx.localbroadcastmanager.content.LocalBroadcastManager;\nimport androidx.appcompat.widget.Toolbar;\nimport androidx.cardview.widget.CardView;\nimport androidx.appcompat.app.ActionBarDrawerToggle;\nimport androidx.drawerlayout.widget.DrawerLayout;\nimport androidx.core.graphics.Insets;\nimport androidx.core.view.ViewCompat;\nimport androidx.core.view.WindowInsetsCompat;\nimport androidx.lifecycle.ViewModelProvider;\nimport androidx.recyclerview.widget.LinearLayoutManager;\nimport androidx.recyclerview.widget.RecyclerView;\n\nimport com.group5.safezone.R;\nimport com.group5.safezone.adapter.UserAdapter;\nimport com.group5.safezone.model.entity.User;\nimport com.group5.safezone.config.AuthInterceptor;\nimport com.group5.safezone.config.SessionManager;\nimport com.group5.safezone.config.NotificationPermissionUtil;\nimport com.group5.safezone.config.NotificationEvents;\nimport com.group5.safezone.view.Wallet.WalletActivity;\nimport com.group5.safezone.config.AppDatabase;\nimport android.os.Handler;\nimport com.group5.safezone.view.admin.AdminMainActivity;\nimport com.group5.safezone.view.auth.LoginActivity;\nimport com.group5.safezone.view.base.BaseActivity;\nimport com.group5.safezone.view.notification.NotificationsActivity;\nimport com.group5.safezone.viewmodel.UserViewModel;\nimport com.google.android.material.navigation.NavigationView;\nimport com.group5.safezone.Constant.Chatbox.ConstantKey;\n\nimport java.text.NumberFormat;\nimport java.util.Locale;\n\nimport com.zegocloud.zimkit.BuildConfig;\nimport com.zegocloud.zimkit.services.ZIMKit;\n\npublic class MainActivity extends BaseActivity {\n\n    private UserViewModel userViewModel;\n    private UserAdapter userAdapter;\n    private SessionManager sessionManager;\n\n    // UI Components\n    private ProgressBar progressBar;\n    private TextView tvError, tvWelcome;\n    private CardView cardUserInfo;\n    private TextView tvUserName, tvEmail, tvPhone, tvRole, tvBalance, tvStatus, tvVerify;\n    private RecyclerView recyclerViewUsers;\n    private Button btnLoadUser, btnLoadAllUsers;\n    private DrawerLayout drawerLayout;\n    private NavigationView navigationView;\n    private View notificationBellView;\n    private TextView notificationBadge;\n    private BroadcastReceiver notificationReceiver;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n\n        // Kiểm tra authentication\n        if (!AuthInterceptor.checkAuthentication(this)) {\n            return;\n        }\n\n        EdgeToEdge.enable(this);\n        setContentView(R.layout.activity_main);\n\n        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {\n            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());\n            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);\n            return insets;\n        });\n\n        sessionManager = new SessionManager(this);\n\n        // Initialize ZEGOCLOUD SDK\n        initZegoCloud();\n\n        initViews();\n        setupToolbar();\n        setupDrawer();\n        setupBackPressedDispatcher();\n        // Hỏi quyền/thông báo nếu đang bị tắt ngay khi vào app\n        NotificationPermissionUtil.promptIfNeeded(this, 7001);\n        \n        // DEV ONLY: Reset database để test user mới\n        if (BuildConfig.DEBUG) {\n            resetDatabaseForTesting();\n        }\n        \n        setupViewModel();\n        setupRecyclerView();\n        setupClickListeners();\n        observeViewModel();\n        setupFooter();\n\n        displayWelcomeMessage();\n\n        // Load dữ liệu ban đầu\n        userViewModel.loadAllUsers();\n    }\n\n    private void initViews() {\n        drawerLayout = findViewById(R.id.drawer_layout);\n        navigationView = findViewById(R.id.navigation_view);\n        progressBar = findViewById(R.id.progressBar);\n        tvError = findViewById(R.id.tvError);\n        tvWelcome = findViewById(R.id.tvWelcome);\n        cardUserInfo = findViewById(R.id.cardUserInfo);\n        tvUserName = findViewById(R.id.tvUserName);\n        tvEmail = findViewById(R.id.tvEmail);\n        tvPhone = findViewById(R.id.tvPhone);\n        tvRole = findViewById(R.id.tvRole);\n        tvBalance = findViewById(R.id.tvBalance);\n        tvStatus = findViewById(R.id.tvStatus);\n        tvVerify = findViewById(R.id.tvVerify);\n        recyclerViewUsers = findViewById(R.id.recyclerViewUsers);\n        btnLoadUser = findViewById(R.id.btnLoadUser);\n        btnLoadAllUsers = findViewById(R.id.btnLoadAllUsers);\n    }\n\n    private void setupToolbar() {\n        Toolbar toolbar = findViewById(R.id.toolbar);\n        setSupportActionBar(toolbar);\n        getSupportActionBar().setTitle(\"SafeZone\");\n    }\n\n    private void setupDrawer() {\n        Toolbar toolbar = findViewById(R.id.toolbar);\n        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(\n                this, drawerLayout, toolbar,\n                R.string.nav_open, R.string.nav_close);\n        drawerLayout.addDrawerListener(toggle);\n        toggle.syncState();\n\n        if (navigationView != null) {\n            navigationView.setNavigationItemSelectedListener(item -> {\n                int id = item.getItemId();\n                if (id == R.id.nav_home) {\n                    // stay on home\n                } else if (id == R.id.nav_wallet) {\n                    startActivity(new Intent(this, WalletActivity.class));\n                } else if (id == R.id.nav_chat) {\n                    startActivity(new Intent(this, com.group5.safezone.view.chat.ChatActivity.class));\n                } else if (id == R.id.nav_settings) {\n                    Toast.makeText(this, \"Cài đặt đang phát triển\", Toast.LENGTH_SHORT).show();\n                } else if (id == R.id.nav_about) {\n                    Toast.makeText(this, \"SafeZone v1.0\", Toast.LENGTH_SHORT).show();\n                } else if (id == R.id.nav_logout) {\n                    logout();\n                }\n                drawerLayout.closeDrawers();\n                return true;\n            });\n\n            // Bind header data\n            View header = navigationView.getHeaderView(0);\n            if (header != null) {\n                TextView name = header.findViewById(R.id.tv_header_name);\n                TextView email = header.findViewById(R.id.tv_header_email);\n                if (name != null) name.setText(sessionManager.getUserName());\n                if (email != null) email.setText(sessionManager.getEmail());\n\n                // Add bell to header area of the main Toolbar instead of drawer header\n                notificationBellView = getLayoutInflater().inflate(R.layout.action_notification, toolbar, false);\n                Toolbar.LayoutParams lp = new Toolbar.LayoutParams(\n                        Toolbar.LayoutParams.WRAP_CONTENT,\n                        Toolbar.LayoutParams.MATCH_PARENT);\n                lp.gravity = android.view.Gravity.END;\n                notificationBellView.setLayoutParams(lp);\n                toolbar.addView(notificationBellView);\n                notificationBadge = notificationBellView.findViewById(R.id.tvBadge);\n                notificationBellView.setOnClickListener(v -> {\n                    startActivity(new Intent(this, NotificationsActivity.class));\n                });\n                refreshUnreadCount();\n            }\n        }\n    }\n\n    private void setupBackPressedDispatcher() {\n        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {\n            @Override\n            public void handleOnBackPressed() {\n                if (drawerLayout != null && drawerLayout.isDrawerOpen(androidx.core.view.GravityCompat.START)) {\n                    drawerLayout.closeDrawer(androidx.core.view.GravityCompat.START);\n                } else {\n                    setEnabled(false);\n                    MainActivity.super.onBackPressed();\n                }\n            }\n        });\n    }\n\n    private void displayWelcomeMessage() {\n        String userName = sessionManager.getUserName();\n        String role = sessionManager.getUserRole();\n        tvWelcome.setText(\"Chào mừng, \" + userName + \" (\" + role + \")!\");\n    }\n\n    private void refreshUnreadCount() {\n        if (notificationBadge == null) return;\n        new Thread(() -> {\n            try {\n                com.group5.safezone.repository.NotificationRepository nr = new com.group5.safezone.repository.NotificationRepository(getApplication());\n                int count = nr.getUnreadByUserIdAsync(sessionManager.getUserId()).get().size();\n                runOnUiThread(() -> {\n                    if (count > 0) {\n                        notificationBadge.setText(String.valueOf(Math.min(count, 99)));\n                        notificationBadge.setVisibility(View.VISIBLE);\n                    } else {\n                        notificationBadge.setVisibility(View.GONE);\n                    }\n                });\n            } catch (Exception ignored) {}\n        }).start();\n    }\n\n    private void setupViewModel() {\n        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);\n    }\n\n    private void setupRecyclerView() {\n        userAdapter = new UserAdapter();\n        recyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));\n        recyclerViewUsers.setAdapter(userAdapter);\n\n        userAdapter.setOnUserClickListener(user -> {\n            displayUserInfo(user);\n            Toast.makeText(this, \"Selected: \" + user.getUserName(), Toast.LENGTH_SHORT).show();\n        });\n    }\n\n    private void setupClickListeners() {\n        btnLoadUser.setOnClickListener(v -> {\n            // Load current user\n            int currentUserId = sessionManager.getUserId();\n            userViewModel.getUserById(currentUserId);\n        });\n\n        btnLoadAllUsers.setOnClickListener(v -> {\n            userViewModel.loadAllUsers();\n        });\n    }\n\n    private void observeViewModel() {\n        // Observe loading state\n        userViewModel.getIsLoading().observe(this, isLoading -> {\n            progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);\n        });\n\n        // Observe error messages\n        userViewModel.getErrorMessage().observe(this, errorMessage -> {\n            if (errorMessage != null && !errorMessage.isEmpty()) {\n                tvError.setText(errorMessage);\n                tvError.setVisibility(View.VISIBLE);\n                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();\n            } else {\n                tvError.setVisibility(View.GONE);\n            }\n        });\n\n        // Observe current user\n        userViewModel.getCurrentUser().observe(this, user -> {\n            if (user != null) {\n                displayUserInfo(user);\n            }\n        });\n\n        // Observe all users\n        userViewModel.getAllUsers().observe(this, users -> {\n            if (users != null && !users.isEmpty()) {\n                userAdapter.setUsers(users);\n                // Hiển thị user đầu tiên\n                displayUserInfo(users.get(0));\n            }\n        });\n    }\n\n    private void displayUserInfo(User user) {\n        cardUserInfo.setVisibility(View.VISIBLE);\n\n        tvUserName.setText(user.getUserName() != null ? user.getUserName() : \"N/A\");\n        tvEmail.setText(user.getEmail() != null ? user.getEmail() : \"N/A\");\n        tvPhone.setText(user.getPhone() != null ? user.getPhone() : \"N/A\");\n        tvRole.setText(user.getRole() != null ? user.getRole() : \"N/A\");\n        tvStatus.setText(user.getStatus() != null ? user.getStatus() : \"N/A\");\n\n        // Format balance\n        if (user.getBalance() != null) {\n            NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale(\"vi\", \"VN\"));\n            tvBalance.setText(formatter.format(user.getBalance()));\n        } else {\n            tvBalance.setText(\"0 VNĐ\");\n        }\n\n        // Verify status\n        tvVerify.setText(user.getIsVerify() != null && user.getIsVerify() ? \"Đã xác thực\" : \"Chưa xác thực\");\n        tvVerify.setTextColor(user.getIsVerify() != null && user.getIsVerify() ?\n                getResources().getColor(android.R.color.holo_green_dark) :\n                getResources().getColor(android.R.color.holo_red_dark));\n    }\n\n    @Override\n    public boolean onCreateOptionsMenu(Menu menu) {\n        getMenuInflater().inflate(R.menu.main_menu, menu);\n\n        // Ẩn menu admin nếu không phải admin\n        MenuItem adminItem = menu.findItem(R.id.action_admin);\n        if (adminItem != null) {\n            adminItem.setVisible(sessionManager.isAdmin());\n        }\n\n        // no toolbar bell (moved to header)\n\n        return true;\n    }\n\n    private void refreshNotificationBadge(TextView badge) { /* kept for potential reuse */ }\n\n    @Override\n    public boolean onOptionsItemSelected(MenuItem item) {\n        int id = item.getItemId();\n\n        if (id == R.id.action_admin) {\n            if (sessionManager.isAdmin()) {\n                startActivity(new Intent(this, AdminMainActivity.class));\n            }\n            return true;\n        } else if (id == R.id.action_logout) {\n            logout();\n            return true;\n        }\n\n        return super.onOptionsItemSelected(item);\n    }\n\n    private void logout() {\n        sessionManager.logout();\n        Intent intent = new Intent(this, LoginActivity.class);\n        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);\n        startActivity(intent);\n        finish();\n    }\n\n    // Back press handled via OnBackPressedDispatcher\n\n    @Override\n    protected int getCurrentPageIndex() {\n        return 0; // Home page\n    }\n\n    @Override\n    protected void onResume() {\n        super.onResume();\n        // Kiểm tra lại authentication và status khi quay lại activity\n        if (!AuthInterceptor.checkAuthentication(this)) {\n            return;\n        }\n        AuthInterceptor.checkAccountStatus(this);\n\n        // Lắng nghe cập nhật thông báo để cập nhật badge real-time\n        if (notificationReceiver == null) {\n            notificationReceiver = new BroadcastReceiver() {\n                @Override\n                public void onReceive(Context context, Intent intent) {\n                    if (NotificationEvents.ACTION_UPDATED.equals(intent.getAction())) {\n                        refreshUnreadCount();\n                    }\n                }\n            };\n            LocalBroadcastManager.getInstance(this)\n                    .registerReceiver(notificationReceiver, new IntentFilter(NotificationEvents.ACTION_UPDATED));\n        }\n\n        // Cập nhật lại badge khi quay lại màn hình\n        refreshUnreadCount();\n    }\n\n    @Override\n    protected void onPause() {\n        super.onPause();\n        if (notificationReceiver != null) {\n            LocalBroadcastManager.getInstance(this).unregisterReceiver(notificationReceiver);\n            notificationReceiver = null;\n        }\n    }\n\n    private void initZegoCloud() {\n        ZIMKit.initWith(this.getApplication(), ConstantKey.appID, ConstantKey.appSign);\n        ZIMKit.initNotifications();\n    }\n\n    // DEV ONLY: Reset database để test\n    private void resetDatabaseForTesting() {\n        // Chỉ reset 1 lần khi app được cài đặt\n        if (!getSharedPreferences(\"dev_prefs\", MODE_PRIVATE).getBoolean(\"db_reset\", false)) {\n            Toast.makeText(this, \"Đang reset database để test user mới...\", Toast.LENGTH_LONG).show();\n            \n\n            \n            // Đánh dấu đã reset\n            getSharedPreferences(\"dev_prefs\", MODE_PRIVATE).edit()\n                    .putBoolean(\"db_reset\", true)\n                    .apply();\n            \n            // Reload data\n            new Handler().postDelayed(() -> {\n                userViewModel.loadAllUsers();\n                Toast.makeText(this, \"Database đã được reset! Bây giờ có 3 users\", Toast.LENGTH_LONG).show();\n            }, 2000);\n        }\n    }\n}\n\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/group5/safezone/view/MainActivity.java b/app/src/main/java/com/group5/safezone/view/MainActivity.java
+--- a/app/src/main/java/com/group5/safezone/view/MainActivity.java	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/src/main/java/com/group5/safezone/view/MainActivity.java	(date 1756010909925)
+@@ -5,8 +5,6 @@
+ import android.view.Menu;
+ import android.view.MenuItem;
+ import android.view.View;
+-import android.widget.Button;
+-import android.widget.ProgressBar;
+ import android.widget.TextView;
+ import android.widget.Toast;
+ 
+@@ -17,53 +15,35 @@
+ import android.content.IntentFilter;
+ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+ import androidx.appcompat.widget.Toolbar;
+-import androidx.cardview.widget.CardView;
+ import androidx.appcompat.app.ActionBarDrawerToggle;
+ import androidx.drawerlayout.widget.DrawerLayout;
+ import androidx.core.graphics.Insets;
+ import androidx.core.view.ViewCompat;
+ import androidx.core.view.WindowInsetsCompat;
+-import androidx.lifecycle.ViewModelProvider;
+-import androidx.recyclerview.widget.LinearLayoutManager;
+-import androidx.recyclerview.widget.RecyclerView;
+ 
+ import com.group5.safezone.R;
+-import com.group5.safezone.adapter.UserAdapter;
+-import com.group5.safezone.model.entity.User;
+ import com.group5.safezone.config.AuthInterceptor;
+ import com.group5.safezone.config.SessionManager;
+ import com.group5.safezone.config.NotificationPermissionUtil;
+ import com.group5.safezone.config.NotificationEvents;
+ import com.group5.safezone.view.Wallet.WalletActivity;
+-import com.group5.safezone.config.AppDatabase;
+-import android.os.Handler;
+ import com.group5.safezone.view.admin.AdminMainActivity;
+ import com.group5.safezone.view.auth.LoginActivity;
+ import com.group5.safezone.view.base.BaseActivity;
+ import com.group5.safezone.view.notification.NotificationsActivity;
+-import com.group5.safezone.viewmodel.UserViewModel;
++import com.group5.safezone.view.PurchaseHistoryActivity;
++import com.group5.safezone.view.SalesHistoryActivity;
+ import com.google.android.material.navigation.NavigationView;
+ import com.group5.safezone.Constant.Chatbox.ConstantKey;
+ 
+-import java.text.NumberFormat;
+-import java.util.Locale;
+-
+ import com.zegocloud.zimkit.BuildConfig;
+ import com.zegocloud.zimkit.services.ZIMKit;
+ 
+ public class MainActivity extends BaseActivity {
+ 
+-    private UserViewModel userViewModel;
+-    private UserAdapter userAdapter;
+     private SessionManager sessionManager;
+ 
+     // UI Components
+-    private ProgressBar progressBar;
+-    private TextView tvError, tvWelcome;
+-    private CardView cardUserInfo;
+-    private TextView tvUserName, tvEmail, tvPhone, tvRole, tvBalance, tvStatus, tvVerify;
+-    private RecyclerView recyclerViewUsers;
+-    private Button btnLoadUser, btnLoadAllUsers;
+     private DrawerLayout drawerLayout;
+     private NavigationView navigationView;
+     private View notificationBellView;
+@@ -97,43 +77,26 @@
+         setupToolbar();
+         setupDrawer();
+         setupBackPressedDispatcher();
++        
++        // Load HomeFragment as default
++        if (savedInstanceState == null) {
++            getSupportFragmentManager().beginTransaction()
++                    .replace(R.id.fragment_container, new HomeFragment())
++                    .commit();
++        }
++        
+         // Hỏi quyền/thông báo nếu đang bị tắt ngay khi vào app
+         NotificationPermissionUtil.promptIfNeeded(this, 7001);
+         
+-        // DEV ONLY: Reset database để test user mới
+-        if (BuildConfig.DEBUG) {
+-            resetDatabaseForTesting();
+-        }
++        // Database reset functionality removed - no longer needed
+         
+-        setupViewModel();
+-        setupRecyclerView();
+-        setupClickListeners();
+-        observeViewModel();
++        // Setup footer for navigation
+         setupFooter();
+-
+-        displayWelcomeMessage();
+-
+-        // Load dữ liệu ban đầu
+-        userViewModel.loadAllUsers();
+     }
+ 
+     private void initViews() {
+         drawerLayout = findViewById(R.id.drawer_layout);
+         navigationView = findViewById(R.id.navigation_view);
+-        progressBar = findViewById(R.id.progressBar);
+-        tvError = findViewById(R.id.tvError);
+-        tvWelcome = findViewById(R.id.tvWelcome);
+-        cardUserInfo = findViewById(R.id.cardUserInfo);
+-        tvUserName = findViewById(R.id.tvUserName);
+-        tvEmail = findViewById(R.id.tvEmail);
+-        tvPhone = findViewById(R.id.tvPhone);
+-        tvRole = findViewById(R.id.tvRole);
+-        tvBalance = findViewById(R.id.tvBalance);
+-        tvStatus = findViewById(R.id.tvStatus);
+-        tvVerify = findViewById(R.id.tvVerify);
+-        recyclerViewUsers = findViewById(R.id.recyclerViewUsers);
+-        btnLoadUser = findViewById(R.id.btnLoadUser);
+-        btnLoadAllUsers = findViewById(R.id.btnLoadAllUsers);
+     }
+ 
+     private void setupToolbar() {
+@@ -154,11 +117,25 @@
+             navigationView.setNavigationItemSelectedListener(item -> {
+                 int id = item.getItemId();
+                 if (id == R.id.nav_home) {
+-                    // stay on home
++                    // Load HomeFragment
++                    getSupportFragmentManager().beginTransaction()
++                            .replace(R.id.fragment_container, new HomeFragment())
++                            .commit();
++                } else if (id == R.id.nav_products) {
++                    // Load HomeFragment (which contains products)
++                    getSupportFragmentManager().beginTransaction()
++                            .replace(R.id.fragment_container, new HomeFragment())
++                            .commit();
+                 } else if (id == R.id.nav_wallet) {
+                     startActivity(new Intent(this, WalletActivity.class));
++                } else if (id == R.id.nav_purchase_history) {
++                    startActivity(new Intent(this, PurchaseHistoryActivity.class));
++                } else if (id == R.id.nav_sales_history) {
++                    startActivity(new Intent(this, SalesHistoryActivity.class));
+                 } else if (id == R.id.nav_chat) {
+                     startActivity(new Intent(this, com.group5.safezone.view.chat.ChatActivity.class));
++                } else if (id == R.id.nav_livestream) {
++                    startActivity(new Intent(this, com.group5.safezone.view.livestreaming.LiveStreamingMainActivity.class));
+                 } else if (id == R.id.nav_settings) {
+                     Toast.makeText(this, "Cài đặt đang phát triển", Toast.LENGTH_SHORT).show();
+                 } else if (id == R.id.nav_about) {
+@@ -209,11 +186,7 @@
+         });
+     }
+ 
+-    private void displayWelcomeMessage() {
+-        String userName = sessionManager.getUserName();
+-        String role = sessionManager.getUserRole();
+-        tvWelcome.setText("Chào mừng, " + userName + " (" + role + ")!");
+-    }
++    // Welcome message functionality removed - no longer needed in new layout
+ 
+     private void refreshUnreadCount() {
+         if (notificationBadge == null) return;
+@@ -233,90 +206,28 @@
+         }).start();
+     }
+ 
+-    private void setupViewModel() {
+-        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+-    }
+-
+-    private void setupRecyclerView() {
+-        userAdapter = new UserAdapter();
+-        recyclerViewUsers.setLayoutManager(new LinearLayoutManager(this));
+-        recyclerViewUsers.setAdapter(userAdapter);
+-
+-        userAdapter.setOnUserClickListener(user -> {
+-            displayUserInfo(user);
+-            Toast.makeText(this, "Selected: " + user.getUserName(), Toast.LENGTH_SHORT).show();
+-        });
+-    }
+-
+-    private void setupClickListeners() {
+-        btnLoadUser.setOnClickListener(v -> {
+-            // Load current user
+-            int currentUserId = sessionManager.getUserId();
+-            userViewModel.getUserById(currentUserId);
+-        });
+-
+-        btnLoadAllUsers.setOnClickListener(v -> {
+-            userViewModel.loadAllUsers();
+-        });
+-    }
+-
+-    private void observeViewModel() {
+-        // Observe loading state
+-        userViewModel.getIsLoading().observe(this, isLoading -> {
+-            progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+-        });
+-
+-        // Observe error messages
+-        userViewModel.getErrorMessage().observe(this, errorMessage -> {
+-            if (errorMessage != null && !errorMessage.isEmpty()) {
+-                tvError.setText(errorMessage);
+-                tvError.setVisibility(View.VISIBLE);
+-                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+-            } else {
+-                tvError.setVisibility(View.GONE);
+-            }
+-        });
+-
+-        // Observe current user
+-        userViewModel.getCurrentUser().observe(this, user -> {
+-            if (user != null) {
+-                displayUserInfo(user);
+-            }
+-        });
+-
+-        // Observe all users
+-        userViewModel.getAllUsers().observe(this, users -> {
+-            if (users != null && !users.isEmpty()) {
+-                userAdapter.setUsers(users);
+-                // Hiển thị user đầu tiên
+-                displayUserInfo(users.get(0));
+-            }
+-        });
++    // Live streaming functionality
++    private void setupLiveStreaming() {
++        // Start live stream as host
++        String userID = "user_" + sessionManager.getUserId();
++        String userName = sessionManager.getUserName();
++        String liveID = "live_" + System.currentTimeMillis();
++        
++        Intent intent = new Intent(this, com.group5.safezone.view.livestreaming.LiveStreamingActivity.class);
++        intent.putExtra("userID", userID);
++        intent.putExtra("userName", userName);
++        intent.putExtra("host", true);
++        intent.putExtra("liveID", liveID);
++        startActivity(intent);
+     }
+ 
+-    private void displayUserInfo(User user) {
+-        cardUserInfo.setVisibility(View.VISIBLE);
+-
+-        tvUserName.setText(user.getUserName() != null ? user.getUserName() : "N/A");
+-        tvEmail.setText(user.getEmail() != null ? user.getEmail() : "N/A");
+-        tvPhone.setText(user.getPhone() != null ? user.getPhone() : "N/A");
+-        tvRole.setText(user.getRole() != null ? user.getRole() : "N/A");
+-        tvStatus.setText(user.getStatus() != null ? user.getStatus() : "N/A");
+-
+-        // Format balance
+-        if (user.getBalance() != null) {
+-            NumberFormat formatter = NumberFormat.getCurrencyInstance(new Locale("vi", "VN"));
+-            tvBalance.setText(formatter.format(user.getBalance()));
+-        } else {
+-            tvBalance.setText("0 VNĐ");
+-        }
++    private void joinLiveStream() {
++        // Open JoinStreamActivity to input Stream ID
++        Intent intent = new Intent(this, com.group5.safezone.view.livestreaming.JoinStreamActivity.class);
++        startActivity(intent);
++    }
+ 
+-        // Verify status
+-        tvVerify.setText(user.getIsVerify() != null && user.getIsVerify() ? "Đã xác thực" : "Chưa xác thực");
+-        tvVerify.setTextColor(user.getIsVerify() != null && user.getIsVerify() ?
+-                getResources().getColor(android.R.color.holo_green_dark) :
+-                getResources().getColor(android.R.color.holo_red_dark));
+-    }
++    // User info display methods removed - no longer needed in new layout
+ 
+     @Override
+     public boolean onCreateOptionsMenu(Menu menu) {
+@@ -392,6 +303,20 @@
+ 
+         // Cập nhật lại badge khi quay lại màn hình
+         refreshUnreadCount();
++        
++        // Reload HomeFragment if it's the current fragment to refresh product list
++        reloadCurrentFragment();
++    }
++    
++    private void reloadCurrentFragment() {
++        // Get current fragment
++        androidx.fragment.app.Fragment currentFragment = getSupportFragmentManager()
++                .findFragmentById(R.id.fragment_container);
++        
++        if (currentFragment instanceof HomeFragment) {
++            System.out.println("=== MainActivity: Reloading HomeFragment on resume ===");
++            ((HomeFragment) currentFragment).reloadProducts();
++        }
+     }
+ 
+     @Override
+@@ -408,25 +333,12 @@
+         ZIMKit.initNotifications();
+     }
+ 
+-    // DEV ONLY: Reset database để test
+-    private void resetDatabaseForTesting() {
+-        // Chỉ reset 1 lần khi app được cài đặt
+-        if (!getSharedPreferences("dev_prefs", MODE_PRIVATE).getBoolean("db_reset", false)) {
+-            Toast.makeText(this, "Đang reset database để test user mới...", Toast.LENGTH_LONG).show();
+-            
+-
+-            
+-            // Đánh dấu đã reset
+-            getSharedPreferences("dev_prefs", MODE_PRIVATE).edit()
+-                    .putBoolean("db_reset", true)
+-                    .apply();
+-            
+-            // Reload data
+-            new Handler().postDelayed(() -> {
+-                userViewModel.loadAllUsers();
+-                Toast.makeText(this, "Database đã được reset! Bây giờ có 3 users", Toast.LENGTH_LONG).show();
+-            }, 2000);
+-        }
++    public void loadHomeFragment() {
++        getSupportFragmentManager().beginTransaction()
++                .replace(R.id.fragment_container, new HomeFragment())
++                .commit();
+     }
++
++    // Database reset functionality removed - no longer needed
+ }
+ 
+Index: app/src/main/java/com/group5/safezone/config/PasswordUtils.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.group5.safezone.config;\n\nimport java.security.MessageDigest;\nimport java.security.NoSuchAlgorithmException;\nimport java.security.SecureRandom;\n\npublic class PasswordUtils {\n\n    public static String hashPassword(String password) {\n        try {\n            MessageDigest md = MessageDigest.getInstance(\"SHA-256\");\n            byte[] hashedBytes = md.digest(password.getBytes());\n\n            StringBuilder sb = new StringBuilder();\n            for (byte b : hashedBytes) {\n                sb.append(String.format(\"%02x\", b));\n            }\n            return sb.toString();\n        } catch (NoSuchAlgorithmException e) {\n            throw new RuntimeException(\"Error hashing password\", e);\n        }\n    }\n\n    public static boolean verifyPassword(String password, String hashedPassword) {\n        String hashedInput = hashPassword(password);\n        return hashedInput.equals(hashedPassword);\n    }\n\n    public static String generateRandomPassword(int length) {\n        String chars = \"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789\";\n        SecureRandom random = new SecureRandom();\n        StringBuilder sb = new StringBuilder();\n\n        for (int i = 0; i < length; i++) {\n            int randomIndex = random.nextInt(chars.length());\n            sb.append(chars.charAt(randomIndex));\n        }\n\n        return sb.toString();\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/group5/safezone/config/PasswordUtils.java b/app/src/main/java/com/group5/safezone/config/PasswordUtils.java
+--- a/app/src/main/java/com/group5/safezone/config/PasswordUtils.java	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/src/main/java/com/group5/safezone/config/PasswordUtils.java	(date 1755915977112)
+@@ -3,6 +3,11 @@
+ import java.security.MessageDigest;
+ import java.security.NoSuchAlgorithmException;
+ import java.security.SecureRandom;
++import java.util.Base64;
++import javax.crypto.Cipher;
++import javax.crypto.KeyGenerator;
++import javax.crypto.SecretKey;
++import javax.crypto.spec.SecretKeySpec;
+ 
+ public class PasswordUtils {
+ 
+@@ -38,4 +43,78 @@
+ 
+         return sb.toString();
+     }
++
++    // Simple encryption for private info - using a simpler approach
++    private static final String SECRET_KEY = "SafeZoneSecretKey1234567890123456"; // Must be 16, 24, or 32 bytes for AES
++    
++    public static String encrypt(String data) throws Exception {
++        if (data == null || data.isEmpty()) {
++            return data;
++        }
++        
++        try {
++            // Ensure key is exactly 16 bytes for AES-128
++            byte[] keyBytes = SECRET_KEY.getBytes("UTF-8");
++            if (keyBytes.length > 16) {
++                byte[] newKeyBytes = new byte[16];
++                System.arraycopy(keyBytes, 0, newKeyBytes, 0, 16);
++                keyBytes = newKeyBytes;
++            } else if (keyBytes.length < 16) {
++                byte[] newKeyBytes = new byte[16];
++                System.arraycopy(keyBytes, 0, newKeyBytes, 0, keyBytes.length);
++                // Fill remaining bytes with zeros
++                for (int i = keyBytes.length; i < 16; i++) {
++                    newKeyBytes[i] = 0;
++                }
++                keyBytes = newKeyBytes;
++            }
++            
++            SecretKeySpec secretKey = new SecretKeySpec(keyBytes, "AES");
++            
++            // Use AES/ECB/PKCS5Padding for simplicity (in production, use CBC mode with IV)
++            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
++            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
++            byte[] encryptedBytes = cipher.doFinal(data.getBytes("UTF-8"));
++            
++            // Return base64 encoded string
++            return Base64.getEncoder().encodeToString(encryptedBytes);
++        } catch (Exception e) {
++            throw new Exception("Encryption failed: " + e.getMessage());
++        }
++    }
++    
++    public static String decrypt(String encryptedData) throws Exception {
++        if (encryptedData == null || encryptedData.isEmpty()) {
++            return encryptedData;
++        }
++        
++        try {
++            // Ensure key is exactly 16 bytes for AES-128
++            byte[] keyBytes = SECRET_KEY.getBytes("UTF-8");
++            if (keyBytes.length > 16) {
++                byte[] newKeyBytes = new byte[16];
++                System.arraycopy(keyBytes, 0, newKeyBytes, 0, 16);
++                keyBytes = newKeyBytes;
++            } else if (keyBytes.length < 16) {
++                byte[] newKeyBytes = new byte[16];
++                System.arraycopy(keyBytes, 0, newKeyBytes, 0, keyBytes.length);
++                // Fill remaining bytes with zeros
++                for (int i = keyBytes.length; i < 16; i++) {
++                    newKeyBytes[i] = 0;
++                }
++                keyBytes = newKeyBytes;
++            }
++            
++            SecretKeySpec secretKey = new SecretKeySpec(keyBytes, "AES");
++            
++            // Use AES/ECB/PKCS5Padding for simplicity
++            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
++            cipher.init(Cipher.DECRYPT_MODE, secretKey);
++            byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
++            
++            return new String(decryptedBytes, "UTF-8");
++        } catch (Exception e) {
++            throw new Exception("Decryption failed: " + e.getMessage());
++        }
++    }
+ }
+Index: app/src/main/java/com/group5/safezone/config/SessionManager.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.group5.safezone.config;\n\nimport android.content.Context;\nimport android.content.SharedPreferences;\n\nimport com.group5.safezone.model.entity.User;\n\npublic class SessionManager {\n    private static final String PREF_NAME = \"SafeZoneSession\";\n    private static final String KEY_IS_LOGGED_IN = \"isLoggedIn\";\n    private static final String KEY_USER_ID = \"userId\";\n    private static final String KEY_USER_NAME = \"userName\";\n    private static final String KEY_EMAIL = \"email\";\n    private static final String KEY_ROLE = \"role\";\n    private static final String KEY_STATUS = \"status\";\n    private static final String KEY_BALANCE = \"balance\";\n    private static final String KEY_IS_VERIFY = \"isVerify\";\n\n    private SharedPreferences pref;\n    private SharedPreferences.Editor editor;\n    private Context context;\n\n    public SessionManager(Context context) {\n        this.context = context;\n        pref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);\n        editor = pref.edit();\n    }\n\n    public void createSession(User user) {\n        editor.putBoolean(KEY_IS_LOGGED_IN, true);\n        editor.putInt(KEY_USER_ID, user.getId());\n        editor.putString(KEY_USER_NAME, user.getUserName());\n        editor.putString(KEY_EMAIL, user.getEmail());\n        editor.putString(KEY_ROLE, user.getRole());\n        editor.putString(KEY_STATUS, user.getStatus());\n        editor.putFloat(KEY_BALANCE, user.getBalance() != null ? user.getBalance().floatValue() : 0f);\n        editor.putBoolean(KEY_IS_VERIFY, user.getIsVerify() != null ? user.getIsVerify() : false);\n        editor.apply();\n    }\n\n    public boolean isLoggedIn() {\n        return pref.getBoolean(KEY_IS_LOGGED_IN, false);\n    }\n\n    public int getUserId() {\n        return pref.getInt(KEY_USER_ID, -1);\n    }\n\n    public String getUserName() {\n        return pref.getString(KEY_USER_NAME, null);\n    }\n\n    public String getEmail() {\n        return pref.getString(KEY_EMAIL, null);\n    }\n\n    public String getUserRole() {\n        return pref.getString(KEY_ROLE, \"USER\");\n    }\n\n    public String getUserStatus() {\n        return pref.getString(KEY_STATUS, \"PENDING\");\n    }\n\n    public double getBalance() {\n        return pref.getFloat(KEY_BALANCE, 0f);\n    }\n\n    public boolean isVerified() {\n        return pref.getBoolean(KEY_IS_VERIFY, false);\n    }\n\n    public boolean isAdmin() {\n        return \"ADMIN\".equals(getUserRole());\n    }\n\n    public boolean isUser() {\n        return \"USER\".equals(getUserRole());\n    }\n\n    public void logout() {\n        editor.clear();\n        editor.apply();\n    }\n\n    public void updateBalance(double newBalance) {\n        editor.putFloat(KEY_BALANCE, (float) newBalance);\n        editor.apply();\n    }\n\n    public void updateVerifyStatus(boolean isVerified) {\n        editor.putBoolean(KEY_IS_VERIFY, isVerified);\n        editor.apply();\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/group5/safezone/config/SessionManager.java b/app/src/main/java/com/group5/safezone/config/SessionManager.java
+--- a/app/src/main/java/com/group5/safezone/config/SessionManager.java	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/src/main/java/com/group5/safezone/config/SessionManager.java	(date 1755938844266)
+@@ -33,7 +33,7 @@
+         editor.putString(KEY_EMAIL, user.getEmail());
+         editor.putString(KEY_ROLE, user.getRole());
+         editor.putString(KEY_STATUS, user.getStatus());
+-        editor.putFloat(KEY_BALANCE, user.getBalance() != null ? user.getBalance().floatValue() : 0f);
++        editor.putLong(KEY_BALANCE, user.getBalance() != null ? user.getBalance().longValue() : 0L);
+         editor.putBoolean(KEY_IS_VERIFY, user.getIsVerify() != null ? user.getIsVerify() : false);
+         editor.apply();
+     }
+@@ -63,7 +63,25 @@
+     }
+ 
+     public double getBalance() {
+-        return pref.getFloat(KEY_BALANCE, 0f);
++        try {
++            // Try to get as float first
++            return pref.getFloat(KEY_BALANCE, 0f);
++        } catch (ClassCastException e) {
++            // If float fails, try to get as long and convert
++            try {
++                long longBalance = pref.getLong(KEY_BALANCE, 0L);
++                return (double) longBalance;
++            } catch (ClassCastException e2) {
++                // If long also fails, try to get as int and convert
++                try {
++                    int intBalance = pref.getInt(KEY_BALANCE, 0);
++                    return (double) intBalance;
++                } catch (ClassCastException e3) {
++                    // If all fail, return 0
++                    return 0.0;
++                }
++            }
++        }
+     }
+ 
+     public boolean isVerified() {
+@@ -84,7 +102,8 @@
+     }
+ 
+     public void updateBalance(double newBalance) {
+-        editor.putFloat(KEY_BALANCE, (float) newBalance);
++        // Store as long to avoid precision issues with float
++        editor.putLong(KEY_BALANCE, (long) newBalance);
+         editor.apply();
+     }
+ 
+Index: app/src/main/java/com/group5/safezone/config/DatabaseInitializer.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.group5.safezone.config;\n\nimport com.group5.safezone.model.entity.User;\nimport com.group5.safezone.config.PasswordUtils;\n\nimport java.util.ArrayList;\nimport java.util.Date;\nimport java.util.List;\nimport java.util.concurrent.ExecutorService;\nimport java.util.concurrent.Executors;\n\npublic class DatabaseInitializer {\n    private static final ExecutorService executor = Executors.newFixedThreadPool(4);\n\n    public static void populateAsync(AppDatabase db) {\n        executor.execute(() -> {\n            populateWithTestData(db);\n        });\n    }\n\n    private static void populateWithTestData(AppDatabase db) {\n        // Xóa tất cả dữ liệu cũ\n        db.userDao().deleteAllUsers();\n\n        // Tạo danh sách users mẫu\n        List<User> sampleUsers = createSampleUsers();\n\n        // Insert dữ liệu vào database\n        db.userDao().insertMultipleUsers(sampleUsers);\n    }\n\n    private static List<User> createSampleUsers() {\n        List<User> users = new ArrayList<>();\n\n        // Admin user\n        User admin = new User();\n        admin.setUserName(\"admin\");\n        admin.setPassword(PasswordUtils.hashPassword(\"admin123\")); // Hash password\n        admin.setEmail(\"admin@safezone.com\");\n        admin.setPhone(\"0901234567\");\n        admin.setGender(true);\n        admin.setDob(new Date(90, 0, 1)); // 1990-01-01\n        admin.setRole(\"ADMIN\");\n        admin.setStatus(\"ACTIVE\");\n        admin.setBalance(1000000.0);\n        admin.setIsVerify(true);\n        users.add(admin);\n\n        // Test user\n        User testUser = new User();\n        testUser.setUserName(\"testuser\");\n        testUser.setPassword(PasswordUtils.hashPassword(\"test123\")); // Hash password\n        testUser.setEmail(\"test@example.com\");\n        testUser.setPhone(\"0945678901\");\n        testUser.setGender(true);\n        testUser.setDob(new Date(100, 8, 5)); // 2000-09-05\n        testUser.setRole(\"USER\");\n        testUser.setStatus(\"ACTIVE\"); // Đổi thành ACTIVE để có thể login\n        testUser.setBalance(50000.0);\n        testUser.setIsVerify(false);\n        users.add(testUser);\n\n        // Thêm user mới - có thể đăng nhập bằng cả username và email\n        User newUser = new User();\n        newUser.setUserName(\"johndoe\");\n        newUser.setPassword(PasswordUtils.hashPassword(\"john123\")); // Hash password\n        newUser.setEmail(\"john.doe@gmail.com\");\n        newUser.setPhone(\"0987654321\");\n        newUser.setGender(false); // false = nữ\n        newUser.setDob(new Date(95, 5, 15)); // 1995-06-15\n        newUser.setRole(\"USER\");\n        newUser.setStatus(\"ACTIVE\");\n        newUser.setBalance(75000.0);\n        newUser.setIsVerify(true);\n        users.add(newUser);\n\n        return users;\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/group5/safezone/config/DatabaseInitializer.java b/app/src/main/java/com/group5/safezone/config/DatabaseInitializer.java
+--- a/app/src/main/java/com/group5/safezone/config/DatabaseInitializer.java	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/src/main/java/com/group5/safezone/config/DatabaseInitializer.java	(date 1755945693626)
+@@ -1,7 +1,10 @@
+ package com.group5.safezone.config;
+ 
+ import com.group5.safezone.model.entity.User;
++import com.group5.safezone.model.entity.Product;
+ import com.group5.safezone.config.PasswordUtils;
++import com.group5.safezone.model.entity.ProductImages;
++import com.group5.safezone.R;
+ 
+ import java.util.ArrayList;
+ import java.util.Date;
+@@ -21,12 +24,37 @@
+     private static void populateWithTestData(AppDatabase db) {
+         // Xóa tất cả dữ liệu cũ
+         db.userDao().deleteAllUsers();
++        db.productDao().deleteAllProducts();
+ 
+         // Tạo danh sách users mẫu
+         List<User> sampleUsers = createSampleUsers();
++ 
++        // Tạo danh sách products mẫu
++        List<Product> sampleProducts = createSampleProducts();
+ 
+         // Insert dữ liệu vào database
+         db.userDao().insertMultipleUsers(sampleUsers);
++        db.productDao().insertMultipleProducts(sampleProducts);
++        
++        // Tạo ảnh mẫu cho products
++        createSampleProductImages(db, sampleProducts);
++    }
++    
++    private static void createSampleProductImages(AppDatabase db, List<Product> products) {
++        // Tạo ảnh mẫu cho từng product
++        for (Product product : products) {
++            // Tạo 1-2 ảnh mẫu cho mỗi product
++            for (int i = 1; i <= 2; i++) {
++                ProductImages image = new ProductImages();
++                image.setProductId(product.getId());
++                image.setName("sample_image_" + i);
++                // Sử dụng ảnh mẫu từ drawable (placeholder)
++                image.setPath("android.resource://com.group5.safezone/" + R.drawable.ic_info);
++                image.setCreatedAt(new Date());
++                image.setUpdatedAt(new Date());
++                db.productImagesDao().insert(image);
++            }
++        }
+     }
+ 
+     private static List<User> createSampleUsers() {
+@@ -62,7 +90,7 @@
+ 
+         // Thêm user mới - có thể đăng nhập bằng cả username và email
+         User newUser = new User();
+-        newUser.setUserName("johndoe");
++        newUser.setUserName("join");
+         newUser.setPassword(PasswordUtils.hashPassword("john123")); // Hash password
+         newUser.setEmail("john.doe@gmail.com");
+         newUser.setPhone("0987654321");
+@@ -76,4 +104,50 @@
+ 
+         return users;
+     }
++
++    private static List<Product> createSampleProducts() {
++        List<Product> products = new ArrayList<>();
++
++        // Sample product 1
++        Product product1 = new Product();
++        product1.setId("prod_001");
++        product1.setProductName("iPhone 15 Pro");
++        product1.setFee(1.0); // Seller pays fee
++        product1.setPrice(25000000.0);
++        product1.setPublicPrivate("public");
++        product1.setStatus("Active");
++        product1.setUserId(1);
++        product1.setCreatedAt(new Date());
++        product1.setUpdatedAt(new Date());
++        products.add(product1);
++
++        // Sample product 2
++        Product product2 = new Product();
++        product2.setId("prod_002");
++        product2.setProductName("MacBook Air M2");
++        product2.setFee(2.0); // Buyer pays fee
++        product2.setPrice(35000000.0);
++        product2.setPublicPrivate("private");
++        product2.setUserView("admin,testuser");
++        product2.setStatus("Active");
++        product2.setUserId(2);
++        product2.setCreatedAt(new Date());
++        product2.setUpdatedAt(new Date());
++        products.add(product2);
++
++        // Sample product 3
++        Product product3 = new Product();
++        product3.setId("prod_003");
++        product3.setProductName("AirPods Pro");
++        product3.setFee(1.0); // Seller pays fee
++        product3.setPrice(8000000.0);
++        product3.setPublicPrivate("public");
++        product3.setStatus("Active");
++        product3.setUserId(1);
++        product3.setCreatedAt(new Date());
++        product3.setUpdatedAt(new Date());
++        products.add(product3);
++
++        return products;
++    }
+ }
+Index: app/src/main/res/layout/item_image_preview.xml
+===================================================================
+diff --git a/app/src/main/res/layout/item_image_preview.xml b/app/src/main/res/layout/item_image_preview.xml
+new file mode 100644
+--- /dev/null	(date 1755916487622)
++++ b/app/src/main/res/layout/item_image_preview.xml	(date 1755916487622)
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="utf-8"?>
++<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
++    android:layout_width="100dp"
++    android:layout_height="100dp"
++    android:layout_marginEnd="8dp">
++
++    <ImageView
++        android:id="@+id/ivPreview"
++        android:layout_width="match_parent"
++        android:layout_height="match_parent"
++        android:scaleType="centerCrop"/>
++</FrameLayout>
+Index: app/src/main/java/com/group5/safezone/adapter/ImagePreviewAdapter.java
+===================================================================
+diff --git a/app/src/main/java/com/group5/safezone/adapter/ImagePreviewAdapter.java b/app/src/main/java/com/group5/safezone/adapter/ImagePreviewAdapter.java
+new file mode 100644
+--- /dev/null	(date 1755916467122)
++++ b/app/src/main/java/com/group5/safezone/adapter/ImagePreviewAdapter.java	(date 1755916467122)
+@@ -0,0 +1,46 @@
++package com.group5.safezone.adapter;
++
++import android.net.Uri;
++import android.view.LayoutInflater;
++import android.view.View;
++import android.view.ViewGroup;
++import android.widget.ImageView;
++
++import androidx.annotation.NonNull;
++import androidx.recyclerview.widget.RecyclerView;
++
++import com.group5.safezone.R;
++
++import java.util.ArrayList;
++import java.util.List;
++
++public class ImagePreviewAdapter extends RecyclerView.Adapter<ImagePreviewAdapter.Holder> {
++    private final List<String> uris = new ArrayList<>();
++
++    public void setItems(List<String> newUris) {
++        uris.clear();
++        if (newUris != null) uris.addAll(newUris);
++        notifyDataSetChanged();
++    }
++
++    @NonNull @Override
++    public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
++        View v = LayoutInflater.from(parent.getContext())
++                .inflate(R.layout.item_image_preview, parent, false);
++        return new Holder(v);
++    }
++
++    @Override public void onBindViewHolder(@NonNull Holder h, int pos) {
++        h.iv.setImageURI(Uri.parse(uris.get(pos)));
++    }
++
++    @Override public int getItemCount() { return uris.size(); }
++
++    static class Holder extends RecyclerView.ViewHolder {
++        ImageView iv;
++        Holder(@NonNull View itemView) {
++            super(itemView);
++            iv = itemView.findViewById(R.id.ivPreview);
++        }
++    }
++}
+Index: app/src/main/java/com/group5/safezone/view/base/BaseActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.group5.safezone.view.base;\n\nimport android.content.Intent;\nimport android.os.Bundle;\nimport android.widget.ImageView;\nimport android.widget.LinearLayout;\nimport android.widget.TextView;\n\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.core.content.ContextCompat;\n\nimport com.group5.safezone.R;\nimport com.group5.safezone.view.MainActivity;\n//import com.group5.safezone.view.AuctionActivity;\n//import com.group5.safezone.view.HomeActivity;\n//import com.group5.safezone.view.ProductsActivity;\n//import com.group5.safezone.view.ProfileActivity;\nimport com.group5.safezone.view.Wallet.WalletActivity;\n\npublic abstract class BaseActivity extends AppCompatActivity {\n\n    protected LinearLayout footerHome, footerProducts, footerAuction, footerWallet, footerProfile;\n    protected ImageView icHome, icProducts, icAuction, icWallet, icProfile;\n    protected TextView tvHome, tvProducts, tvAuction, tvWallet, tvProfile;\n\n    protected abstract int getCurrentPageIndex(); // 0: Home, 1: Products, 2: Auction, 3: Wallet, 4: Profile\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n    }\n\n    protected void setupFooter() {\n        // Initialize footer views\n        footerHome = findViewById(R.id.footer_home);\n        footerProducts = findViewById(R.id.footer_products);\n        footerAuction = findViewById(R.id.footer_auction);\n        footerWallet = findViewById(R.id.footer_wallet);\n        footerProfile = findViewById(R.id.footer_profile);\n\n        icHome = findViewById(R.id.ic_home);\n        icProducts = findViewById(R.id.ic_products);\n        icAuction = findViewById(R.id.ic_auction);\n        icWallet = findViewById(R.id.ic_wallet);\n        icProfile = findViewById(R.id.ic_profile);\n\n        tvHome = findViewById(R.id.tv_home);\n        tvProducts = findViewById(R.id.tv_products);\n        tvAuction = findViewById(R.id.tv_auction);\n        tvWallet = findViewById(R.id.tv_wallet);\n        tvProfile = findViewById(R.id.tv_profile);\n\n        // Set click listeners\n        footerHome.setOnClickListener(v -> navigateToPage(0));\n        footerProducts.setOnClickListener(v -> navigateToPage(1));\n        footerAuction.setOnClickListener(v -> navigateToPage(2));\n        footerWallet.setOnClickListener(v -> navigateToPage(3));\n        footerProfile.setOnClickListener(v -> navigateToPage(4));\n\n        // Highlight current page\n        updateFooterSelection();\n    }\n\n    private void navigateToPage(int pageIndex) {\n        if (pageIndex == getCurrentPageIndex()) {\n            return; // Đã ở trang hiện tại\n        }\n\n        Intent intent = null;\n        switch (pageIndex) {\n            case 0:\n                intent = new Intent(this, MainActivity.class);\n                break;\n            case 1:\n                //intent = new Intent(this, ProductsActivity.class);\n                break;\n            case 2:\n                //intent = new Intent(this, AuctionActivity.class);\n                break;\n            case 3:\n                intent = new Intent(this, WalletActivity.class);\n                break;\n            case 4:\n               // intent = new Intent(this, ProfileActivity.class);\n                break;\n            default:\n                return;\n        }\n\n        if (intent != null) {\n            try {\n                startActivity(intent);\n                overridePendingTransition(0, 0); // Không có animation\n                // Chỉ finish() khi chuyển về MainActivity\n                if (pageIndex == 0) {\n                    finish();\n                }\n            } catch (Exception e) {\n                e.printStackTrace();\n                // Log lỗi để debug\n                android.util.Log.e(\"BaseActivity\", \"Error navigating to page \" + pageIndex, e);\n            }\n        }\n    }\n\n    private void updateFooterSelection() {\n        // Reset all items\n        resetFooterItem(icHome, tvHome, footerHome);\n        resetFooterItem(icProducts, tvProducts, footerProducts);\n        resetFooterItem(icAuction, tvAuction, footerAuction);\n        resetFooterItem(icWallet, tvWallet, footerWallet);\n        resetFooterItem(icProfile, tvProfile, footerProfile);\n\n        // Highlight current item\n        int currentPage = getCurrentPageIndex();\n        switch (currentPage) {\n            case 0:\n                selectFooterItem(icHome, tvHome, footerHome);\n                break;\n            case 1:\n                selectFooterItem(icProducts, tvProducts, footerProducts);\n                break;\n            case 2:\n                selectFooterItem(icAuction, tvAuction, footerAuction);\n                break;\n            case 3:\n                selectFooterItem(icWallet, tvWallet, footerWallet);\n                break;\n            case 4:\n                selectFooterItem(icProfile, tvProfile, footerProfile);\n                break;\n        }\n    }\n\n    private void resetFooterItem(ImageView icon, TextView text, LinearLayout container) {\n        icon.setColorFilter(ContextCompat.getColor(this, R.color.footer_icon_color));\n        text.setTextColor(ContextCompat.getColor(this, R.color.footer_text_color));\n        container.setBackgroundResource(0);\n    }\n\n    private void selectFooterItem(ImageView icon, TextView text, LinearLayout container) {\n        icon.setColorFilter(ContextCompat.getColor(this, R.color.footer_icon_selected));\n        text.setTextColor(ContextCompat.getColor(this, R.color.footer_text_selected));\n        container.setBackgroundResource(R.drawable.footer_item_selected);\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/group5/safezone/view/base/BaseActivity.java b/app/src/main/java/com/group5/safezone/view/base/BaseActivity.java
+--- a/app/src/main/java/com/group5/safezone/view/base/BaseActivity.java	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/src/main/java/com/group5/safezone/view/base/BaseActivity.java	(date 1755914812490)
+@@ -72,7 +72,12 @@
+                 intent = new Intent(this, MainActivity.class);
+                 break;
+             case 1:
+-                //intent = new Intent(this, ProductsActivity.class);
++                // Products page - stay in MainActivity but load HomeFragment
++                if (this instanceof MainActivity) {
++                    ((MainActivity) this).loadHomeFragment();
++                    return;
++                }
++                intent = new Intent(this, MainActivity.class);
+                 break;
+             case 2:
+                 //intent = new Intent(this, AuctionActivity.class);
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<androidx.drawerlayout.widget.DrawerLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:id=\"@+id/drawer_layout\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:fitsSystemWindows=\"true\"\n    tools:context=\".view.MainActivity\">\n\n    <androidx.constraintlayout.widget.ConstraintLayout\n        android:id=\"@+id/main\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"match_parent\">\n\n        <!-- Toolbar -->\n        <androidx.appcompat.widget.Toolbar\n            android:id=\"@+id/toolbar\"\n            android:layout_width=\"0dp\"\n            android:layout_height=\"?attr/actionBarSize\"\n            android:background=\"@color/primary_color\"\n            android:theme=\"@style/ThemeOverlay.AppCompat.Dark.ActionBar\"\n            app:popupTheme=\"@style/ThemeOverlay.AppCompat.Light\"\n            app:layout_constraintTop_toTopOf=\"parent\"\n            app:layout_constraintStart_toStartOf=\"parent\"\n            app:layout_constraintEnd_toEndOf=\"parent\" />\n\n        <ScrollView\n            android:id=\"@+id/scroll_view\"\n            android:layout_width=\"0dp\"\n            android:layout_height=\"0dp\"\n            app:layout_constraintTop_toBottomOf=\"@+id/toolbar\"\n            app:layout_constraintStart_toStartOf=\"parent\"\n            app:layout_constraintEnd_toEndOf=\"parent\"\n            app:layout_constraintBottom_toTopOf=\"@+id/footer_container\">\n\n            <LinearLayout\n                android:layout_width=\"match_parent\"\n                android:layout_height=\"wrap_content\"\n                android:orientation=\"vertical\"\n                android:padding=\"16dp\">\n\n                <!-- Welcome Message -->\n                <TextView\n                    android:id=\"@+id/tvWelcome\"\n                    android:layout_width=\"match_parent\"\n                    android:layout_height=\"wrap_content\"\n                    android:text=\"Chào mừng đến với SafeZone\"\n                    android:textSize=\"20sp\"\n                    android:textStyle=\"bold\"\n                    android:gravity=\"center\"\n                    android:textColor=\"@color/primary_color\"\n                    android:layout_marginBottom=\"24dp\" />\n\n                <!-- Progress Bar -->\n                <ProgressBar\n                    android:id=\"@+id/progressBar\"\n                    android:layout_width=\"wrap_content\"\n                    android:layout_height=\"wrap_content\"\n                    android:layout_gravity=\"center\"\n                    android:visibility=\"gone\" />\n\n                <!-- Error Message -->\n                <TextView\n                    android:id=\"@+id/tvError\"\n                    android:layout_width=\"match_parent\"\n                    android:layout_height=\"wrap_content\"\n                    android:textColor=\"@android:color/holo_red_dark\"\n                    android:gravity=\"center\"\n                    android:visibility=\"gone\"\n                    android:layout_marginBottom=\"16dp\" />\n\n                <!-- User Info Card -->\n                <androidx.cardview.widget.CardView\n                    android:id=\"@+id/cardUserInfo\"\n                    android:layout_width=\"match_parent\"\n                    android:layout_height=\"wrap_content\"\n                    android:layout_marginBottom=\"16dp\"\n                    app:cardCornerRadius=\"8dp\"\n                    app:cardElevation=\"4dp\"\n                    android:visibility=\"gone\">\n\n                    <LinearLayout\n                        android:layout_width=\"match_parent\"\n                        android:layout_height=\"wrap_content\"\n                        android:orientation=\"vertical\"\n                        android:padding=\"16dp\">\n\n                        <TextView\n                            android:layout_width=\"match_parent\"\n                            android:layout_height=\"wrap_content\"\n                            android:text=\"Thông tin người dùng\"\n                            android:textSize=\"18sp\"\n                            android:textStyle=\"bold\"\n                            android:textColor=\"@color/primary_color\"\n                            android:layout_marginBottom=\"12dp\" />\n\n                        <!-- User Name -->\n                        <LinearLayout\n                            android:layout_width=\"match_parent\"\n                            android:layout_height=\"wrap_content\"\n                            android:orientation=\"horizontal\"\n                            android:layout_marginBottom=\"8dp\">\n\n                            <TextView\n                                android:layout_width=\"0dp\"\n                                android:layout_height=\"wrap_content\"\n                                android:layout_weight=\"1\"\n                                android:text=\"Tên đăng nhập:\"\n                                android:textStyle=\"bold\" />\n\n                            <TextView\n                                android:id=\"@+id/tvUserName\"\n                                android:layout_width=\"0dp\"\n                                android:layout_height=\"wrap_content\"\n                                android:layout_weight=\"1\"\n                                android:text=\"-\"\n                                android:textColor=\"@color/text_primary\" />\n                        </LinearLayout>\n\n                        <!-- Email -->\n                        <LinearLayout\n                            android:layout_width=\"match_parent\"\n                            android:layout_height=\"wrap_content\"\n                            android:orientation=\"horizontal\"\n                            android:layout_marginBottom=\"8dp\">\n\n                            <TextView\n                                android:layout_width=\"0dp\"\n                                android:layout_height=\"wrap_content\"\n                                android:layout_weight=\"1\"\n                                android:text=\"Email:\"\n                                android:textStyle=\"bold\" />\n\n                            <TextView\n                                android:id=\"@+id/tvEmail\"\n                                android:layout_width=\"0dp\"\n                                android:layout_height=\"wrap_content\"\n                                android:layout_weight=\"1\"\n                                android:text=\"-\"\n                                android:textColor=\"@color/text_primary\" />\n                        </LinearLayout>\n\n                        <!-- Phone -->\n                        <LinearLayout\n                            android:layout_width=\"match_parent\"\n                            android:layout_height=\"wrap_content\"\n                            android:orientation=\"horizontal\"\n                            android:layout_marginBottom=\"8dp\">\n\n                            <TextView\n                                android:layout_width=\"0dp\"\n                                android:layout_height=\"wrap_content\"\n                                android:layout_weight=\"1\"\n                                android:text=\"Số điện thoại:\"\n                                android:textStyle=\"bold\" />\n\n                            <TextView\n                                android:id=\"@+id/tvPhone\"\n                                android:layout_width=\"0dp\"\n                                android:layout_height=\"wrap_content\"\n                                android:layout_weight=\"1\"\n                                android:text=\"-\"\n                                android:textColor=\"@color/text_primary\" />\n                        </LinearLayout>\n\n                        <!-- Role -->\n                        <LinearLayout\n                            android:layout_width=\"match_parent\"\n                            android:layout_height=\"wrap_content\"\n                            android:orientation=\"horizontal\"\n                            android:layout_marginBottom=\"8dp\">\n\n                            <TextView\n                                android:layout_width=\"0dp\"\n                                android:layout_height=\"wrap_content\"\n                                android:layout_weight=\"1\"\n                                android:text=\"Vai trò:\"\n                                android:textStyle=\"bold\" />\n\n                            <TextView\n                                android:id=\"@+id/tvRole\"\n                                android:layout_width=\"0dp\"\n                                android:layout_height=\"wrap_content\"\n                                android:layout_weight=\"1\"\n                                android:text=\"-\"\n                                android:textColor=\"@android:color/holo_orange_dark\" />\n                        </LinearLayout>\n\n                        <!-- Balance -->\n                        <LinearLayout\n                            android:layout_width=\"match_parent\"\n                            android:layout_height=\"wrap_content\"\n                            android:orientation=\"horizontal\"\n                            android:layout_marginBottom=\"8dp\">\n\n                            <TextView\n                                android:layout_width=\"0dp\"\n                                android:layout_height=\"wrap_content\"\n                                android:layout_weight=\"1\"\n                                android:text=\"Số dư:\"\n                                android:textStyle=\"bold\" />\n\n                            <TextView\n                                android:id=\"@+id/tvBalance\"\n                                android:layout_width=\"0dp\"\n                                android:layout_height=\"wrap_content\"\n                                android:layout_weight=\"1\"\n                                android:text=\"-\"\n                                android:textColor=\"@android:color/holo_green_dark\" />\n                        </LinearLayout>\n\n                        <!-- Status -->\n                        <LinearLayout\n                            android:layout_width=\"match_parent\"\n                            android:layout_height=\"wrap_content\"\n                            android:orientation=\"horizontal\"\n                            android:layout_marginBottom=\"8dp\">\n\n                            <TextView\n                                android:layout_width=\"0dp\"\n                                android:layout_height=\"wrap_content\"\n                                android:layout_weight=\"1\"\n                                android:text=\"Trạng thái:\"\n                                android:textStyle=\"bold\" />\n\n                            <TextView\n                                android:id=\"@+id/tvStatus\"\n                                android:layout_width=\"0dp\"\n                                android:layout_height=\"wrap_content\"\n                                android:layout_weight=\"1\"\n                                android:text=\"-\"\n                                android:textColor=\"@color/text_primary\" />\n                        </LinearLayout>\n\n                        <!-- Verify Status -->\n                        <LinearLayout\n                            android:layout_width=\"match_parent\"\n                            android:layout_height=\"wrap_content\"\n                            android:orientation=\"horizontal\">\n\n                            <TextView\n                                android:layout_width=\"0dp\"\n                                android:layout_height=\"wrap_content\"\n                                android:layout_weight=\"1\"\n                                android:text=\"Xác thực:\"\n                                android:textStyle=\"bold\" />\n\n                            <TextView\n                                android:id=\"@+id/tvVerify\"\n                                android:layout_width=\"0dp\"\n                                android:layout_height=\"wrap_content\"\n                                android:layout_weight=\"1\"\n                                android:text=\"-\"\n                                android:textColor=\"@color/text_primary\" />\n                        </LinearLayout>\n\n                    </LinearLayout>\n\n                </androidx.cardview.widget.CardView>\n\n                <!-- All Users List -->\n                <androidx.cardview.widget.CardView\n                    android:layout_width=\"match_parent\"\n                    android:layout_height=\"wrap_content\"\n                    android:layout_marginBottom=\"16dp\"\n                    app:cardCornerRadius=\"8dp\"\n                    app:cardElevation=\"4dp\">\n\n                    <LinearLayout\n                        android:layout_width=\"match_parent\"\n                        android:layout_height=\"wrap_content\"\n                        android:orientation=\"vertical\"\n                        android:padding=\"16dp\">\n\n                        <TextView\n                            android:layout_width=\"match_parent\"\n                            android:layout_height=\"wrap_content\"\n                            android:text=\"Danh sách người dùng\"\n                            android:textSize=\"18sp\"\n                            android:textStyle=\"bold\"\n                            android:textColor=\"@color/primary_color\"\n                            android:layout_marginBottom=\"12dp\" />\n\n                        <androidx.recyclerview.widget.RecyclerView\n                            android:id=\"@+id/recyclerViewUsers\"\n                            android:layout_width=\"match_parent\"\n                            android:layout_height=\"wrap_content\"\n                            android:nestedScrollingEnabled=\"false\" />\n\n                    </LinearLayout>\n\n                </androidx.cardview.widget.CardView>\n\n                <!-- Action Buttons -->\n                <LinearLayout\n                    android:layout_width=\"match_parent\"\n                    android:layout_height=\"wrap_content\"\n                    android:orientation=\"horizontal\"\n                    android:gravity=\"center\">\n\n                    <Button\n                        android:id=\"@+id/btnLoadUser\"\n                        android:layout_width=\"0dp\"\n                        android:layout_height=\"wrap_content\"\n                        android:layout_weight=\"1\"\n                        android:layout_marginEnd=\"8dp\"\n                        android:text=\"Load My Info\"\n                        android:backgroundTint=\"@color/primary_color\" />\n\n                    <Button\n                        android:id=\"@+id/btnLoadAllUsers\"\n                        android:layout_width=\"0dp\"\n                        android:layout_height=\"wrap_content\"\n                        android:layout_weight=\"1\"\n                        android:layout_marginStart=\"8dp\"\n                        android:text=\"Load All Users\"\n                        android:backgroundTint=\"@android:color/holo_green_dark\" />\n\n                </LinearLayout>\n\n            </LinearLayout>\n\n        </ScrollView>\n\n        <!-- Footer - Luôn nằm dưới cùng -->\n        <include\n            android:id=\"@+id/footer_container\"\n            layout=\"@layout/footer_layout\"\n            android:layout_width=\"0dp\"\n            android:layout_height=\"wrap_content\"\n            app:layout_constraintStart_toStartOf=\"parent\"\n            app:layout_constraintEnd_toEndOf=\"parent\"\n            app:layout_constraintBottom_toBottomOf=\"parent\" />\n\n    </androidx.constraintlayout.widget.ConstraintLayout>\n\n    <com.google.android.material.navigation.NavigationView\n        android:id=\"@+id/navigation_view\"\n        android:layout_width=\"wrap_content\"\n        android:layout_height=\"match_parent\"\n        android:layout_gravity=\"start\"\n        android:fitsSystemWindows=\"true\"\n        android:background=\"@color/white\"\n        app:headerLayout=\"@layout/nav_header\"\n        app:menu=\"@menu/drawer_menu\"\n        app:itemIconTint=\"@color/nav_item_icon_color\"\n        app:itemTextColor=\"@color/nav_item_text_color\"\n        app:itemRippleColor=\"@color/nav_item_ripple_color\"\n        app:itemBackground=\"@drawable/nav_item_background\"\n        app:itemIconSize=\"24dp\"\n        app:itemHorizontalPadding=\"16dp\" />\n\n</androidx.drawerlayout.widget.DrawerLayout>\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+--- a/app/src/main/res/layout/activity_main.xml	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/src/main/res/layout/activity_main.xml	(date 1755914487320)
+@@ -25,303 +25,15 @@
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintEnd_toEndOf="parent" />
+ 
+-        <ScrollView
+-            android:id="@+id/scroll_view"
++        <!-- Fragment Container -->
++        <androidx.fragment.app.FragmentContainerView
++            android:id="@+id/fragment_container"
+             android:layout_width="0dp"
+             android:layout_height="0dp"
+             app:layout_constraintTop_toBottomOf="@+id/toolbar"
+             app:layout_constraintStart_toStartOf="parent"
+             app:layout_constraintEnd_toEndOf="parent"
+-            app:layout_constraintBottom_toTopOf="@+id/footer_container">
+-
+-            <LinearLayout
+-                android:layout_width="match_parent"
+-                android:layout_height="wrap_content"
+-                android:orientation="vertical"
+-                android:padding="16dp">
+-
+-                <!-- Welcome Message -->
+-                <TextView
+-                    android:id="@+id/tvWelcome"
+-                    android:layout_width="match_parent"
+-                    android:layout_height="wrap_content"
+-                    android:text="Chào mừng đến với SafeZone"
+-                    android:textSize="20sp"
+-                    android:textStyle="bold"
+-                    android:gravity="center"
+-                    android:textColor="@color/primary_color"
+-                    android:layout_marginBottom="24dp" />
+-
+-                <!-- Progress Bar -->
+-                <ProgressBar
+-                    android:id="@+id/progressBar"
+-                    android:layout_width="wrap_content"
+-                    android:layout_height="wrap_content"
+-                    android:layout_gravity="center"
+-                    android:visibility="gone" />
+-
+-                <!-- Error Message -->
+-                <TextView
+-                    android:id="@+id/tvError"
+-                    android:layout_width="match_parent"
+-                    android:layout_height="wrap_content"
+-                    android:textColor="@android:color/holo_red_dark"
+-                    android:gravity="center"
+-                    android:visibility="gone"
+-                    android:layout_marginBottom="16dp" />
+-
+-                <!-- User Info Card -->
+-                <androidx.cardview.widget.CardView
+-                    android:id="@+id/cardUserInfo"
+-                    android:layout_width="match_parent"
+-                    android:layout_height="wrap_content"
+-                    android:layout_marginBottom="16dp"
+-                    app:cardCornerRadius="8dp"
+-                    app:cardElevation="4dp"
+-                    android:visibility="gone">
+-
+-                    <LinearLayout
+-                        android:layout_width="match_parent"
+-                        android:layout_height="wrap_content"
+-                        android:orientation="vertical"
+-                        android:padding="16dp">
+-
+-                        <TextView
+-                            android:layout_width="match_parent"
+-                            android:layout_height="wrap_content"
+-                            android:text="Thông tin người dùng"
+-                            android:textSize="18sp"
+-                            android:textStyle="bold"
+-                            android:textColor="@color/primary_color"
+-                            android:layout_marginBottom="12dp" />
+-
+-                        <!-- User Name -->
+-                        <LinearLayout
+-                            android:layout_width="match_parent"
+-                            android:layout_height="wrap_content"
+-                            android:orientation="horizontal"
+-                            android:layout_marginBottom="8dp">
+-
+-                            <TextView
+-                                android:layout_width="0dp"
+-                                android:layout_height="wrap_content"
+-                                android:layout_weight="1"
+-                                android:text="Tên đăng nhập:"
+-                                android:textStyle="bold" />
+-
+-                            <TextView
+-                                android:id="@+id/tvUserName"
+-                                android:layout_width="0dp"
+-                                android:layout_height="wrap_content"
+-                                android:layout_weight="1"
+-                                android:text="-"
+-                                android:textColor="@color/text_primary" />
+-                        </LinearLayout>
+-
+-                        <!-- Email -->
+-                        <LinearLayout
+-                            android:layout_width="match_parent"
+-                            android:layout_height="wrap_content"
+-                            android:orientation="horizontal"
+-                            android:layout_marginBottom="8dp">
+-
+-                            <TextView
+-                                android:layout_width="0dp"
+-                                android:layout_height="wrap_content"
+-                                android:layout_weight="1"
+-                                android:text="Email:"
+-                                android:textStyle="bold" />
+-
+-                            <TextView
+-                                android:id="@+id/tvEmail"
+-                                android:layout_width="0dp"
+-                                android:layout_height="wrap_content"
+-                                android:layout_weight="1"
+-                                android:text="-"
+-                                android:textColor="@color/text_primary" />
+-                        </LinearLayout>
+-
+-                        <!-- Phone -->
+-                        <LinearLayout
+-                            android:layout_width="match_parent"
+-                            android:layout_height="wrap_content"
+-                            android:orientation="horizontal"
+-                            android:layout_marginBottom="8dp">
+-
+-                            <TextView
+-                                android:layout_width="0dp"
+-                                android:layout_height="wrap_content"
+-                                android:layout_weight="1"
+-                                android:text="Số điện thoại:"
+-                                android:textStyle="bold" />
+-
+-                            <TextView
+-                                android:id="@+id/tvPhone"
+-                                android:layout_width="0dp"
+-                                android:layout_height="wrap_content"
+-                                android:layout_weight="1"
+-                                android:text="-"
+-                                android:textColor="@color/text_primary" />
+-                        </LinearLayout>
+-
+-                        <!-- Role -->
+-                        <LinearLayout
+-                            android:layout_width="match_parent"
+-                            android:layout_height="wrap_content"
+-                            android:orientation="horizontal"
+-                            android:layout_marginBottom="8dp">
+-
+-                            <TextView
+-                                android:layout_width="0dp"
+-                                android:layout_height="wrap_content"
+-                                android:layout_weight="1"
+-                                android:text="Vai trò:"
+-                                android:textStyle="bold" />
+-
+-                            <TextView
+-                                android:id="@+id/tvRole"
+-                                android:layout_width="0dp"
+-                                android:layout_height="wrap_content"
+-                                android:layout_weight="1"
+-                                android:text="-"
+-                                android:textColor="@android:color/holo_orange_dark" />
+-                        </LinearLayout>
+-
+-                        <!-- Balance -->
+-                        <LinearLayout
+-                            android:layout_width="match_parent"
+-                            android:layout_height="wrap_content"
+-                            android:orientation="horizontal"
+-                            android:layout_marginBottom="8dp">
+-
+-                            <TextView
+-                                android:layout_width="0dp"
+-                                android:layout_height="wrap_content"
+-                                android:layout_weight="1"
+-                                android:text="Số dư:"
+-                                android:textStyle="bold" />
+-
+-                            <TextView
+-                                android:id="@+id/tvBalance"
+-                                android:layout_width="0dp"
+-                                android:layout_height="wrap_content"
+-                                android:layout_weight="1"
+-                                android:text="-"
+-                                android:textColor="@android:color/holo_green_dark" />
+-                        </LinearLayout>
+-
+-                        <!-- Status -->
+-                        <LinearLayout
+-                            android:layout_width="match_parent"
+-                            android:layout_height="wrap_content"
+-                            android:orientation="horizontal"
+-                            android:layout_marginBottom="8dp">
+-
+-                            <TextView
+-                                android:layout_width="0dp"
+-                                android:layout_height="wrap_content"
+-                                android:layout_weight="1"
+-                                android:text="Trạng thái:"
+-                                android:textStyle="bold" />
+-
+-                            <TextView
+-                                android:id="@+id/tvStatus"
+-                                android:layout_width="0dp"
+-                                android:layout_height="wrap_content"
+-                                android:layout_weight="1"
+-                                android:text="-"
+-                                android:textColor="@color/text_primary" />
+-                        </LinearLayout>
+-
+-                        <!-- Verify Status -->
+-                        <LinearLayout
+-                            android:layout_width="match_parent"
+-                            android:layout_height="wrap_content"
+-                            android:orientation="horizontal">
+-
+-                            <TextView
+-                                android:layout_width="0dp"
+-                                android:layout_height="wrap_content"
+-                                android:layout_weight="1"
+-                                android:text="Xác thực:"
+-                                android:textStyle="bold" />
+-
+-                            <TextView
+-                                android:id="@+id/tvVerify"
+-                                android:layout_width="0dp"
+-                                android:layout_height="wrap_content"
+-                                android:layout_weight="1"
+-                                android:text="-"
+-                                android:textColor="@color/text_primary" />
+-                        </LinearLayout>
+-
+-                    </LinearLayout>
+-
+-                </androidx.cardview.widget.CardView>
+-
+-                <!-- All Users List -->
+-                <androidx.cardview.widget.CardView
+-                    android:layout_width="match_parent"
+-                    android:layout_height="wrap_content"
+-                    android:layout_marginBottom="16dp"
+-                    app:cardCornerRadius="8dp"
+-                    app:cardElevation="4dp">
+-
+-                    <LinearLayout
+-                        android:layout_width="match_parent"
+-                        android:layout_height="wrap_content"
+-                        android:orientation="vertical"
+-                        android:padding="16dp">
+-
+-                        <TextView
+-                            android:layout_width="match_parent"
+-                            android:layout_height="wrap_content"
+-                            android:text="Danh sách người dùng"
+-                            android:textSize="18sp"
+-                            android:textStyle="bold"
+-                            android:textColor="@color/primary_color"
+-                            android:layout_marginBottom="12dp" />
+-
+-                        <androidx.recyclerview.widget.RecyclerView
+-                            android:id="@+id/recyclerViewUsers"
+-                            android:layout_width="match_parent"
+-                            android:layout_height="wrap_content"
+-                            android:nestedScrollingEnabled="false" />
+-
+-                    </LinearLayout>
+-
+-                </androidx.cardview.widget.CardView>
+-
+-                <!-- Action Buttons -->
+-                <LinearLayout
+-                    android:layout_width="match_parent"
+-                    android:layout_height="wrap_content"
+-                    android:orientation="horizontal"
+-                    android:gravity="center">
+-
+-                    <Button
+-                        android:id="@+id/btnLoadUser"
+-                        android:layout_width="0dp"
+-                        android:layout_height="wrap_content"
+-                        android:layout_weight="1"
+-                        android:layout_marginEnd="8dp"
+-                        android:text="Load My Info"
+-                        android:backgroundTint="@color/primary_color" />
+-
+-                    <Button
+-                        android:id="@+id/btnLoadAllUsers"
+-                        android:layout_width="0dp"
+-                        android:layout_height="wrap_content"
+-                        android:layout_weight="1"
+-                        android:layout_marginStart="8dp"
+-                        android:text="Load All Users"
+-                        android:backgroundTint="@android:color/holo_green_dark" />
+-
+-                </LinearLayout>
+-
+-            </LinearLayout>
+-
+-        </ScrollView>
++            app:layout_constraintBottom_toTopOf="@+id/footer_container" />
+ 
+         <!-- Footer - Luôn nằm dưới cùng -->
+         <include
+Index: app/src/main/res/values/themes.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><resources xmlns:tools=\"http://schemas.android.com/tools\">\n    <!-- Base application theme. -->\n    <style name=\"Base.Theme.SafeZone\" parent=\"Theme.Material3.DayNight.NoActionBar\">\n        <!-- Customize your light theme here. -->\n        <!-- <item name=\"colorPrimary\">@color/my_light_primary</item> -->\n    </style>\n\n    <style name=\"Theme.SafeZone\" parent=\"Base.Theme.SafeZone\" />\n    \n    <style name=\"Theme.SafeZone.NoActionBar\" parent=\"Base.Theme.SafeZone\" />\n    \n    <!-- Custom styles for chat -->\n    <style name=\"ToolbarTitleStyle\" parent=\"TextAppearance.AppCompat.Title\">\n        <item name=\"android:textSize\">20sp</item>\n        <item name=\"android:textStyle\">bold</item>\n        <item name=\"android:textColor\">@android:color/white</item>\n    </style>\n    \n    <style name=\"CustomAlertDialog\" parent=\"ThemeOverlay.MaterialComponents.MaterialAlertDialog\">\n        <item name=\"android:windowBackground\">@android:color/transparent</item>\n        <item name=\"android:windowMinWidthMajor\">85%</item>\n        <item name=\"android:windowMinWidthMinor\">85%</item>\n        <item name=\"android:textColorPrimary\">@color/text_primary</item>\n        <item name=\"android:textColorSecondary\">@color/text_secondary</item>\n    </style>\n</resources>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/themes.xml b/app/src/main/res/values/themes.xml
+--- a/app/src/main/res/values/themes.xml	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/src/main/res/values/themes.xml	(date 1755925504118)
+@@ -7,7 +7,20 @@
+ 
+     <style name="Theme.SafeZone" parent="Base.Theme.SafeZone" />
+     
+-    <style name="Theme.SafeZone.NoActionBar" parent="Base.Theme.SafeZone" />
++    <style name="Theme.SafeZone.NoActionBar" parent="Base.Theme.SafeZone">
++        <item name="windowActionBar">false</item>
++        <item name="windowNoTitle">true</item>
++    </style>
++
++    <style name="FullScreenDialog" parent="Theme.SafeZone">
++        <item name="android:windowNoTitle">true</item>
++        <item name="android:windowFullscreen">true</item>
++        <item name="android:windowIsFloating">false</item>
++        <item name="android:windowBackground">@android:color/transparent</item>
++        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
++        <item name="android:statusBarColor">@android:color/transparent</item>
++        <item name="android:navigationBarColor">@android:color/transparent</item>
++    </style>
+     
+     <!-- Custom styles for chat -->
+     <style name="ToolbarTitleStyle" parent="TextAppearance.AppCompat.Title">
+Index: app/src/main/java/com/group5/safezone/model/dao/ProductDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.group5.safezone.model.dao;\n\nimport androidx.room.Dao;\nimport androidx.room.Delete;\nimport androidx.room.Insert;\nimport androidx.room.Query;\nimport androidx.room.Update;\n\nimport com.group5.safezone.model.entity.Product;\n\nimport java.util.List;\n\n@Dao\npublic interface ProductDao {\n    @Query(\"SELECT * FROM product WHERE IsDeleted = 0\")\n    List<Product> getAllProducts();\n\n    @Query(\"SELECT * FROM product WHERE id = :id AND IsDeleted = 0\")\n    Product getProductById(String id);\n\n    @Query(\"SELECT * FROM product WHERE UserId = :userId AND IsDeleted = 0\")\n    List<Product> getProductsByUserId(int userId);\n\n    @Query(\"SELECT * FROM product WHERE status = :status AND IsDeleted = 0\")\n    List<Product> getProductsByStatus(String status);\n\n    @Query(\"SELECT * FROM product WHERE isAuctionItem = 1 AND IsDeleted = 0\")\n    List<Product> getAuctionProducts();\n\n    @Query(\"SELECT * FROM product WHERE isAuctionItem = 0 AND IsDeleted = 0\")\n    List<Product> getNormalProducts();\n\n    @Query(\"SELECT * FROM product WHERE productName LIKE '%' || :keyword || '%' AND IsDeleted = 0\")\n    List<Product> searchProducts(String keyword);\n\n    @Query(\"UPDATE product SET views = views + 1 WHERE id = :id\")\n    void incrementView(String id);\n\n    @Query(\"UPDATE product SET isAdminCheck = :isChecked, adminmessage = :message WHERE id = :id\")\n    void updateAdminCheck(String id, boolean isChecked, String message);\n\n    @Insert\n    void insert(Product product);\n\n    @Update\n    void update(Product product);\n\n    @Delete\n    void delete(Product product);\n\n    @Query(\"UPDATE product SET IsDeleted = 1, DeletedAt = datetime('now') WHERE id = :id\")\n    void softDelete(String id);\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/group5/safezone/model/dao/ProductDao.java b/app/src/main/java/com/group5/safezone/model/dao/ProductDao.java
+--- a/app/src/main/java/com/group5/safezone/model/dao/ProductDao.java	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/src/main/java/com/group5/safezone/model/dao/ProductDao.java	(date 1755919805688)
+@@ -50,4 +50,10 @@
+ 
+     @Query("UPDATE product SET IsDeleted = 1, DeletedAt = datetime('now') WHERE id = :id")
+     void softDelete(String id);
++
++    @Query("DELETE FROM product")
++    void deleteAllProducts();
++
++    @Insert
++    void insertMultipleProducts(List<Product> products);
+ }
+Index: app/src/main/java/com/group5/safezone/model/dao/OrderDao.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.group5.safezone.model.dao;\n\nimport androidx.room.Dao;\nimport androidx.room.Delete;\nimport androidx.room.Insert;\nimport androidx.room.Query;\nimport androidx.room.Update;\n\nimport com.group5.safezone.model.entity.Order;\n\nimport java.util.List;\n\n@Dao\npublic interface OrderDao {\n    @Query(\"SELECT * FROM `order` WHERE IsDeleted = 0\")\n    List<Order> getAllOrders();\n\n    @Query(\"SELECT * FROM `order` WHERE id = :id AND IsDeleted = 0\")\n    Order getOrderById(int id);\n\n    @Query(\"SELECT * FROM `order` WHERE UserId = :userId AND IsDeleted = 0 ORDER BY orderDate DESC\")\n    List<Order> getOrdersByUserId(int userId);\n\n    @Query(\"SELECT * FROM `order` WHERE productId = :productId AND IsDeleted = 0\")\n    List<Order> getOrdersByProductId(String productId);\n\n    @Query(\"SELECT * FROM `order` WHERE status = :status AND IsDeleted = 0\")\n    List<Order> getOrdersByStatus(String status);\n\n    @Query(\"UPDATE `order` SET status = :status WHERE id = :id\")\n    void updateOrderStatus(int id, String status);\n\n    @Insert\n    void insert(Order order);\n\n    @Update\n    void update(Order order);\n\n    @Delete\n    void delete(Order order);\n\n    @Query(\"UPDATE `order` SET IsDeleted = 1, DeletedAt = datetime('now') WHERE id = :id\")\n    void softDelete(int id);\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/group5/safezone/model/dao/OrderDao.java b/app/src/main/java/com/group5/safezone/model/dao/OrderDao.java
+--- a/app/src/main/java/com/group5/safezone/model/dao/OrderDao.java	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/src/main/java/com/group5/safezone/model/dao/OrderDao.java	(date 1756010738345)
+@@ -26,12 +26,18 @@
+ 
+     @Query("SELECT * FROM `order` WHERE status = :status AND IsDeleted = 0")
+     List<Order> getOrdersByStatus(String status);
++    
++    @Query("SELECT o.* FROM `order` o " +
++           "INNER JOIN product p ON o.productId = p.id " +
++           "WHERE p.userId = :sellerId AND o.IsDeleted = 0 " +
++           "ORDER BY o.orderDate DESC")
++    List<Order> getOrdersBySellerId(int sellerId);
+ 
+     @Query("UPDATE `order` SET status = :status WHERE id = :id")
+     void updateOrderStatus(int id, String status);
+ 
+     @Insert
+-    void insert(Order order);
++    long insert(Order order);
+ 
+     @Update
+     void update(Order order);
+Index: app/src/main/java/com/group5/safezone/view/admin/AdminMainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.group5.safezone.view.admin;\n\nimport android.content.Intent;\nimport android.os.Bundle;\nimport android.view.Menu;\nimport android.view.MenuItem;\nimport android.widget.TextView;\n\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.appcompat.widget.Toolbar;\nimport androidx.cardview.widget.CardView;\n\nimport com.group5.safezone.R;\nimport com.group5.safezone.config.AuthInterceptor;\nimport com.group5.safezone.config.SessionManager;\nimport com.group5.safezone.view.auth.LoginActivity;\n\npublic class AdminMainActivity extends AppCompatActivity {\n\n    private SessionManager sessionManager;\n    private TextView tvWelcome;\n    private CardView cardUserManagement, cardProductManagement, cardOrderManagement, cardReports;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n\n        // Kiểm tra quyền admin\n        if (!AuthInterceptor.checkAdminPermission(this)) {\n            return;\n        }\n\n        setContentView(R.layout.activity_admin_main);\n\n        initViews();\n        setupToolbar();\n        setupClickListeners();\n\n        sessionManager = new SessionManager(this);\n        displayWelcomeMessage();\n    }\n\n    private void initViews() {\n        tvWelcome = findViewById(R.id.tvWelcome);\n        cardUserManagement = findViewById(R.id.cardUserManagement);\n        cardProductManagement = findViewById(R.id.cardProductManagement);\n        cardOrderManagement = findViewById(R.id.cardOrderManagement);\n        cardReports = findViewById(R.id.cardReports);\n    }\n\n    private void setupToolbar() {\n        Toolbar toolbar = findViewById(R.id.toolbar);\n        setSupportActionBar(toolbar);\n        getSupportActionBar().setTitle(\"Quản trị viên\");\n    }\n\n    private void setupClickListeners() {\n\n\n        cardProductManagement.setOnClickListener(v -> {\n            // startActivity(new Intent(this, ProductManagementActivity.class));\n        });\n\n        cardOrderManagement.setOnClickListener(v -> {\n            // startActivity(new Intent(this, OrderManagementActivity.class));\n        });\n\n        cardReports.setOnClickListener(v -> {\n            // startActivity(new Intent(this, ReportsActivity.class));\n        });\n    }\n\n    private void displayWelcomeMessage() {\n        String userName = sessionManager.getUserName();\n        tvWelcome.setText(\"Chào mừng, \" + userName + \"!\");\n    }\n\n    @Override\n    public boolean onCreateOptionsMenu(Menu menu) {\n        getMenuInflater().inflate(R.menu.admin_menu, menu);\n        return true;\n    }\n\n    @Override\n    public boolean onOptionsItemSelected(MenuItem item) {\n        int id = item.getItemId();\n\n        if (id == R.id.action_logout) {\n            logout();\n            return true;\n        }\n\n        return super.onOptionsItemSelected(item);\n    }\n\n    private void logout() {\n        sessionManager.logout();\n        Intent intent = new Intent(this, LoginActivity.class);\n        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);\n        startActivity(intent);\n        finish();\n    }\n\n    @Override\n    protected void onResume() {\n        super.onResume();\n        // Kiểm tra lại quyền khi quay lại activity\n        AuthInterceptor.checkAdminPermission(this);\n        AuthInterceptor.checkAccountStatus(this);\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/group5/safezone/view/admin/AdminMainActivity.java b/app/src/main/java/com/group5/safezone/view/admin/AdminMainActivity.java
+--- a/app/src/main/java/com/group5/safezone/view/admin/AdminMainActivity.java	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/src/main/java/com/group5/safezone/view/admin/AdminMainActivity.java	(date 1756034928295)
+@@ -66,7 +66,7 @@
+         });
+ 
+         cardReports.setOnClickListener(v -> {
+-            // startActivity(new Intent(this, ReportsActivity.class));
++            startActivity(new Intent(this, ReportManagementActivity.class));
+         });
+     }
+ 
+Index: settings.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>pluginManagement {\n    repositories {\n        google {\n            content {\n                includeGroupByRegex(\"com\\\\.android.*\")\n                includeGroupByRegex(\"com\\\\.google.*\")\n                includeGroupByRegex(\"androidx.*\")\n            }\n        }\n        mavenCentral()\n        gradlePluginPortal()\n    }\n}\ndependencyResolutionManagement {\n    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)\n    repositories {\n        google()\n        mavenCentral()\n        maven { url 'https://storage.zego.im/maven' }\n        maven { url 'https://www.jitpack.io' }\n    }\n}\n\nrootProject.name = \"SafeZone\"\ninclude ':app'\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/settings.gradle b/settings.gradle
+--- a/settings.gradle	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/settings.gradle	(date 1755804078180)
+@@ -16,6 +16,7 @@
+     repositories {
+         google()
+         mavenCentral()
++        maven { url 'https://maven.zego.im' }  // ZEGOCLOUD maven repository
+         maven { url 'https://storage.zego.im/maven' }
+         maven { url 'https://www.jitpack.io' }
+     }
+Index: app/src/main/java/com/group5/safezone/Constant/Chatbox/ConstantKey.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.group5.safezone.Constant.Chatbox;\n\n\npublic class ConstantKey {\n    public static long appID = 2028834369;\n    public static String appSign = \"f93470d31741ba5308119cdc5570dd13f4e43e8fbb171e3ea21e1d758d8824f5\";\n}\n
+===================================================================
+diff --git a/app/src/main/java/com/group5/safezone/Constant/Chatbox/ConstantKey.java b/app/src/main/java/com/group5/safezone/Constant/Chatbox/ConstantKey.java
+--- a/app/src/main/java/com/group5/safezone/Constant/Chatbox/ConstantKey.java	(revision 22f5f41986a385c16dd1feb7252e2e7f6bd4f329)
++++ b/app/src/main/java/com/group5/safezone/Constant/Chatbox/ConstantKey.java	(date 1755681074994)
+@@ -1,7 +1,6 @@
+ package com.group5.safezone.Constant.Chatbox;
+ 
+-
+ public class ConstantKey {
+-    public static long appID = 2028834369;
++    public static long appID = 2028834369L;
+     public static String appSign = "f93470d31741ba5308119cdc5570dd13f4e43e8fbb171e3ea21e1d758d8824f5";
+-}
++}
+\ No newline at end of file

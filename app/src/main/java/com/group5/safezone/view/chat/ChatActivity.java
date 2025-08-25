@@ -78,8 +78,8 @@ public class ChatActivity extends AppCompatActivity {
     private void connectCurrentUser() {
         String userId = sessionManager.getUserName();
         String userName = sessionManager.getUserName();
-        // Giữ nguyên là null cho avatarUrl để ZEGO hoàn toàn bỏ qua
-        String avatarUrl = "https://i.ytimg.com/vi/-Om9cVZeZ58/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGH8gIigjMA8=&rs=AOn4CLBlJZt4vMRdBt-6BETpatSyTQ5ZEA";
+        // Tắt avatar để tránh lỗi ZEGOCLOUD
+        String avatarUrl = null;
         
         Log.d(TAG, "Attempting to connect current user to ZIMKit:");
         Log.d(TAG, "  userId: " + userId);
@@ -283,8 +283,8 @@ public class ChatActivity extends AppCompatActivity {
     private void registerUserToZEGO(User user, Runnable onSuccess) {
         String userId = String.valueOf(user.getId());
         String userName = user.getUserName();
-        // Giữ nguyên là null cho avatarUrl
-        String avatarUrl = "https://i.ytimg.com/vi/-Om9cVZeZ58/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AH-CYAC0AWKAgwIABABGH8gIigjMA8=&rs=AOn4CLBlJZt4vMRdBt-6BETpatSyTQ5ZEA"; 
+        // Tắt avatar để tránh lỗi ZEGOCLOUD
+        String avatarUrl = null; 
         
         Log.d(TAG, "Attempting to register user " + userName + " (ID: " + userId + ") to ZEGO:");
         Log.d(TAG, "  userId: " + userId);
