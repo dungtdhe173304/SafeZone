@@ -89,7 +89,9 @@ public class MainActivity extends BaseActivity {
         setupToolbar();
         setupDrawer();
         setupBackPressedDispatcher();
-        setupCommunityChat();
+        
+        // Đảm bảo views đã được khởi tạo trước khi setup community chat
+        new android.os.Handler().post(() -> setupCommunityChat());
         
         // Load HomeFragment as default
         if (savedInstanceState == null) {
@@ -132,9 +134,11 @@ public class MainActivity extends BaseActivity {
     
     private void setupCommunityChat() {
         System.out.println("=== MainActivity: setupCommunityChat() called ===");
+        android.util.Log.d("MainActivity", "setupCommunityChat() called");
         
         if (communityChatHeaderView != null) {
             System.out.println("=== MainActivity: communityChatHeaderView is NOT NULL ===");
+            android.util.Log.d("MainActivity", "communityChatHeaderView is NOT NULL");
             
             try {
                 AppDatabase database = AppDatabase.getDatabase(this);
@@ -145,6 +149,10 @@ public class MainActivity extends BaseActivity {
                 
                 communityChatHeaderView.setChatService(communityChatService);
                 System.out.println("=== MainActivity: ChatService set to header view ===");
+                android.util.Log.d("MainActivity", "ChatService set to header view");
+                
+                // Đảm bảo ChatService đã được set trước khi load messages
+                android.util.Log.d("MainActivity", "About to load recent messages...");
                 
                 // Load recent messages
                 new Thread(() -> {

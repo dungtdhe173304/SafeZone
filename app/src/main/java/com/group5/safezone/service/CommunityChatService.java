@@ -75,9 +75,11 @@ public class CommunityChatService {
                  }
                  
                  // Thông báo message đã được lưu thành công
-                 new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
-                     displayListener.onMessageDisplayed(chatMessage);
-                 });
+                 if (displayListener != null) {
+                     new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
+                         displayListener.onMessageDisplayed(chatMessage);
+                     });
+                 }
             } catch (Exception e) {
                 Log.e(TAG, "Error sending message", e);
             }

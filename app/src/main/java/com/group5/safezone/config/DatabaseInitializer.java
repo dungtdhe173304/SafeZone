@@ -84,7 +84,7 @@ public class DatabaseInitializer {
         testUser.setDob(new Date(100, 8, 5)); // 2000-09-05
         testUser.setRole("USER");
         testUser.setStatus("ACTIVE"); // Đổi thành ACTIVE để có thể login
-        testUser.setBalance(50000.0);
+        testUser.setBalance(0.0);
         testUser.setIsVerify(false);
         users.add(testUser);
 
@@ -111,7 +111,7 @@ public class DatabaseInitializer {
         // Sample product 1
         Product product1 = new Product();
         product1.setId("prod_001");
-        product1.setProductName("iPhone 15 Pro");
+        product1.setProductName("Nic liên quân");
         product1.setFee(1.0); // Seller pays fee
         product1.setPrice(25000000.0);
         product1.setPublicPrivate("public");
@@ -124,7 +124,7 @@ public class DatabaseInitializer {
         // Sample product 2
         Product product2 = new Product();
         product2.setId("prod_002");
-        product2.setProductName("MacBook Air M2");
+        product2.setProductName("Nic ninja school ");
         product2.setFee(2.0); // Buyer pays fee
         product2.setPrice(35000000.0);
         product2.setPublicPrivate("private");

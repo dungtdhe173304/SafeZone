@@ -76,10 +76,11 @@ public class CommunityChatHeaderView extends LinearLayout {
         if (service != null) {
             android.util.Log.d("CommunityChatHeaderView", "Setting MessageDisplayListener");
             
+            // Set listener trước khi gọi bất kỳ method nào khác
             service.setMessageDisplayListener(new CommunityChatService.MessageDisplayListener() {
-                                 @Override
-                 public void onNewMessage(ChatCommunity message) {
-                     android.util.Log.d("CommunityChatHeaderView", "New message: " + message.getMessage());
+                @Override
+                public void onNewMessage(ChatCommunity message) {
+                    android.util.Log.d("CommunityChatHeaderView", "New message: " + message.getMessage());
                      
                      // Thêm tin nhắn mới vào đầu danh sách
                      if (currentMessages == null) {

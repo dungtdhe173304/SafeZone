@@ -76,7 +76,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void connectCurrentUser() {
-        String userId = sessionManager.getUserName();
+        String userId = String.valueOf(sessionManager.getUserId()); // Sử dụng userId thay vì userName
         String userName = sessionManager.getUserName();
         // Tắt avatar để tránh lỗi ZEGOCLOUD
         String avatarUrl = null;
@@ -84,7 +84,7 @@ public class ChatActivity extends AppCompatActivity {
         Log.d(TAG, "Attempting to connect current user to ZIMKit:");
         Log.d(TAG, "  userId: " + userId);
         Log.d(TAG, "  userName: " + userName);
-        Log.d(TAG, "  avatarUrl: " + (avatarUrl == null ? "null" : avatarUrl)); // Log giá trị avatarUrl
+        Log.d(TAG, "  avatarUrl: " + (avatarUrl == null ? "null" : avatarUrl));
 
         if (userId != null && !userId.equals("0")) {
             try {
@@ -93,6 +93,8 @@ public class ChatActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             Toast.makeText(ChatActivity.this, "Đã kết nối chat thành công", Toast.LENGTH_SHORT).show();
                             Log.d(TAG, "ZIMKit connection successful for user: " + userName);
+                            // Sau khi kết nối thành công, hiển thị conversation list
+                            showConversationList();
                         });
                     } else {
                         runOnUiThread(() -> {
@@ -111,6 +113,28 @@ public class ChatActivity extends AppCompatActivity {
             Log.e(TAG, "Current userId is null or '0'. Cannot connect to ZIMKit.");
             finish();
         }
+    }
+    
+    private void showConversationList() {
+        try {
+            // Hiển thị conversation list fragment
+            getSupportFragmentManager().beginTransaction()
+                .replace(R.id.frag_conversation_list, new com.zegocloud.zimkit.components.conversation.ui.ZIMKitConversationFragment())
+                .commit();
+            
+            Log.d(TAG, "Conversation list fragment loaded successfully");
+        } catch (Exception e) {
+            Log.e(TAG, "Error loading conversation list fragment: " + e.getMessage(), e);
+            // Fallback: hiển thị welcome message
+            showWelcomeMessage();
+        }
+    }
+    
+    private void showWelcomeMessage() {
+        // Ẩn conversation container và hiển thị welcome message
+        findViewById(R.id.conversationContainer).setVisibility(View.GONE);
+        findViewById(R.id.welcomeContainer).setVisibility(View.VISIBLE);
+        Log.d(TAG, "Welcome message displayed");
     }
 
     private void setupClickListeners() {
@@ -292,34 +316,9 @@ public class ChatActivity extends AppCompatActivity {
         Log.d(TAG, "  avatarUrl: " + (avatarUrl == null ? "null" : avatarUrl));
 
         try {
-            ZIMKit.connectUser(userId, userName, avatarUrl, errorInfo -> {
-                if (errorInfo.code == ZIMErrorCode.SUCCESS) {
-                    Log.d(TAG, "User " + userName + " successfully registered/connected to ZEGO.");
-                    runOnUiThread(onSuccess);
-                } else {
-                    Log.e(TAG, "Failed to register/connect user " + userName + " to ZEGO: " + errorInfo.message + " (Code: " + errorInfo.code + ")");
-                    // Fallback: thử kết nối với userId và userName đơn giản nếu lỗi
-                    try {
-                        Log.d(TAG, "Attempting fallback connection for user " + userName + " (no avatarUrl)...");
-                        ZIMKit.connectUser(userId, userName, null, fallbackErrorInfo -> { 
-                            if (fallbackErrorInfo.code == ZIMErrorCode.SUCCESS) {
-                                Log.d(TAG, "Fallback connection successful for user " + userName);
-                                runOnUiThread(onSuccess);
-                            } else {
-                                Log.e(TAG, "Fallback connection failed for user " + userName + ": " + fallbackErrorInfo.message + " (Code: " + fallbackErrorInfo.code + ")");
-                                runOnUiThread(() -> {
-                                    Toast.makeText(ChatActivity.this, "Không thể kết nối ZEGO: " + fallbackErrorInfo.message, Toast.LENGTH_LONG).show();
-                                });
-                            }
-                        });
-                    } catch (Exception fallbackEx) {
-                        Log.e(TAG, "Exception during ZIMKit fallback connectUser: " + fallbackEx.getMessage(), fallbackEx);
-                        runOnUiThread(() -> {
-                            Toast.makeText(ChatActivity.this, "ZEGO không thể kết nối", Toast.LENGTH_SHORT).show();
-                        });
-                    }
-                }
-            });
+            // Không cần connect user khác, chỉ cần mở chat trực tiếp
+            Log.d(TAG, "User " + userName + " ready for chat. Opening message activity...");
+            runOnUiThread(onSuccess);
         } catch (Exception e) {
             Log.e(TAG, "Exception when attempting to register user to ZEGO: " + e.getMessage(), e);
             runOnUiThread(() -> {
